@@ -1,6 +1,6 @@
 <?php
-session_start();
-include 'db.php';
+require_once __DIR__ . '/includes/auth.php';
+require_login();
 
 // Get all officers and advisor/admin
 $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_advisor' ORDER BY id ASC");

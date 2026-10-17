@@ -1,14 +1,20 @@
 <?php
-$servername = "localhost";
-$username = "root"; // default XAMPP user
-$password = "";     // default XAMPP password is empty
-$dbname = "jpcs_event_system"; // pangalan ng database mo
+declare(strict_types=1);
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Keep local XAMPP defaults working while allowing deployment configuration
+// through environment variables instead of hard-coding secrets in the app.
+$servername = getenv('JPCS_DB_HOST') ?: 'localhost';
+$username = getenv('JPCS_DB_USER') ?: 'root';
+$password = getenv('JPCS_DB_PASSWORD') ?: '';
+$dbname = getenv('JPCS_DB_NAME') ?: 'jpcs_event_system';
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+try {
+    $conn = new mysqli($servername, $username, $password, $dbname);
+    $conn->set_charset('utf8mb4');
+} catch (mysqli_sql_exception $exception) {
+    error_log('JPCS database connection failed: ' . $exception->getMessage());
+    http_response_code(500);
+    exit('The database is temporarily unavailable.');
 }
-?>

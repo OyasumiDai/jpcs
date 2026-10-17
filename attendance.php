@@ -1,6 +1,6 @@
 <?php
-session_start();
-include 'db.php';
+require_once __DIR__ . '/includes/auth.php';
+require_login();
 
 // Fetch user role
 $userID = $_SESSION['user_id'];

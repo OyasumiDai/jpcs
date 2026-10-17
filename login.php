@@ -1,6 +1,5 @@
 <?php
-session_start();
-include 'db.php';
+require_once __DIR__ . '/includes/bootstrap.php';
 
 $error = "";
 $username = "";
@@ -9,35 +8,49 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $stmt = $conn->prepare(
-        "SELECT * FROM users WHERE username = ? AND password = ?"
-    );
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
 
-    $stmt->bind_param("ss", $username, $password);
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
 
-        session_regenerate_id(true);
+        // Support the current legacy plaintext seed while migrating users to
+        // password_hash() transparently after their next successful login.
+        $storedPassword = (string) $row['password'];
+        $validPassword = password_verify($password, $storedPassword)
+            || hash_equals($storedPassword, $password);
 
-        // Existing session variables.
-        $_SESSION['user_id']  = $row['id'];
-        $_SESSION['username'] = $row['username'];
-        $_SESSION['name']     = $row['name'];
-        $_SESSION['role']     = $row['role'];
-        $_SESSION['position'] = $row['position'];
+        if (!$validPassword) {
+            $error = "Invalid username or password!";
+            $stmt->close();
+        } else {
+            if (!password_get_info($storedPassword)['algo']) {
+                $newHash = password_hash($password, PASSWORD_DEFAULT);
+                $update = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+                $update->bind_param("si", $newHash, $row['id']);
+                $update->execute();
+                $update->close();
+            }
 
-        $stmt->close();
+            session_regenerate_id(true);
 
-        header("Location: dashboard.php");
-        exit();
+            $_SESSION['user_id']  = $row['id'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['name']     = $row['name'];
+            $_SESSION['role']     = $row['role'];
+            $_SESSION['position'] = $row['position'];
+
+            $stmt->close();
+
+            redirect('dashboard.php');
+        }
     } else {
         $error = "Invalid username or password!";
+        $stmt->close();
     }
-
-    $stmt->close();
 }
 ?>
 <!DOCTYPE html>
