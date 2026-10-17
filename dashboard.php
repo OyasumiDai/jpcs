@@ -675,7 +675,8 @@ function closeAddImageModal() {
 }
 </script>
 <link rel="stylesheet" href="css/theme.css">
-<script src="js/theme.js" defer></script>
+<script src="js/theme-init.js"></script>
+<script src="css/theme.js" defer></script>
 <script>
 (function () {
     let theme = "dark";
@@ -689,8 +690,10 @@ function closeAddImageModal() {
     document.documentElement.setAttribute("data-theme", theme);
 })();
 </script>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
+<body class="app-page admin-page">
 <div class="sidebar">
     <h2><?php echo dashboardEscape(ucfirst($role)); ?></h2>
     <a href="dashboard.php">Dashboard</a>
@@ -774,16 +777,17 @@ function closeAddImageModal() {
                 $images = [];
 
                 while ($img = $gallery->fetch_assoc()) {
+                    $img['image_path'] = image_url($img['image_path']);
                     $images[] = $img;
                 }
             ?>
                 <div class="event-card">
                     <?php if (!empty($row['poster'])) { ?>
                         <img
-                            src="<?php echo dashboardEscape($row['poster']); ?>"
+                            src="<?php echo dashboardEscape(image_url($row['poster'])); ?>"
                             alt="Poster">
                     <?php } else { ?>
-                        <img src="uploads/events/default.jpg" alt="Poster">
+                        <img src="assets/img/default.svg" alt="Poster">
                     <?php } ?>
 
                     <div>
@@ -807,9 +811,7 @@ function closeAddImageModal() {
 
                         <?php if (!empty($images)) { ?>
                             <img
-                                src="<?php
-                                    echo dashboardEscape($images[0]['image_path']);
-                                ?>"
+                            src="<?php echo dashboardEscape($images[0]['image_path']); ?>"
                                 id="slide-<?php echo $eventId; ?>"
                                 class="highlight-slide"
                                 alt="Event highlight"
@@ -850,10 +852,10 @@ function closeAddImageModal() {
                         file_exists($row['poster'])
                     ) { ?>
                         <img
-                            src="<?php echo dashboardEscape($row['poster']); ?>"
+                            src="<?php echo dashboardEscape(image_url($row['poster'])); ?>"
                             alt="Poster">
                     <?php } else { ?>
-                        <img src="uploads/events/default.jpg" alt="Poster">
+                        <img src="assets/img/default.svg" alt="Poster">
                     <?php } ?>
 
                     <div>

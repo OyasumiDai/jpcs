@@ -1,0 +1,131 @@
+/* JPCS application shell adapted from the Smilecare export: calm surfaces, hairlines, compact density. */
+body.app-page {
+  --sc-bg: #0f1212;
+  --sc-surface: #171b1b;
+  --sc-surface-2: #1d2222;
+  --sc-text: #f5f7f6;
+  --sc-muted: #aab4b3;
+  --sc-line: rgba(255, 255, 255, .12);
+  --sc-line-strong: rgba(255, 255, 255, .2);
+  --sc-accent: #f97316;
+  --sc-accent-dark: #c2410c;
+  --sc-accent-soft: rgba(249, 115, 22, .13);
+  display: flex;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--sc-text) !important;
+  background: var(--sc-bg) !important;
+  font-family: Inter, Poppins, "Segoe UI", Arial, sans-serif !important;
+}
+html[data-theme="light"] body.app-page {
+  --sc-bg: #f6f5f1;
+  --sc-surface: #ffffff;
+  --sc-surface-2: #faf9f6;
+  --sc-text: #1c2528;
+  --sc-muted: #66717a;
+  --sc-line: #e5e2db;
+  --sc-line-strong: #d0ccc3;
+  --sc-accent: #ea580c;
+  --sc-accent-dark: #c2410c;
+  --sc-accent-soft: #fff1e6;
+}
+
+.app-page .sidebar {
+  width: 236px !important;
+  padding: 16px 12px !important;
+  background: var(--sc-bg) !important;
+  color: var(--sc-text) !important;
+  border-right: 1px solid var(--sc-line) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.app-page .sidebar h2 {
+  margin: 0 0 18px !important;
+  padding: 4px 8px 16px !important;
+  text-align: left !important;
+  color: var(--sc-text) !important;
+  font-size: 18px !important;
+  letter-spacing: .01em !important;
+  border-bottom: 1px solid var(--sc-line) !important;
+}
+.app-page .sidebar h2::after { width: 28px !important; height: 2px !important; margin: 9px 0 0 !important; background: var(--sc-accent) !important; box-shadow: none !important; }
+.app-page .sidebar a {
+  display: flex !important;
+  align-items: center;
+  min-height: 34px;
+  margin: 3px 0 !important;
+  padding: 0 10px !important;
+  color: var(--sc-muted) !important;
+  border: 1px solid transparent;
+  border-radius: 6px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  line-height: 20px !important;
+}
+.app-page .sidebar a:hover,
+.app-page .sidebar a:focus-visible { color: var(--sc-text) !important; background: var(--sc-surface-2) !important; border-color: var(--sc-line) !important; box-shadow: none !important; }
+.app-page .sidebar a[href],
+.app-page .sidebar a[class] { transition: background .18s ease, color .18s ease, border-color .18s ease; }
+.app-page .content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 236px !important;
+  padding: 0 32px 56px !important;
+  background: var(--sc-surface) !important;
+}
+.app-page.student-page .content { margin-left: 0 !important; padding-top: 84px !important; }
+.app-page .content > header {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  margin: 0 -32px 28px !important;
+  padding: 0 32px !important;
+  text-align: left !important;
+  color: var(--sc-text) !important;
+  background: var(--sc-surface) !important;
+  border: 0 !important;
+  border-bottom: 1px solid var(--sc-line) !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.app-page .content > header h1 { color: var(--sc-text) !important; font-size: 20px !important; font-weight: 650 !important; letter-spacing: -.01em !important; }
+.app-page .content > header h2 { margin-left: 10px; color: var(--sc-muted) !important; font-size: 13px !important; font-weight: 400 !important; }
+.app-page .section { padding: 24px 0 !important; text-align: left !important; }
+.app-page .section h3, .app-page .page-title { margin: 0 0 18px !important; color: var(--sc-text) !important; font-size: 18px !important; font-weight: 650 !important; }
+.app-page .section h3::after, .app-page .page-title::after { display: block; width: 28px !important; height: 2px !important; margin: 8px 0 0 !important; background: var(--sc-accent) !important; box-shadow: none !important; }
+.app-page .section p { color: var(--sc-muted); }
+.app-page .welcome, .app-page .mv-card, .app-page .event-card, .app-page .officer-card, .app-page .modal-content, .app-page .panel, .app-page .card {
+  background: var(--sc-surface) !important;
+  color: var(--sc-text) !important;
+  border: 1px solid var(--sc-line) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+.app-page .welcome { padding: 24px !important; }
+.app-page .welcome h3, .app-page .mv-card h4, .app-page .event-card h4, .app-page .officer-card h4 { color: var(--sc-text) !important; }
+.app-page .welcome p, .app-page .mv-card p, .app-page .event-card p, .app-page .officer-card p { color: var(--sc-muted) !important; }
+.app-page .event-card:hover, .app-page .officer-card:hover, .app-page .mv-card:hover { transform: translateY(-2px); border-color: var(--sc-accent) !important; box-shadow: 0 8px 20px rgba(0,0,0,.12) !important; }
+.app-page .btn, .app-page button, .app-page input[type="submit"] { border-radius: 6px !important; box-shadow: none !important; }
+.app-page .btn.primary, .app-page .btn-add, .app-page button[type="submit"], .app-page input[type="submit"] { color: #fff !important; background: var(--sc-accent) !important; border-color: var(--sc-accent) !important; }
+.app-page .btn.primary:hover, .app-page .btn-add:hover, .app-page button[type="submit"]:hover, .app-page input[type="submit"]:hover { background: var(--sc-accent-dark) !important; }
+.app-page input, .app-page select, .app-page textarea { color: var(--sc-text) !important; background: var(--sc-surface) !important; border-color: var(--sc-line-strong) !important; border-radius: 6px !important; }
+.app-page input:focus, .app-page select:focus, .app-page textarea:focus { outline: 2px solid var(--sc-accent) !important; outline-offset: -1px; border-color: var(--sc-accent) !important; box-shadow: none !important; }
+.app-page table { width: 100%; color: var(--sc-text); border-collapse: collapse; background: var(--sc-surface); }
+.app-page th { color: var(--sc-muted) !important; background: var(--sc-surface-2) !important; border-color: var(--sc-line) !important; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+.app-page td { color: var(--sc-text) !important; background: var(--sc-surface) !important; border-color: var(--sc-line) !important; }
+.app-page tr:hover td { background: var(--sc-accent-soft) !important; }
+.app-page a { color: var(--sc-accent) !important; }
+.app-page footer { color: var(--sc-muted) !important; border-color: var(--sc-line) !important; }
+
+@media (max-width: 760px) {
+  .app-page .sidebar { position: relative !important; width: 100% !important; height: auto !important; min-height: 0; border-right: 0 !important; border-bottom: 1px solid var(--sc-line) !important; }
+  .app-page .sidebar h2 { text-align: center !important; }
+  .app-page .sidebar h2::after { margin: 9px auto 0 !important; }
+  .app-page .sidebar a { display: inline-flex !important; margin: 2px !important; padding: 0 9px !important; }
+  .app-page .content, .app-page.student-page .content { margin-left: 0 !important; padding: 0 16px 36px !important; }
+  .app-page .content > header { margin: 0 -16px 18px !important; padding: 0 16px !important; }
+  .app-page .content > header h1 { font-size: 17px !important; }
+}

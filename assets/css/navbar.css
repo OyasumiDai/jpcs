@@ -1,0 +1,89 @@
+.jpcs-navbar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72px;
+  padding: 10px clamp(18px, 4vw, 52px);
+  color: #fff;
+  background: rgba(12, 12, 12, .86);
+  border-bottom: 1px solid rgba(255, 166, 70, .24);
+  box-shadow: 0 8px 30px rgba(0,0,0,.18);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.jpcs-brand, .jpcs-nav-links, .jpcs-nav-actions, .jpcs-profile {
+  display: flex;
+  align-items: center;
+}
+
+.jpcs-brand { gap: 10px; color: #fff; text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
+.jpcs-brand img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.jpcs-logo-light { display: none; }
+html[data-theme="light"] .jpcs-logo-dark { display: none; }
+html[data-theme="light"] .jpcs-logo-light { display: block; }
+.jpcs-nav-links { gap: 6px; margin-left: auto; margin-right: 20px; }
+.jpcs-nav-links a { padding: 9px 13px; color: #d9d1ca; border-radius: 9px; text-decoration: none; font-size: 14px; font-weight: 600; }
+.jpcs-nav-links a:hover, .jpcs-nav-links a.active { color: #fff; background: rgba(255,133,10,.18); box-shadow: inset 0 0 0 1px rgba(255,133,10,.45); }
+.jpcs-nav-actions { gap: 9px; }
+.jpcs-nav-button { display: inline-block; padding: 9px 16px; border-radius: 9px; text-decoration: none; font-size: 14px; font-weight: 700; }
+.jpcs-nav-button.outline { color: #ffae55; border: 1px solid #ff850a; }
+.jpcs-nav-button.solid { color: #1a1008; background: linear-gradient(135deg,#ffae55,#ff7900); }
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 64px;
+  height: 36px;
+  padding: 2px;
+  border: 1px solid rgba(255, 166, 70, .5);
+  border-radius: 999px;
+  color: #ffad4d;
+  background: linear-gradient(145deg, #24201d, #100f0e);
+  font: inherit;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 5px 18px rgba(0, 0, 0, .25), 0 0 0 4px rgba(255, 122, 0, .035);
+  transition: color .2s ease, background .2s ease, border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.theme-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff7ed;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .25);
+  pointer-events: none;
+  transition: transform .25s ease, background .25s ease, box-shadow .25s ease;
+}
+.theme-toggle:hover,
+.theme-toggle:focus-visible {
+  color: #fff;
+  background: linear-gradient(145deg, rgba(255, 166, 70, .24), rgba(255, 122, 0, .13));
+  border-color: #ff850a;
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), 0 8px 22px rgba(255, 125, 0, .2), 0 0 0 4px rgba(255, 122, 0, .1);
+  outline: none;
+}
+.theme-icon { position: absolute; top: 50%; left: 5px; z-index: 1; display: inline-grid; width: 24px; height: 24px; place-items: center; padding: 0 0 1px; transform: translateY(-50%); font-family: "Segoe UI Symbol", "Arial Unicode MS", sans-serif; font-size: 20px; line-height: 24px; text-align: center; text-shadow: 0 0 10px rgba(255, 166, 70, .55); }
+html[data-theme="dark"] .theme-toggle { justify-content: initial; }
+html[data-theme="dark"] .theme-icon { left: 35px; }
+html[data-theme="dark"] .theme-toggle::after { transform: translateX(30px); background: #fff7ed; }
+.jpcs-profile { gap: 9px; color: #fff; font-size: 14px; font-weight: 700; }
+.jpcs-avatar { display: grid; width: 35px; height: 35px; place-items: center; overflow: hidden; border-radius: 50%; background: #ff850a; color: #1a1008; }
+.jpcs-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.jpcs-menu-toggle { display: none; border: 0; background: transparent; color: #fff; font-size: 28px; cursor: pointer; }
+
+@media (max-width: 760px) {
+  .jpcs-menu-toggle { display: block; }
+  .jpcs-nav-links, .jpcs-nav-actions { display: none; position: absolute; left: 12px; right: 12px; top: 68px; padding: 12px; flex-direction: column; align-items: stretch; margin: 0; border: 1px solid rgba(255,166,70,.25); border-radius: 14px; background: rgba(15,15,15,.96); }
+  .jpcs-navbar.open .jpcs-nav-links, .jpcs-navbar.open .jpcs-nav-actions { display: flex; }
+  .jpcs-nav-links a, .jpcs-nav-button { text-align: center; }
+  .jpcs-profile { justify-content: center; }
+}

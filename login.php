@@ -59,6 +59,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Login - JPCS</title>
+    <link rel="icon" type="image/png" href="assets/img/jpcs-logo.png">
+    <link rel="stylesheet" href="css/theme.css">
+    <script src="js/theme-init.js"></script>
+    <link rel="stylesheet" href="assets/css/navbar.css">
 
     <style>
         * {
@@ -68,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         body {
             margin: 0;
             min-height: 100vh;
-            padding: 30px 20px;
+            padding: 110px 20px 30px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -274,62 +278,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/auth-modern.css">
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
-    <div class="login-container">
-        <p class="brand">JP<span>C</span>S</p>
-
-        <p class="organization">
-            Junior Philippine Computer Society<br>
-            City of Malabon University
-        </p>
-
-        <div class="divider"></div>
-
-        <h2>Login</h2>
-
-        <form method="POST">
-            <div class="field">
-                <label for="username">Username</label>
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Username"
-                    autocomplete="username"
-                    value="<?php
-                        echo htmlspecialchars(
-                            $username,
-                            ENT_QUOTES,
-                            'UTF-8'
-                        );
-                    ?>"
-                    required>
-            </div>
-
-            <div class="field">
-                <label for="password">Password</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Password"
-                    autocomplete="current-password"
-                    required>
-            </div>
-
-            <button type="submit">Login</button>
-        </form>
-
-        <?php if ($error !== '') { ?>
-            <p class="error" role="alert">
-                <?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?>
-            </p>
-        <?php } ?>
-
-        <p class="back-link">
-            Back to <a href="index.php">Landing Page</a>
-        </p>
-    </div>
+<body class="auth-page">
+    <?php require __DIR__ . '/includes/navbar.php'; ?>
+    <main class="auth-layout">
+        <section class="auth-intro">
+            <img class="theme-logo-dark" src="assets/img/jpcs-logo.png" alt="JPCS logo">
+            <img class="theme-logo-light" src="assets/img/jpcs-logo-light.png" alt="JPCS logo">
+            <h1>Welcome back to <span>JPCS</span></h1>
+            <p>Stay connected with the Junior Philippine Computer Society and continue building the future through technology.</p>
+        </section>
+        <section class="auth-card login-container">
+            <h1>Login</h1>
+            <p>Use your officer or advisor account to continue.</p>
+            <?php if ($error !== '') { ?><p class="error" role="alert"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p><?php } ?>
+            <form class="auth-form" method="POST">
+                <div class="auth-field full">
+                    <label for="username">Username</label>
+                    <div class="input-wrap"><span class="field-icon" aria-hidden="true">&#128100;</span><input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" required></div>
+                </div>
+                <div class="auth-field full">
+                    <label for="password">Password</label>
+                    <div class="input-wrap password-wrap"><span class="field-icon" aria-hidden="true">&#128272;</span><input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required><button class="password-toggle" type="button" aria-label="Show password" data-password-toggle="password">&#128065;</button></div>
+                </div>
+                <div class="auth-meta"><label class="check"><input type="checkbox" name="remember" id="remember"> Remember me</label><a href="mailto:jpcs@cmu.edu.ph?subject=JPCS%20password%20reset">Forgot password?</a></div>
+                <button class="auth-submit" type="submit">Login</button>
+            </form>
+            <p class="auth-link">Don't have an account? <a href="student_register.php">Register</a></p>
+            <a class="auth-back" href="index.php">Back to landing page</a>
+        </section>
+    </main>
+    <script>
+      document.querySelector('[data-password-toggle]')?.addEventListener('click', function () {
+        const input = document.getElementById(this.dataset.passwordToggle);
+        const visible = input.type === 'text';
+        input.type = visible ? 'password' : 'text';
+        this.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+      });
+    </script>
 </body>
 </html>

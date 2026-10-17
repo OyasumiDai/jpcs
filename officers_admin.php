@@ -34,6 +34,8 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <title>JPCS Admin Dashboard</title>
   <style>
@@ -125,8 +127,10 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
       }
     }
   </script>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
+<body class="app-page admin-page">
   <div class="sidebar">
     <h2>Admin</h2>
     <a href="dashboard.php">Dashboard</a>
@@ -174,9 +178,9 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
         <?php while($row = $highlights->fetch_assoc()) { ?>
         <div class="event-card">
           <?php if(!empty($row['poster'])) { ?>
-            <img src="<?php echo $row['poster']; ?>" alt="Poster">
+            <img src="<?php echo e(image_url($row['poster'])); ?>" alt="Poster">
           <?php } else { ?>
-            <img src="uploads/events/default.jpg" alt="Poster">
+            <img src="assets/img/default.svg" alt="Poster">
           <?php } ?>
           <div>
             <h4><?php echo $row['title']; ?></h4>
@@ -190,7 +194,7 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
               $gallery = $conn->query("SELECT * FROM highlight_images WHERE event_id=".$row['id']." ORDER BY uploaded_at DESC");
               $images = [];
               while($img = $gallery->fetch_assoc()) {
-                  $images[] = $img['image_path'];
+                  $images[] = image_url($img['image_path']);
               }
               foreach($images as $index => $path) {
                   echo "<img src='".$path."' onclick='openViewer(".json_encode($images).",".$index.")'>";

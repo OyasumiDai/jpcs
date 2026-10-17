@@ -100,6 +100,8 @@ function registerListEscape($value) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register List</title>
@@ -575,9 +577,11 @@ function registerListEscape($value) {
       }
     }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
 
-<body>
+<body class="app-page admin-page">
   <div class="sidebar">
     <h2><?php echo registerListEscape(ucfirst($role)); ?></h2>
 
@@ -610,7 +614,7 @@ function registerListEscape($value) {
           <?php while($row = $events->fetch_assoc()) { ?>
             <div class="event-card">
               <img
-                src="<?php echo registerListEscape($row['poster']); ?>"
+                src="<?php echo registerListEscape(image_url($row['poster'])); ?>"
                 alt="Poster"
               >
 

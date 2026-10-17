@@ -1,0 +1,126 @@
+/* Final presentation layer: scoped overrides for legacy page styles. */
+:root {
+  --ui-bg: #10100f; --ui-panel: #191817; --ui-soft: #22201d;
+  --ui-text: #f5f2ee; --ui-muted: #bbb3aa; --ui-line: #3e3730;
+  --ui-accent: #ffad66; --ui-action: #b9430b; --ui-action-hover: #963508;
+  --ui-shadow: 0 8px 24px #00000018; --ui-radius: 14px;
+}
+html[data-theme="light"] {
+  --ui-bg: #f7f5f2; --ui-panel: #ffffff; --ui-soft: #f2ede7;
+  --ui-text: #29241f; --ui-muted: #655c53; --ui-line: #ddd5cb;
+  --ui-accent: #a43c0a; --ui-shadow: 0 8px 24px #49321d08;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 100px; }
+body { -webkit-font-smoothing: antialiased; }
+html body :is(a, button, input, select, textarea):focus-visible {
+  outline: 3px solid var(--ui-accent) !important; outline-offset: 3px;
+}
+html body :is(button, input, select, textarea) { font-family: inherit; }
+html body button:disabled { opacity: .6; cursor: wait; }
+html body.app-page { display: block; background: var(--ui-bg) !important; color: var(--ui-text) !important; }
+html body.app-page .content {
+  min-height: 100vh; background: var(--ui-bg) !important;
+  padding: 24px 36px 56px !important;
+}
+html body.app-page.student-page .content { padding-top: 104px !important; }
+html body.app-page .content > header {
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+  gap: 6px; margin: 0 0 28px !important; padding: 0 0 22px !important;
+  background: transparent !important; border-color: var(--ui-line) !important;
+}
+html body.app-page .content > header h1 { margin: 0; font-size: clamp(22px, 2.4vw, 30px) !important; color: var(--ui-text) !important; }
+html body.app-page .content > header h2 { margin: 0; color: var(--ui-muted) !important; }
+html body.app-page .sidebar { background: var(--ui-panel) !important; border-color: var(--ui-line) !important; }
+html body.app-page .sidebar h2 { color: var(--ui-text) !important; text-shadow: none; }
+html body.app-page .sidebar a {
+  min-height: 42px; padding: 9px 12px !important; color: var(--ui-muted) !important;
+  background: transparent !important; box-shadow: none !important;
+}
+html body.app-page .sidebar a:is(:hover, [aria-current="page"]) {
+  color: var(--ui-accent) !important; background: var(--ui-soft) !important; border-color: var(--ui-line) !important;
+}
+html body.app-page :is(.card, .panel, .table-panel, .welcome, .event-card, .officer-card, .mv-card, .modal-content) {
+  color: var(--ui-text) !important; background: var(--ui-panel) !important;
+  border: 1px solid var(--ui-line) !important; border-radius: var(--ui-radius) !important;
+  box-shadow: var(--ui-shadow) !important;
+}
+html body.app-page :is(.welcome, .mv-card) { padding: 24px !important; }
+html body.app-page :is(.welcome, .mv-card, .event-card, .officer-card) p { color: var(--ui-muted) !important; line-height: 1.7; }
+html body.app-page :is(.section h3, .page-title, .event-card h4, .officer-card h4) { color: var(--ui-text) !important; }
+html body.app-page :is(.events, .officer-grid, .mv-container) { gap: 24px; }
+html body.app-page :is(.event-card, .officer-card) { overflow: hidden; }
+html body.app-page :is(.table-wrapper, .table-container, .ui-table-scroll) {
+  max-width: 100%; overflow-x: auto; border: 1px solid var(--ui-line); border-radius: 12px;
+}
+html body.app-page table { margin: 0; font-size: 14px; font-variant-numeric: tabular-nums; }
+html body.app-page :is(th, td) { padding: 14px 16px; border-color: var(--ui-line) !important; }
+html body.app-page th { background: var(--ui-soft) !important; color: var(--ui-muted) !important; text-align: left; }
+html body.app-page td { color: var(--ui-text) !important; background: var(--ui-panel) !important; }
+html body.app-page tr:hover td { background: var(--ui-soft) !important; }
+html body:is(.app-page, .auth-page) :is(input, select, textarea) {
+  color: var(--ui-text) !important; background: var(--ui-panel) !important;
+  border-color: var(--ui-line) !important; border-radius: 9px !important;
+}
+html body:is(.app-page, .auth-page) input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+html body:is(.app-page, .auth-page) select { min-height: 44px; }
+html body:is(.app-page, .auth-page) :is(input, textarea)::placeholder { color: var(--ui-muted) !important; opacity: 1; }
+html body:is(.app-page, .auth-page) label { color: var(--ui-text) !important; }
+html body.app-page :is(button[type="submit"], input[type="submit"], .btn.primary, .btn-add) {
+  background: var(--ui-action) !important; color: white !important; border-color: var(--ui-action) !important;
+}
+html body.app-page :is(button[type="submit"], input[type="submit"], .btn.primary, .btn-add):hover {
+  background: var(--ui-action-hover) !important;
+}
+html body.app-page .content > header h2 { margin-left: 0; }
+html body .auth-submit { color: white !important; background: var(--ui-action) !important; margin-top: 20px; }
+html body .auth-submit:hover { background: var(--ui-action-hover) !important; }
+html body.auth-page { margin: 0; background: var(--ui-bg) !important; color: var(--ui-text); }
+html body.auth-page .auth-layout { border-color: var(--ui-line); background: var(--ui-panel); }
+html body.auth-page .auth-card { background: var(--ui-panel) !important; text-align: left; }
+html body.auth-page .auth-card h1 { text-align: left; color: var(--ui-text) !important; }
+html body.auth-page .auth-card p { color: var(--ui-muted) !important; }
+html body.auth-page .password-toggle { background: transparent !important; color: var(--ui-accent) !important; }
+html body.auth-page .error { color: var(--ui-text) !important; background: var(--ui-soft) !important; }
+html body.auth-page .success { color: var(--ui-text) !important; background: var(--ui-soft) !important; }
+html body .jpcs-navbar { background: var(--ui-panel) !important; border-color: var(--ui-line); box-shadow: var(--ui-shadow); }
+html body .jpcs-navbar :is(.jpcs-brand, .jpcs-profile, .jpcs-menu-toggle) { color: var(--ui-text) !important; }
+html body .jpcs-nav-links a { color: var(--ui-muted) !important; }
+html body .jpcs-nav-links a:is(:hover, .active) { color: var(--ui-accent) !important; background: var(--ui-soft); box-shadow: none; }
+html body .jpcs-nav-button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; }
+html body .jpcs-nav-button.solid { background: var(--ui-action); color: white !important; }
+html body .jpcs-nav-button.outline { color: var(--ui-accent) !important; border-color: var(--ui-accent); }
+html body .jpcs-menu-toggle { width: 44px; min-height: 44px; padding: 0; margin: 0; background: transparent !important; box-shadow: none; }
+html body.public-page { background: var(--ui-bg) !important; }
+html body.public-page .content { background: transparent !important; }
+html body.public-page .content > .section { padding: 32px 0; margin-top: 28px; background: transparent !important; box-shadow: none !important; border: 0; }
+html body.public-page :is(.highlight-card, .mv-card, .event-card) { background: var(--ui-panel) !important; border-color: var(--ui-line) !important; border-radius: var(--ui-radius); box-shadow: var(--ui-shadow); }
+html body.public-page :is(.highlight-card, .mv-card, .event-card) p { color: var(--ui-muted) !important; }
+html body.public-page .section h3 { color: var(--ui-text) !important; }
+html body.public-page .hero-banner h1 { color: #fffaf4 !important; }
+html body.public-page .hero-banner__chapter, html body.public-page .hero-banner__chapter strong { color: #fffaf4 !important; }
+@media (max-width: 760px) {
+  html body.app-page .content { padding: 24px 16px 36px !important; }
+  html body.app-page.student-page .content { padding-top: 100px !important; }
+  html body.app-page .sidebar { position: relative !important; height: auto !important; }
+  html body.app-page .content > header { margin: 0 0 20px !important; }
+  html body .jpcs-navbar { flex-wrap: wrap; }
+  html body .jpcs-nav-links, html body .jpcs-nav-actions {
+    position: static; width: 100%; margin: 0; padding: 12px 0; border: 0;
+    background: var(--ui-panel); border-radius: 0; gap: 8px;
+  }
+  html body .jpcs-navbar.open { max-height: 90dvh; overflow-y: auto; }
+  html body .jpcs-navbar.open .jpcs-nav-links { order: 3; }
+  html body .jpcs-navbar.open .jpcs-nav-actions { order: 4; border-top: 1px solid var(--ui-line); }
+  html body .jpcs-navbar .theme-toggle { flex-shrink: 0; align-self: center; }
+  html body.app-page :is(.events, .mv-container) { display: grid; grid-template-columns: minmax(0, 1fr); }
+  html body.auth-page { padding: 100px 12px 28px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  html body.app-page .content { margin: 0 !important; padding: 0 !important; }
+  html body.app-page .sidebar, .jpcs-navbar { display: none !important; }
+  .ui-table-scroll { overflow: visible !important; border: 0 !important; }
+}

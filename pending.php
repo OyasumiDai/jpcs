@@ -484,6 +484,8 @@ if ($selectedEventID !== null) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Student Registered Pending</title>
@@ -641,8 +643,10 @@ if ($selectedEventID !== null) {
             .card { max-width:100%; }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
+<body class="app-page admin-page">
 <div class="sidebar">
     <h2><?= pendingEscape(ucfirst($role)) ?></h2>
     <a href="dashboard.php">Dashboard</a>
@@ -680,7 +684,7 @@ if ($selectedEventID !== null) {
                 <div class="card">
                     <a href="pending.php?event_id=<?= (int) $row['id'] ?>">
                         <img src="<?= pendingEscape(
-                            $row['poster'] ?: 'uploads/events/default.jpg'
+                            image_url($row['poster'])
                         ) ?>" alt="Event Poster">
                         <h4>
                             <?= pendingEscape($row['title']) ?><br>

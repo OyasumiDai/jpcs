@@ -1,5 +1,6 @@
 <?php
-include 'db.php';
+require_once __DIR__ . '/includes/student_auth.php';
+require_student();
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -293,6 +294,10 @@ $events = $conn->query(
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Event Registration</title>
+    <link rel="icon" type="image/png" href="assets/img/jpcs-logo.png">
+    <link rel="stylesheet" href="css/theme.css">
+    <script src="js/theme-init.js"></script>
+    <link rel="stylesheet" href="assets/css/navbar.css">
 
     <style>
         * {
@@ -656,16 +661,14 @@ $events = $conn->query(
                 font-size: 16px;
             }
         }
+        .sidebar { display: none !important; }
+        .content { margin-left: 0 !important; width: 100%; padding-top: 100px !important; }
     </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
-    <div class="sidebar">
-        <h2>JPCS</h2>
-        <a href="index.php">Landing Page</a>
-        <a href="pofficer.php">Officer Information</a>
-        <a href="registration.php">Event Registration</a>
-        <a href="login.php">Admin Login</a>
-    </div>
+<body class="app-page student-page">
+    <?php require __DIR__ . '/includes/navbar.php'; ?>
 
     <div class="content">
         <header>

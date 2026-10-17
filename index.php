@@ -1,5 +1,8 @@
 <?php
-include 'db.php';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/includes/student_auth.php';
+
+$student = current_student();
 
 // Fetch highlights (done events, limit 3 for landing page)
 $highlights = $conn->query("SELECT * FROM events WHERE status='done' ORDER BY event_date DESC LIMIT 3");
@@ -12,7 +15,12 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>JPCS Event System - Landing Page</title>
+  <link rel="icon" type="image/png" href="assets/img/jpcs-logo.png">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/navbar.css">
   <style>
   :root {
     --orange: #ff850a;
@@ -151,8 +159,8 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
   .content {
     flex: 1;
     min-width: 0;
-    margin-left: 240px;
-    padding: 30px;
+    margin-left: 0;
+    padding: 105px 30px 30px;
   }
 
   header,
@@ -692,27 +700,27 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
       document.getElementById('viewerImg').src = currentImages[currentIndex];
     }
   </script>
+  <link rel="stylesheet" href="assets/css/landing-page.css">
+  <link rel="stylesheet" href="assets/css/hero-banner.css">
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>JPCS</h2>
-    <a href="index.php">Landing Page</a>
-    <a href="pofficer.php">Officer Information</a>
-    <a href="registration.php">Event Registration</a>
-    <a href="login.php">Admin Login</a>
-  </div>
+<body class="public-page">
+  <?php require __DIR__ . '/includes/navbar.php'; ?>
 
   <!-- Content -->
   <div class="content">
-    <header>
-      <h1>Junior Philippine Computer Society</h1>
-      <h2>City of Malabon University</h2>
-    </header>
+    <?php require __DIR__ . '/includes/hero-banner.php'; ?>
 
-    <div class="section">
-      <h3 >Welcome to the Official JPCS Event System</h3>
-      <p>Empowering students through technology, leadership, and innovation.</p>
+
+    <div class="section highlights-section">
+      <h3>What we build together</h3>
+      <div class="highlights-grid">
+        <article class="highlight-card"><span class="highlight-icon" aria-hidden="true">&#9733;</span><h4>Events</h4><p>Connect through meaningful activities and campus experiences.</p></article>
+        <article class="highlight-card"><span class="highlight-icon" aria-hidden="true">&#9881;</span><h4>Training</h4><p>Learn practical skills that turn curiosity into confidence.</p></article>
+        <article class="highlight-card"><span class="highlight-icon" aria-hidden="true">&#9829;</span><h4>Collaboration</h4><p>Work with peers, mentors, and communities that inspire.</p></article>
+        <article class="highlight-card"><span class="highlight-icon" aria-hidden="true">&#9734;</span><h4>Leadership</h4><p>Grow as a responsible and creative future IT professional.</p></article>
+      </div>
     </div>
 
     <!-- Mission & Vision -->
@@ -737,9 +745,9 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
         <?php while($row = $highlights->fetch_assoc()) { ?>
         <div class="event-card">
           <?php if(!empty($row['poster']) && file_exists($row['poster'])) { ?>
-            <img src="<?php echo $row['poster']; ?>" alt="Poster">
+            <img src="<?php echo e(image_url($row['poster'])); ?>" alt="Poster">
           <?php } else { ?>
-            <img src="uploads/events/default.jpg" alt="Poster">
+            <img src="assets/img/default.svg" alt="Poster">
           <?php } ?>
           <div>
             <h4><?php echo $row['title']; ?></h4>
@@ -751,11 +759,11 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
 $gallery = $conn->query("SELECT * FROM highlight_images WHERE event_id=".$row['id']." ORDER BY uploaded_at DESC");
 $images = [];
 while($img = $gallery->fetch_assoc()) {
-    $images[] = $img['image_path'];
+    $images[] = image_url($img['image_path']);
 }
 if(!empty($images)) {
 ?>
-  <img src="<?php echo $images[0]; ?>" 
+  <img src="<?php echo e(image_url($images[0])); ?>" 
        id="slide-<?php echo $row['id']; ?>" 
        style="width:100%;height:180px;object-fit:cover;cursor:pointer;border-radius:8px;margin-top:10px;"
        onclick='openViewer(<?php echo json_encode($images); ?>,0)'>
@@ -786,9 +794,9 @@ if(!empty($images)) {
         <?php while($row = $upcoming->fetch_assoc()) { ?>
         <div class="event-card">
           <?php if(!empty($row['poster']) && file_exists($row['poster'])) { ?>
-            <img src="<?php echo $row['poster']; ?>" alt="Poster">
+            <img src="<?php echo e(image_url($row['poster'])); ?>" alt="Poster">
           <?php } else { ?>
-            <img src="uploads/events/default.jpg" alt="Poster">
+            <img src="assets/img/default.svg" alt="Poster">
           <?php } ?>
           <div>
             <h4><?php echo $row['title']; ?></h4>
@@ -796,7 +804,7 @@ if(!empty($images)) {
                <strong>Time:</strong> <?php echo $row['event_time']; ?></p>
             <p><strong>Location:</strong> <?php echo $row['location']; ?></p>
               <p><?php echo $row['description']; ?></p>
-            <a href="registration.php?event_id=<?php echo $row['id']; ?>" class="btn">Register Now</a>
+            <a href="<?php echo $student ? 'registration.php?event_id=' . (int) $row['id'] : 'student_register.php'; ?>" class="btn"><?php echo $student ? 'Register Now' : 'Register to join'; ?></a>
           </div>
         </div>
         <?php } ?>
@@ -814,11 +822,23 @@ if(!empty($images)) {
     <div class="section">
       <h3>Get Started</h3>
       <p>Register for upcoming events, explore officer information, and stay connected with JPCS activities.</p>
-      <a href="registration.php" class="btn">Register Now</a>
-      <a href="login.php" class="btn">Admin Login</a>
+      <a href="student_register.php" class="btn">Register Now</a>
+      <a href="login.php" class="btn">Login</a>
     </div>
 
     <footer>
+      <div>
+        <div class="footer-brand"><img class="theme-logo-dark" src="assets/img/jpcs-logo.png" alt="JPCS logo"><img class="theme-logo-light" src="assets/img/jpcs-logo-light.png" alt="JPCS logo"><span>JPCS</span></div>
+        <p class="footer-copy">A student-led community empowering future IT professionals through technology, leadership, and innovation.</p>
+      </div>
+      <div>
+        <strong>Quick links</strong>
+        <div class="footer-links"><a href="index.php">Home</a><a href="student_register.php">Register</a><a href="login.php">Login</a></div>
+      </div>
+      <div class="footer-social" aria-label="Social links">
+        <a href="mailto:jpcs@cmu.edu.ph" aria-label="Email JPCS">&#9993;</a>
+        <a href="index.php" aria-label="JPCS home">&#8962;</a>
+      </div>
       <p>&copy; 2026 Junior Philippine Computer Society - City of Malabon University</p>
     </footer>
   </div>

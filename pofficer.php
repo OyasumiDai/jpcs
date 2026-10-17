@@ -1,6 +1,6 @@
 <?php
-session_start();
-include 'db.php';
+require_once __DIR__ . '/includes/student_auth.php';
+require_student();
 
 // Get all officers and advisor/admin
 $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_advisor' ORDER BY id ASC");
@@ -12,6 +12,10 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Officer Information</title>
+  <link rel="icon" type="image/png" href="assets/img/jpcs-logo.png">
+  <link rel="stylesheet" href="css/theme.css">
+  <script src="js/theme-init.js"></script>
+  <link rel="stylesheet" href="assets/css/navbar.css">
 
   <style>
     body {
@@ -385,17 +389,15 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
         transform: none;
       }
     }
+
+    .sidebar { display: none !important; }
+    .content { margin-left: 0 !important; padding: 100px 20px 20px !important; }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <h2>JPCS</h2>
-    <a href="index.php">Landing Page</a>
-    <a href="pofficer.php">Officer Information</a>
-    <a href="registration.php">Event Registration</a>
-    <a href="login.php">Admin Login</a>
-  </div>
+<body class="app-page student-page officer-page">
+  <?php require __DIR__ . '/includes/navbar.php'; ?>
 
   <!-- Content -->
   <div class="content">
@@ -408,7 +410,7 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
 
     <div class="officer-grid">
       <?php while($row = $result->fetch_assoc()) {
-        $photo = $row['photo'] ? $row['photo'] : 'assets/img/default.png';
+        $photo = image_url($row['photo']);
       ?>
         <div class="officer-card">
           <img

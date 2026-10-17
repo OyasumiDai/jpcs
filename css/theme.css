@@ -1,0 +1,291 @@
+@import url("../assets/css/smilecare-app.css");
+
+/* =====================================
+   JPCS GLOBAL LIGHT & DARK MODE
+===================================== */
+
+/* LIGHT MODE: Orange and White. Dark mode values below remain unchanged. */
+html[data-theme="light"] {
+    color-scheme: light;
+
+    --bg-color: #ffffff;
+    --sidebar-bg: #ffffff;
+    --card-bg: #fffaf5;
+    --text-color: #1a1a1a;
+    --muted-color: #555555;
+    --border-color: rgba(234, 88, 12, 0.28);
+    --input-bg: #ffffff;
+    --hover-bg: #fff7ed;
+    --accent: #f97316;
+    --accent-hover: #ea580c;
+    --shadow: 0 10px 28px rgba(124, 45, 18, 0.12);
+}
+
+/* DARK MODE */
+html[data-theme="dark"] {
+    color-scheme: dark;
+
+    --bg-color: #090909;
+    --sidebar-bg: #11100f;
+    --card-bg: #1b1715;
+    --text-color: #ffffff;
+    --muted-color: #c7c0bb;
+    --border-color: #54361d;
+    --input-bg: #241d18;
+    --hover-bg: #3b2515;
+    --accent: #ff9b3d;
+    --accent-hover: #ffa94d;
+    --shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* PAGE */
+html,
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+}
+
+body {
+    transition: background-color .25s, color .25s;
+}
+
+/* SIDEBAR */
+html[data-theme] .sidebar {
+    background: var(--sidebar-bg);
+    color: var(--text-color);
+    border-right: 1px solid var(--border-color);
+}
+
+html[data-theme] .sidebar h2,
+html[data-theme] .sidebar a {
+    color: var(--text-color);
+}
+
+html[data-theme] .sidebar a:hover {
+    background: var(--hover-bg);
+}
+
+/* COMMON CONTAINERS */
+html[data-theme] :is(.card,
+    .stat-card,
+    .dashboard-card,
+    .event-card,
+    .info-card,
+    .panel,
+    .modal-content) {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow);
+}
+
+/* TABLES */
+html[data-theme] table {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+html[data-theme] th {
+    background: var(--hover-bg);
+    color: var(--text-color);
+}
+
+html[data-theme] td {
+    background: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+/* FORMS */
+html[data-theme] input,
+html[data-theme] select,
+html[data-theme] textarea {
+    background: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+html[data-theme] input::placeholder,
+html[data-theme] textarea::placeholder {
+    color: var(--muted-color);
+}
+
+/* THEME SWITCHER */
+#themeToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(100% - 24px);
+    margin: 14px 12px;
+    padding: 12px;
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#themeToggle:hover {
+    background: var(--hover-bg);
+}
+
+/* PAGE-SPECIFIC COLORS */
+html[data-theme="light"] {
+    --jpcs-heading: #172033;
+    --jpcs-surface: #ffffff;
+}
+
+:root,
+html[data-theme="dark"] {
+    --jpcs-heading: #ffffff;
+    --jpcs-surface: #1b1715;
+}
+
+/* Shared light-theme refinements for pages with inline legacy styles. */
+html[data-theme="light"] body,
+html[data-theme="light"] .content {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+}
+
+html[data-theme="light"] header,
+html[data-theme="light"] .event-card,
+html[data-theme="light"] .mv-card,
+html[data-theme="light"] .modal-content,
+html[data-theme="light"] .login-container,
+html[data-theme="light"] .auth-card,
+html[data-theme="light"] .section {
+    background: linear-gradient(145deg, #ffffff, #fff7ed) !important;
+    color: #1a1a1a !important;
+    border-color: rgba(234, 88, 12, .28) !important;
+    box-shadow: var(--shadow) !important;
+}
+
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+html[data-theme="light"] h4,
+html[data-theme="light"] h5,
+html[data-theme="light"] h6,
+html[data-theme="light"] strong,
+html[data-theme="light"] label {
+    color: #1a1a1a !important;
+}
+
+html[data-theme="light"] p,
+html[data-theme="light"] td,
+html[data-theme="light"] .organization,
+html[data-theme="light"] .muted {
+    color: #555555 !important;
+}
+
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+html[data-theme="light"] textarea {
+    background: #ffffff !important;
+    color: #1a1a1a !important;
+    border-color: rgba(234, 88, 12, .28) !important;
+}
+
+html[data-theme="light"] input::placeholder,
+html[data-theme="light"] textarea::placeholder {
+    color: #666666 !important;
+}
+
+html[data-theme="light"] button,
+html[data-theme="light"] .btn,
+html[data-theme="light"] .btn-add,
+html[data-theme="light"] .primary {
+    color: #1a1008 !important;
+    background: linear-gradient(135deg, #ffa94d, #f97316) !important;
+}
+
+html[data-theme="light"] button:hover,
+html[data-theme="light"] .btn:hover,
+html[data-theme="light"] .btn-add:hover,
+html[data-theme="light"] .primary:hover {
+    background: #ea580c !important;
+}
+
+html[data-theme="light"] table,
+html[data-theme="light"] th,
+html[data-theme="light"] td {
+    border-color: rgba(234, 88, 12, .22) !important;
+}
+
+html[data-theme="light"] th {
+    background: #fff7ed !important;
+}
+
+html[data-theme="light"] .theme-toggle {
+    justify-content: flex-start;
+    color: #ea580c !important;
+    background: linear-gradient(145deg, #ffffff, #fff7ed) !important;
+    border-color: rgba(234, 88, 12, .45) !important;
+    box-shadow: inset 0 1px 0 #ffffff, 0 5px 18px rgba(124, 45, 18, .14), 0 0 0 4px rgba(234, 88, 12, .05) !important;
+}
+
+html[data-theme="light"] .theme-toggle::after {
+    transform: translateX(0);
+    background: #f97316;
+    box-shadow: 0 2px 8px rgba(234, 88, 12, .25);
+}
+
+html[data-theme="light"] .theme-icon {
+    color: #9a3412;
+    text-shadow: none;
+}
+
+html[data-theme="light"] .theme-toggle:hover,
+html[data-theme="light"] .theme-toggle:focus-visible {
+    color: #c2410c !important;
+    background: linear-gradient(145deg, #fff7ed, #ffedd5) !important;
+    border-color: #ea580c !important;
+    box-shadow: 0 8px 22px rgba(234, 88, 12, .18), 0 0 0 4px rgba(234, 88, 12, .1) !important;
+}
+
+/* Keep the dark-mode control dark and visually aligned with the navbar. */
+html[data-theme="dark"] .theme-toggle {
+    color: #ffad4d !important;
+    background: linear-gradient(145deg, #24201d, #100f0e) !important;
+    border-color: rgba(255, 166, 70, .48) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 5px 18px rgba(0, 0, 0, .34), 0 0 0 4px rgba(255, 122, 0, .04) !important;
+}
+
+html[data-theme="dark"] .theme-toggle::after {
+    transform: translateX(30px);
+    background: #fff7ed;
+}
+
+html[data-theme="dark"] .theme-toggle {
+    background: linear-gradient(180deg, #211811, #140e0a) !important;
+    border-color: #874b18 !important;
+    box-shadow: inset 0 1px 0 rgba(255, 190, 115, .08), 0 5px 16px rgba(0, 0, 0, .38), 0 0 0 4px rgba(255, 122, 0, .05) !important;
+}
+
+html[data-theme="dark"] .theme-toggle::after {
+    background: #fffaf3;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .35);
+}
+
+html[data-theme="dark"] .theme-icon {
+    font-size: 22px;
+    color: #292524;
+}
+
+html[data-theme="dark"] .theme-icon {
+    color: #292524;
+    text-shadow: none;
+}
+
+html[data-theme="dark"] .theme-toggle:hover,
+html[data-theme="dark"] .theme-toggle:focus-visible {
+    color: #ffffff !important;
+    background: linear-gradient(145deg, #382417, #19130f) !important;
+    border-color: #ff850a !important;
+}
+
+html[data-theme="light"] .jpcs-logo-dark { display: none !important; }
+html[data-theme="light"] .jpcs-logo-light { display: block !important; }

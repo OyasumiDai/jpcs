@@ -33,6 +33,8 @@ function officerEscape($value) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Officer Information</title>
@@ -319,8 +321,10 @@ function officerEscape($value) {
             }
         }
     </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
+<body class="app-page admin-page">
     <div class="sidebar">
         <h2><?php echo officerEscape(ucfirst($role)); ?></h2>
 
@@ -352,11 +356,11 @@ function officerEscape($value) {
                 <div class="officer-card">
                     <?php if ($row['photo']) { ?>
                         <img
-                            src="<?php echo officerEscape($row['photo']); ?>"
+                            src="<?php echo officerEscape(image_url($row['photo'])); ?>"
                             alt="<?php echo officerEscape($row['name']); ?>">
                     <?php } else { ?>
                         <img
-                            src="assets/img/default.png"
+                            src="assets/img/default.svg"
                             alt="No Photo">
                     <?php } ?>
 

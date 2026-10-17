@@ -166,6 +166,19 @@ INSERT INTO `registrations` (`id`, `event_id`, `student_name`, `student_id`, `co
 
 -- --------------------------------------------------------
 
+CREATE TABLE `student_accounts` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `full_name` varchar(150) NOT NULL,
+  `student_id` varchar(50) NOT NULL,
+  `email` varchar(150) NOT NULL,
+  `course_year` varchar(100) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `student_accounts_student_id_unique` (`student_id`),
+  UNIQUE KEY `student_accounts_email_unique` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 --
 -- Table structure for table `users`
 --

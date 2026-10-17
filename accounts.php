@@ -229,6 +229,8 @@ if (isset($_GET['edit'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Account Management</title>
@@ -675,9 +677,11 @@ if (isset($_GET['edit'])) {
       }
     }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
 
-<body>
+<body class="app-page admin-page">
   <div class="sidebar">
     <h2>Admin</h2>
     <a href="dashboard.php">Dashboard</a>
@@ -747,7 +751,7 @@ if (isset($_GET['edit'])) {
                 <td>
                   <?php if ($row['photo']) { ?>
                     <img
-                      src="<?php echo accountEscape($row['photo']); ?>"
+                      src="<?php echo accountEscape(image_url($row['photo'])); ?>"
                       alt="<?php echo accountEscape($row['name']); ?>"
                       class="account-photo"
                     >
@@ -971,7 +975,7 @@ if (isset($_GET['edit'])) {
             <?php if ($editRow['photo']) { ?>
               <div class="current-photo">
                 <img
-                  src="<?php echo accountEscape($editRow['photo']); ?>"
+                  src="<?php echo accountEscape(image_url($editRow['photo'])); ?>"
                   alt="Current photo"
                   class="account-photo"
                 >

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <title>JPCS Admin Dashboard</title>
   <style>
@@ -76,8 +78,10 @@
       margin-bottom:10px;
     }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
+<body class="app-page admin-page">
   <!-- Sidebar -->
   <div class="sidebar">
     <h2>Admin</h2>

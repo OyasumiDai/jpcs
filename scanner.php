@@ -159,6 +159,8 @@ $upcoming = $conn->query("
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Event Attendance Scanner</title>
@@ -557,8 +559,10 @@ $upcoming = $conn->query("
     transform: scaleX(-1);
 }
     </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
+<body class="app-page admin-page">
     <div class="sidebar">
         <h2><?php echo scannerEscape(ucfirst($role)); ?></h2>
 
@@ -607,7 +611,7 @@ $upcoming = $conn->query("
                         <?php while ($row = $upcoming->fetch_assoc()) { ?>
                             <div class="event-card">
                                 <img
-                                    src="<?php echo scannerEscape($row['poster']); ?>"
+                                    src="<?php echo scannerEscape(image_url($row['poster'])); ?>"
                                     alt="Poster">
 
                                 <div>

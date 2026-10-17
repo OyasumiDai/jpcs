@@ -89,6 +89,8 @@ function eventEscape($value) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Event Management</title>
@@ -589,9 +591,11 @@ function eventEscape($value) {
       }
     }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
 
-<body>
+<body class="app-page admin-page">
   <!-- Sidebar -->
   <div class="sidebar">
   <h2><?php echo htmlspecialchars(ucfirst($role), ENT_QUOTES, 'UTF-8'); ?></h2>
@@ -634,11 +638,11 @@ function eventEscape($value) {
         <div class="event-card">
           <?php if (!empty($row['poster']) && file_exists($row['poster'])) { ?>
             <img
-              src="<?php echo eventEscape($row['poster']); ?>"
+              src="<?php echo eventEscape(image_url($row['poster'])); ?>"
               alt="Poster"
             >
           <?php } else { ?>
-            <img src="uploads/events/default.jpg" alt="Poster">
+            <img src="assets/img/default.svg" alt="Poster">
           <?php } ?>
 
           <div class="info">

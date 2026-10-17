@@ -13,6 +13,8 @@ $events = $conn->query("SELECT * FROM events ORDER BY event_date DESC");
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Attendance List per Event</title>
@@ -317,9 +319,11 @@ $events = $conn->query("SELECT * FROM events ORDER BY event_date DESC");
       }
     }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
 
-<body>
+<body class="app-page admin-page">
   <!-- Sidebar -->
   <div class="sidebar">
     <h2><?php echo ucfirst($role); ?></h2>
@@ -348,7 +352,7 @@ $events = $conn->query("SELECT * FROM events ORDER BY event_date DESC");
     <div class="events">
       <?php while($row = $events->fetch_assoc()) { ?>
         <div class="event-card">
-          <img src="<?php echo $row['poster']; ?>" alt="Poster">
+          <img src="<?php echo e(image_url($row['poster'])); ?>" alt="Poster">
 
           <h3><?php echo $row['title']; ?></h3>
 

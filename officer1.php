@@ -9,6 +9,8 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <title>Officer Information</title>
   <style>
@@ -44,8 +46,10 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
     .officer-card h4 { margin:10px 0 5px 0; color:#f39c12; }
     .officer-card p { margin:0 0 15px 0; color:#000; font-weight:bold; }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
-<body>
+<body class="app-page officer-page">
   <!-- Sidebar -->
   <div class="sidebar">
     <h2>Admin</h2>
@@ -67,9 +71,9 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
       <?php while($row = $result->fetch_assoc()) { ?>
         <div class="officer-card">
           <?php if($row['photo']) { ?>
-            <img src="<?php echo $row['photo']; ?>" alt="<?php echo $row['name']; ?>">
+            <img src="<?php echo e(image_url($row['photo'])); ?>" alt="<?php echo e($row['name']); ?>">
           <?php } else { ?>
-            <img src="assets/img/default.png" alt="No Photo">
+            <img src="assets/img/default.svg" alt="No Photo">
           <?php } ?>
           <h4><?php echo $row['name']; ?></h4>
           <p><?php echo $row['position']; ?></p>

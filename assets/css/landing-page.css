@@ -1,0 +1,175 @@
+/* Landing page presentation layer. PHP data and existing event behavior stay unchanged. */
+:root {
+  --landing-surface: var(--card-bg, #1b1715);
+  --landing-border: var(--border-color, rgba(255, 166, 70, .25));
+  --landing-muted: var(--muted-color, #c7c0bb);
+  --landing-orange: var(--accent, #ff9b3d);
+}
+
+body {
+  display: block !important;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-family: Inter, Poppins, "Segoe UI", Arial, sans-serif !important;
+  color: var(--text-color, #fff) !important;
+  background:
+    radial-gradient(circle at 92% 5%, color-mix(in srgb, var(--landing-orange) 20%, transparent), transparent 30%),
+    radial-gradient(circle at 6% 88%, color-mix(in srgb, var(--landing-orange) 12%, transparent), transparent 34%),
+    var(--bg-color, #090909) !important;
+}
+
+.content { 
+  width: min(1180px, calc(100% - 40px));
+  margin: 0 auto !important;
+  padding: 112px 0 40px !important;
+}
+
+.sidebar { display: none !important; }
+
+.content > header,
+.content > .section {
+  border-color: var(--landing-border) !important;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--landing-orange) 10%, var(--landing-surface)), var(--landing-surface)) !important;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .2), inset 0 1px 0 rgba(255, 255, 255, .07) !important;
+}
+
+/* The reusable banner is now the hero; the first section below it stays compact. */
+.content > .section:first-of-type {
+  min-height: 0;
+  display: block;
+  margin-top: 28px !important;
+  padding: 28px 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  animation: none;
+}
+.content > .section:first-of-type h3 {
+  max-width: none;
+  margin: 0 0 24px !important;
+  font-size: clamp(24px, 2.2vw, 30px) !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.02em !important;
+}
+.content > .section:first-of-type::before,
+.content > .section:first-of-type::after { display: none; }
+
+.content > header {
+  padding: 32px 28px !important;
+  border-radius: 24px !important;
+}
+
+.content > header h1 {
+  font-size: clamp(24px, 4vw, 42px) !important;
+  letter-spacing: -.04em !important;
+}
+
+.content > header h2 { color: var(--landing-muted) !important; }
+
+.content > .section:first-of-type {
+  min-height: 330px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 24px !important;
+  padding: clamp(36px, 7vw, 78px) clamp(24px, 6vw, 74px) !important;
+  border-radius: 28px !important;
+  animation: landing-rise .7s ease both;
+}
+
+.content > .section:first-of-type h3 {
+  max-width: 760px;
+  margin: 0 0 14px !important;
+  font-size: clamp(34px, 6vw, 68px) !important;
+  line-height: 1.04 !important;
+  letter-spacing: -.055em !important;
+}
+
+.content > .section:first-of-type p {
+  max-width: 610px;
+  margin: 0 !important;
+  font-size: clamp(16px, 2vw, 20px) !important;
+}
+
+.content > .section:first-of-type::before,
+.content > .section:first-of-type::after {
+  opacity: .7;
+  animation: landing-drift 8s ease-in-out infinite alternate;
+}
+
+.content > .section:first-of-type::after { animation-delay: -3s; }
+
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.hero-actions .btn { margin: 0 !important; min-width: 142px; }
+.hero-actions .btn[href="login.php"] { color: var(--text-color, #fff) !important; background: transparent !important; border-color: var(--landing-border) !important; box-shadow: none !important; }
+.hero-actions .btn[href="login.php"]:hover { background: color-mix(in srgb, var(--landing-orange) 14%, transparent) !important; }
+
+.highlights-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.highlight-card { padding: 22px; border: 1px solid var(--landing-border); border-radius: 18px; background: color-mix(in srgb, var(--landing-surface) 92%, var(--landing-orange)); transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease; }
+.highlight-card:hover { transform: translateY(-5px); border-color: var(--landing-orange); box-shadow: 0 14px 30px rgba(255, 122, 0, .12); }
+.highlight-icon { display: grid; width: 42px; height: 42px; place-items: center; margin-bottom: 16px; border-radius: 13px; color: #1a1008; background: linear-gradient(135deg, #ffa94d, #f97316); font-size: 20px; }
+.highlight-card h4 { margin: 0 0 8px; color: var(--text-color, #fff); font-size: 17px; }
+.highlight-card p { margin: 0; color: var(--landing-muted); font-size: 13px; line-height: 1.6; }
+
+.mv-card, .event-card { transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease !important; }
+.mv-card:hover, .event-card:hover { transform: translateY(-5px); }
+.mv-card h4 { color: var(--landing-orange) !important; }
+.mv-mission p, .mv-vision p, .event-card p { color: var(--landing-muted) !important; }
+.event-card h4 { color: var(--text-color, #fff) !important; }
+.event-card strong { color: var(--landing-orange) !important; }
+.event-card > img { background: color-mix(in srgb, var(--landing-orange) 8%, var(--landing-surface)); }
+
+footer { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 22px; align-items: center; margin-top: 30px !important; padding: 28px 8px !important; text-align: left !important; color: var(--landing-muted) !important; border-top-color: var(--landing-border) !important; }
+.footer-brand { display: flex; align-items: center; gap: 12px; color: var(--text-color, #fff); font-weight: 800; }
+.footer-brand img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.footer-brand .theme-logo-light { display: none; }
+html[data-theme="light"] .footer-brand .theme-logo-dark { display: none; }
+html[data-theme="light"] .footer-brand .theme-logo-light { display: block; }
+.footer-copy { margin: 8px 0 0; max-width: 310px; color: var(--landing-muted); font-size: 13px; line-height: 1.6; }
+.footer-links { display: flex; flex-wrap: wrap; gap: 12px 18px; }
+.footer-links a, footer a { color: var(--landing-orange) !important; }
+.footer-social { display: flex; justify-content: flex-end; gap: 10px; }
+.footer-social a { display: grid; width: 34px; height: 34px; place-items: center; border: 1px solid var(--landing-border); border-radius: 50%; }
+
+@keyframes landing-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes landing-drift { from { transform: translate3d(0, 0, 0) rotate(-35deg); } to { transform: translate3d(-16px, 10px, 0) rotate(-30deg); } }
+
+@media (max-width: 850px) {
+  .highlights-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  footer { grid-template-columns: 1fr 1fr; }
+  .footer-social { justify-content: flex-start; }
+}
+@media (max-width: 560px) {
+  .content { width: min(100% - 24px, 1180px); padding-top: 96px !important; }
+  .highlights-grid, footer { grid-template-columns: 1fr; }
+  .content > .section:first-of-type { min-height: 390px; }
+  .footer-links { margin-top: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .content > .section:first-of-type, .content > .section:first-of-type::before, .content > .section:first-of-type::after { animation: none; }
+}
+
+/* Override legacy first-section hero rules now that HeroBanner owns the hero area. */
+.content > .section:first-of-type {
+  min-height: 0 !important;
+  display: block !important;
+  margin-top: 28px !important;
+  padding: 28px 0 !important;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+.content > .section:first-of-type h3 {
+  max-width: none !important;
+  margin: 0 0 24px !important;
+  font-size: clamp(24px, 2.2vw, 30px) !important;
+  line-height: 1.3 !important;
+  letter-spacing: -.02em !important;
+}
+.content > .section:first-of-type::before,
+.content > .section:first-of-type::after { display: none !important; }
+
+.hero-banner + .section { margin-top: 34px !important; }
+.content > .section:not(:first-of-type) { margin-top: 12px; }
+.mv-container, .events { row-gap: 22px; }

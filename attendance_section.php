@@ -60,6 +60,8 @@ function sectionEscape($value) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<link rel="stylesheet" href="css/theme.css">
+<script src="js/theme-init.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -555,9 +557,11 @@ function sectionEscape($value) {
       }
     }
   </style>
+    <link rel="stylesheet" href="assets/css/system-ui.css">
+    <script src="js/system-ui.js" defer></script>
 </head>
 
-<body>
+<body class="app-page admin-page">
   <!-- Sidebar -->
   <div class="sidebar">
     <h2><?php echo sectionEscape(ucfirst($role)); ?></h2>
