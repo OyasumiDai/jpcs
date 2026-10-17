@@ -15,7 +15,10 @@ $initial = strtoupper(substr($studentName !== '' ? $studentName : 'S', 0, 1));
   <a class="jpcs-brand" href="index.php">
     <img class="jpcs-logo-dark" src="assets/img/jpcs-logo.png" alt="JPCS logo">
     <img class="jpcs-logo-light" src="assets/img/jpcs-logo-light.png" alt="JPCS logo">
-    <span>JPCS</span>
+    <span class="jpcs-brand-text">
+      <span>JPCS</span>
+      <span class="jpcs-brand-subtitle">City of Malabon University</span>
+    </span>
   </a>
 
   <button class="jpcs-menu-toggle" type="button" aria-label="Toggle menu" aria-expanded="false" onclick="toggleJpcsMenu()">&#9776;</button>

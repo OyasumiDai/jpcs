@@ -1,0 +1,183 @@
+/* JPCS glass tokens. Component colors belong here, not in individual pages. */
+:root {
+  --glass-page: #151413;
+  --glass-bg: rgba(29,27,25,.88);
+  --glass-bg-hover: rgba(38,34,30,.94);
+  --glass-sheen: rgba(225,202,174,.025);
+  --glass-warm-glow: rgba(173,92,35,.055);
+  --glass-edge-glow: transparent;
+  --glass-solid: #191613;
+  --glass-border: rgba(197,165,130,.2);
+  --glass-highlight: rgba(226,210,189,.12);
+  --glass-text: #ded9d2;
+  --glass-muted: #b9b1a7;
+  --glass-accent: #d99b62;
+  --glass-input-bg: rgba(12,10,8,.8);
+  --glass-primary: #c58145;
+  --glass-primary-end: #d49a66;
+  --glass-button-text: #211006;
+  --glass-shadow: rgba(0,0,0,.3);
+  --glow-color: rgba(184,111,51,.08);
+  --glass-ambient: rgba(169,98,47,.045);
+  --glass-backdrop: rgba(10,8,6,.72);
+  --glass-heading-end: #c8bfb6;
+  --glass-error: #ffb4a5;
+  --glass-success: #ace4bf;
+  --glass-warning: #ffd18c;
+  --glass-clear: transparent;
+  --glass-blur: 16px;
+  --cursor-glow: rgba(216,143,76,.09);
+  --circuit-overlay: rgba(21,20,19,.94);
+  --circuit-image: url('../img/circuit-background.png');
+  --circuit-tile-size: 350px 350px;
+}
+html[data-theme="light"] {
+  --glass-page: #e5dfd6;
+  --glass-bg: rgba(237,232,224,.9);
+  --glass-bg-hover: rgba(240,234,225,.96);
+  --glass-sheen: rgba(250,245,236,.08);
+  --glass-warm-glow: rgba(162,105,58,.035);
+  --glass-edge-glow: transparent;
+  --glass-solid: #ede8e0;
+  --glass-border: rgba(116,93,70,.22);
+  --glass-highlight: rgba(249,244,235,.25);
+  --glass-text: #302c27;
+  --glass-muted: #60584e;
+  --glass-accent: #8b491f;
+  --glass-input-bg: rgba(231,225,216,.95);
+  --glass-primary: #90491e;
+  --glass-primary-end: #9d5427;
+  --glass-button-text: #f4eee6;
+  --glass-shadow: rgba(88,42,11,.1);
+  --glow-color: rgba(145,88,40,.06);
+  --glass-ambient: rgba(164,104,56,.025);
+  --glass-backdrop: rgba(216,208,197,.9);
+  --glass-heading-end: #9a3d0a;
+  --glass-error: #a52416;
+  --glass-success: #22653a;
+  --glass-warning: #86520b;
+  --circuit-overlay: rgba(229,223,214,.96);
+  --cursor-glow: rgba(139,73,31,.06);
+}
+/* Keep legacy headings, tables and form labels on the same subdued palette. */
+html[data-theme] {
+  --ui-text: var(--glass-text); --ui-muted: var(--glass-muted);
+  --ui-panel: var(--glass-solid); --ui-bg: var(--glass-page);
+  --ui-accent: var(--glass-accent);
+}
+html body:is(.app-page,.public-page,.auth-page) :is(h1,h2,h3,h4,h5,h6,label,strong) { color: var(--glass-text) !important; }
+html body:is(.app-page,.public-page,.auth-page) .hero-banner h1,
+html body:is(.app-page,.public-page,.auth-page) .hero-banner__chapter,
+html body:is(.app-page,.public-page,.auth-page) .hero-banner__chapter strong { color: #e5dbce !important; }
+html body:is(.app-page,.public-page,.auth-page) .hero-accent { color: #d59a60; }
+/* Original uploaded circuit artwork, tiled at native resolution to avoid stretching.
+   A theme-aware wash keeps text legible without altering the source image. */
+html body:is(.app-page,.public-page,.auth-page),
+html body .glass-auth-modal { isolation: isolate; }
+html body:is(.app-page,.public-page,.auth-page)::before,
+html body .glass-auth-modal::before {
+  content: ''; position: fixed; inset: 0; z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(ellipse at 0% 12%,var(--glass-warm-glow),var(--glass-clear) 58%), radial-gradient(ellipse at 100% 78%,var(--glass-ambient),var(--glass-clear) 55%), linear-gradient(var(--circuit-overlay),var(--circuit-overlay)), var(--circuit-image);
+  background-size: auto, auto, auto, var(--circuit-tile-size);
+  background-repeat: repeat;
+}
+@media print {
+  html body:is(.app-page,.public-page,.auth-page)::before,
+  html body .glass-auth-modal::before { display: none; }
+}
+html { scrollbar-color: var(--glass-accent) var(--glass-page); scrollbar-width: thin; }
+::-webkit-scrollbar { width: 9px; height: 9px; }
+::-webkit-scrollbar-track { background: var(--glass-page); }
+::-webkit-scrollbar-thumb { background: var(--glass-accent); border: 2px solid var(--glass-page); border-radius: 20px; }
+html body:is(.app-page,.public-page,.auth-page):is(.public-page,.auth-page,.app-page) {
+  background: radial-gradient(ellipse at 4% 10%, var(--glass-ambient), var(--glass-clear) 45%), radial-gradient(ellipse at 94% 80%, var(--glass-ambient), var(--glass-clear) 45%), var(--glass-page) !important;
+  background-attachment: fixed !important; color: var(--glass-text) !important;
+}
+html body:is(.app-page,.public-page,.auth-page).app-page .content { background: var(--glass-clear) !important; }
+/* Map existing components as well as the reusable utilities; works without JS. */
+html body:is(.app-page,.public-page,.auth-page) :is(.glass-panel,.glass-card,.jpcs-navbar,.sidebar,.highlight-card,.mv-card,.event-card,.officer-card,.panel,.table-panel,.card,.welcome,.modal-content,.auth-layout,footer) {
+  background: linear-gradient(135deg,var(--glass-sheen),var(--glass-clear) 48%),var(--glass-bg) !important; color: var(--glass-text) !important;
+  border: 1px solid var(--glass-border) !important; border-radius: 20px !important;
+  box-shadow: inset 0 1px 0 var(--glass-highlight), 0 12px 36px var(--glass-shadow), 0 0 24px var(--glass-edge-glow) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(145%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(145%);
+}
+html body:is(.app-page,.public-page,.auth-page) :is(.glass-panel,.glass-card) { position: relative; }
+html body:is(.app-page,.public-page,.auth-page) .glass-panel::before { content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px; background: linear-gradient(90deg,var(--glass-clear),var(--glass-highlight),var(--glass-clear)); pointer-events: none; }
+html body:is(.app-page,.public-page,.auth-page) :is(.glass-card,.highlight-card,.mv-card,.event-card,.officer-card) { transition: transform .35s ease-out, border-color .35s ease-out, box-shadow .35s ease-out; }
+html body:is(.app-page,.public-page,.auth-page) :is(.highlight-card,.mv-card,.event-card,.officer-card,.welcome,.auth-card) p { color: var(--glass-muted) !important; }
+html body:is(.app-page,.public-page,.auth-page) :is(.glass-input,input:not([type="submit"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),select,textarea) {
+  background: var(--glass-input-bg) !important; color: var(--glass-text) !important; border: 1px solid var(--glass-border) !important;
+  transition: border-color .3s ease-out, box-shadow .3s ease-out;
+}
+html body:is(.app-page,.public-page,.auth-page) :is(input,textarea)::placeholder { color: var(--glass-muted) !important; }
+html body:is(.app-page,.public-page,.auth-page) :is(input,select,textarea):focus { border-color: var(--glass-accent) !important; box-shadow: 0 0 0 3px var(--glow-color) !important; }
+html body:is(.app-page,.public-page,.auth-page) :is(a,button,input,select,textarea):focus-visible { outline: 3px solid var(--glass-accent) !important; outline-offset: 3px; }
+html body:is(.app-page,.public-page,.auth-page) :is(.glass-button,.btn-glow,.auth-submit,.jpcs-nav-button.solid,.btn.primary,.btn-add,button[type="submit"],input[type="submit"]) {
+  background: linear-gradient(125deg,var(--glass-primary-end),var(--glass-primary)) !important; color: var(--glass-button-text) !important;
+  border-color: var(--glass-primary) !important; border-radius: 12px !important;
+  transition: box-shadow .35s ease-out, transform .35s ease-out;
+}
+html body:is(.app-page,.public-page,.auth-page) :is(.glass-button,.btn-glow,.auth-submit,.jpcs-nav-button.solid,button[type="submit"]):hover { box-shadow: 0 0 0 4px var(--glow-color), 0 8px 28px var(--glow-color) !important; transform: translateY(-2px); }
+html body:is(.app-page,.public-page,.auth-page) .jpcs-nav-button.outline, html body:is(.app-page,.public-page,.auth-page) .glass-secondary { background: var(--glass-bg) !important; color: var(--glass-accent) !important; border: 1px solid var(--glass-border); }
+html body:is(.app-page,.public-page,.auth-page) .jpcs-navbar { inset: 12px 20px auto; width: auto; min-height: 68px; padding: 10px 24px; }
+html body:is(.app-page,.public-page,.auth-page) .sidebar { border-radius: 0 20px 20px 0 !important; }
+html body:is(.app-page,.public-page,.auth-page) :is(.jpcs-nav-links,.jpcs-nav-actions) { background: var(--glass-clear); }
+html body:is(.app-page,.public-page,.auth-page) .hero-banner { border-color: var(--glass-border); box-shadow: inset 0 1px 0 var(--glass-highlight),0 18px 48px var(--glass-shadow); transition: transform .35s ease-out; }
+html body:is(.app-page,.public-page,.auth-page) .hero-banner__contact { background: var(--glass-bg); }
+html body:is(.app-page,.public-page,.auth-page) .hero-banner__contact a { color: var(--glass-text) !important; }
+html body:is(.app-page,.public-page,.auth-page) .hero-banner__badges { position: absolute; top: 12px; right: 20px; display: flex; gap: 8px; pointer-events: none; }
+html body:is(.app-page,.public-page,.auth-page) .hero-glass-badge { padding: 7px 12px; border: 1px solid var(--glass-border); border-radius: 30px; background: var(--glass-solid); color: var(--glass-text); font-size: 11px; animation: glass-float 7s ease-in-out infinite; }
+html body:is(.app-page,.public-page,.auth-page) .hero-glass-badge:nth-child(2) { animation-delay: -3s; }
+html body:is(.app-page,.public-page,.auth-page) .section > h3, html body:is(.app-page,.public-page,.auth-page) .content > header h1 { background: linear-gradient(120deg,var(--glass-text),var(--glass-heading-end)); background-clip: text; -webkit-background-clip: text; color: var(--glass-text) !important; -webkit-text-fill-color: var(--glass-clear); }
+/* Decorative halo supplements the native pointer, never replaces it. */
+.glass-cursor { position: fixed; top: 0; left: 0; width: 360px; height: 360px; border-radius: 50%; background: radial-gradient(circle,var(--cursor-glow),var(--glass-clear) 70%); pointer-events: none; z-index: 10000; opacity: 0; transition: opacity .18s ease-out; }
+@media (hover:none), (pointer:coarse), (forced-colors:active) { .glass-cursor { display: none !important; } }
+/* A route-backed native dialog preserves POST handlers and browser navigation. */
+html body:is(.app-page,.public-page,.auth-page) .glass-auth-modal { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 112px 20px 32px; border: 0; background: var(--glass-clear); color: var(--glass-text); overflow-y: auto; }
+.glass-auth-modal::backdrop { background: var(--glass-backdrop); }
+html body:is(.app-page,.public-page,.auth-page) .glass-auth-modal .auth-layout { position: relative; margin: 0 auto; width: min(980px,100%); }
+html body:is(.app-page,.public-page,.auth-page).auth-page .auth-card { background: var(--glass-clear) !important; padding: 60px 32px 32px !important; }
+html body:is(.app-page,.public-page,.auth-page) .auth-intro { background: linear-gradient(145deg,var(--glow-color),var(--glass-clear)); }
+html body:is(.app-page,.public-page,.auth-page) .glass-close { position: absolute; top: 10px; right: 10px; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; min-height: 44px; padding: 0; margin: 0; border: 1px solid var(--glass-border); border-radius: 50%; background: var(--glass-solid); color: var(--glass-text); box-shadow: none; font-size: 24px; cursor: pointer; }
+html body:is(.app-page,.public-page,.auth-page) .glass-auth-tabs { display: flex; gap: 6px; margin-bottom: 24px; padding: 5px; border: 1px solid var(--glass-border); border-radius: 14px; background: var(--glass-input-bg); }
+html body:is(.app-page,.public-page,.auth-page) .glass-auth-tabs a { flex: 1; padding: 10px; border-radius: 10px; color: var(--glass-muted) !important; text-align: center; text-decoration: none; }
+html body:is(.app-page,.public-page,.auth-page) .glass-auth-tabs a[aria-current="page"] { background: var(--glow-color); color: var(--glass-accent) !important; }
+html body:is(.app-page,.public-page,.auth-page) .glass-float-field { position: relative; }
+html body:is(.app-page,.public-page,.auth-page) .glass-float-field > label { position: absolute; top: 17px; left: 14px; z-index: 1; margin: 0; color: var(--glass-muted) !important; pointer-events: none; transform-origin: left top; transition: transform .3s ease-out; }
+html body:is(.app-page,.public-page,.auth-page) .glass-float-field:has(.field-icon) > label { left: 42px; }
+html body:is(.app-page,.public-page,.auth-page) .glass-float-field input { min-height: 60px !important; padding-top: 25px; padding-bottom: 7px; }
+html body:is(.app-page,.public-page,.auth-page) .glass-float-field input::placeholder { opacity: 0; }
+html body:is(.app-page,.public-page,.auth-page) .glass-float-field:focus-within > label, html body:is(.app-page,.public-page,.auth-page) .glass-float-field:has(input:not(:placeholder-shown)) > label { transform: translateY(-10px) scale(.8); color: var(--glass-accent) !important; }
+html body:is(.app-page,.public-page,.auth-page) .glass-toast { position: fixed; bottom: 20px; right: 20px; z-index: 3000; max-width: min(420px,calc(100vw - 40px)); padding: 16px 48px 16px 18px; border: 1px solid var(--glass-border); border-radius: 16px; background: var(--glass-solid); color: var(--glass-text); box-shadow: 0 12px 36px var(--glass-shadow); }
+html body:is(.app-page,.public-page,.auth-page) .glass-toast button { position: absolute; top: 4px; right: 4px; width: 36px; min-height: 36px; margin: 0; padding: 0; background: var(--glass-clear); color: var(--glass-text); box-shadow: none; border: 0; }
+html body:is(.app-page,.public-page,.auth-page).auth-page .error { color: var(--glass-error) !important; }
+html body:is(.app-page,.public-page,.auth-page).auth-page .success { color: var(--glass-success) !important; }
+@keyframes glass-float { 50% { transform: translateY(-5px); } }
+@media (hover:hover) and (pointer:fine) {
+  html body:is(.app-page,.public-page,.auth-page) :is(.glass-card,.highlight-card,.mv-card,.event-card,.officer-card):hover { transform: translateY(-3px); border-color: var(--glass-accent) !important; box-shadow: 0 16px 40px var(--glass-shadow),0 0 20px var(--glow-color) !important; }
+}
+@media (max-width:760px) {
+  :root { --glass-blur: 8px; }
+  html body:is(.app-page,.public-page,.auth-page) .jpcs-navbar { inset: 8px 10px auto; padding: 8px 16px; }
+  html body:is(.app-page,.public-page,.auth-page) .hero-banner__badges { display: none; }
+  html body:is(.app-page,.public-page,.auth-page) .glass-auth-modal { padding: 100px 10px 20px; }
+  html body:is(.app-page,.public-page,.auth-page) .glass-auth-modal:has(.jpcs-navbar.open) { padding-top: 210px; }
+  html body:is(.app-page,.public-page,.auth-page) .glass-auth-modal .auth-layout { grid-template-columns: 1fr; }
+  html body:is(.app-page,.public-page,.auth-page) .auth-intro { min-height: auto; padding: 24px; }
+  html body:is(.app-page,.public-page,.auth-page) .auth-intro h1 { font-size: 26px; }
+  html body:is(.app-page,.public-page,.auth-page) .auth-intro img { width: 48px; height: 48px; margin-bottom: 12px; }
+  html body:is(.app-page,.public-page,.auth-page).auth-page .auth-card { padding: 24px !important; min-height: auto; }
+  html body:is(.app-page,.public-page,.auth-page) .glass-auth-modal .auth-intro { padding-right: 64px; }
+  .glass-cursor { display: none; }
+}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  html body:is(.app-page,.public-page,.auth-page) :is(.glass-panel,.glass-card,.jpcs-navbar,.sidebar,.highlight-card,.mv-card,.event-card,.officer-card,.panel,.table-panel,.card,.welcome,.modal-content,.auth-layout,footer) { background: var(--glass-solid) !important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html body:is(.app-page,.public-page,.auth-page) *, html body:is(.app-page,.public-page,.auth-page) *::before, html body:is(.app-page,.public-page,.auth-page) *::after { animation: none !important; transition: none !important; }
+  .glass-cursor { display: none !important; }
+  html body:is(.app-page,.public-page,.auth-page) .hero-banner { transform: none !important; }
+}
+@media print { .glass-cursor,.hero-banner__badges,.glass-toast { display: none !important; } }

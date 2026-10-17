@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480" fill="none" stroke="black" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Seamless circuit traces; CSS supplies the theme color through a mask. -->
+  <path d="M0 64h88l32 32h96m-96 0v80l40 40h64M0 80h64l40 40v80l40 40h96M320 0v48l-40 40v72l40 40h72l40 40v80l48 48h160M336 0v56l-40 40v56l32 32h72l48 48v80l40 40h152M640 64h-88l-32 32h-80M640 80h-64l-40 40h-72M0 368h80l48-48h96l48 48v112M0 352h72l48-48h112l56 56v120M640 432h-96l-48-48h-80l-48 48v48M640 448h-104l-48-48h-64l-40 40v40M192 0v32l40 40v32M96 480v-32l64-64h48M480 0v32l-40 40h-48"/>
+  <g stroke-width="1.8">
+    <circle cx="220" cy="96" r="4"/><circle cx="228" cy="216" r="4"/>
+    <circle cx="244" cy="240" r="4"/><circle cx="436" cy="96" r="4"/>
+    <circle cx="460" cy="120" r="4"/><circle cx="232" cy="108" r="4"/>
+    <circle cx="212" cy="384" r="4"/><circle cx="388" cy="72" r="4"/>
+  </g>
+  <g opacity=".5">
+    <rect x="326" y="270" width="40" height="40" rx="6"/>
+    <rect x="334" y="278" width="24" height="24" rx="3"/>
+    <path d="M334 262v8m12-8v8m12-8v8m-24 40v8m12-8v8m12-8v8m-40-40h8m-8 12h8m-8 12h8m40-24h8m-8 12h8m-8 12h8"/>
+  </g>
+</svg>

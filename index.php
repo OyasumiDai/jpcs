@@ -704,6 +704,9 @@ $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY 
   <link rel="stylesheet" href="assets/css/hero-banner.css">
     <link rel="stylesheet" href="assets/css/system-ui.css">
     <script src="js/system-ui.js" defer></script>
+    <link rel="stylesheet" href="assets/css/glass.css">
+    <link rel="stylesheet" href="assets/css/light-clean.css">
+    <script src="js/glass-ui.js" defer></script>
 </head>
 <body class="public-page">
   <?php require __DIR__ . '/includes/navbar.php'; ?>

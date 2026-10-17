@@ -1,55 +1,27 @@
 <?php
-require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/student_auth.php';
+require_once __DIR__ . '/includes/login_auth.php';
 
-$error = "";
-$username = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'] ?? '';
-    $password = $_POST['password'] ?? '';
-
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? LIMIT 1");
-
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-
-        // Support the current legacy plaintext seed while migrating users to
-        // password_hash() transparently after their next successful login.
-        $storedPassword = (string) $row['password'];
-        $validPassword = password_verify($password, $storedPassword)
-            || hash_equals($storedPassword, $password);
-
-        if (!$validPassword) {
-            $error = "Invalid username or password!";
-            $stmt->close();
-        } else {
-            if (!password_get_info($storedPassword)['algo']) {
-                $newHash = password_hash($password, PASSWORD_DEFAULT);
-                $update = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
-                $update->bind_param("si", $newHash, $row['id']);
-                $update->execute();
-                $update->close();
-            }
-
-            session_regenerate_id(true);
-
-            $_SESSION['user_id']  = $row['id'];
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['name']     = $row['name'];
-            $_SESSION['role']     = $row['role'];
-            $_SESSION['position'] = $row['position'];
-
-            $stmt->close();
-
-            redirect('dashboard.php');
-        }
+$error = '';
+$username = '';
+if (request_method_is('POST')) {
+    // Accept identifier from older student forms as well as the shared form.
+    $username = trim((string) ($_POST['username'] ?? $_POST['identifier'] ?? ''));
+    $password = (string) ($_POST['password'] ?? '');
+    $account = find_login_account($conn, $username, $password);
+    if ($account === null) {
+        $error = 'Invalid login details. Check your email, student ID or username and password.';
     } else {
-        $error = "Invalid username or password!";
-        $stmt->close();
+        // Retain the existing one-time upgrade of legacy staff passwords.
+        if ($account['legacy']) {
+            $newHash = password_hash($password, PASSWORD_DEFAULT);
+            $id = $account['record']['id'];
+            $update = $conn->prepare('UPDATE users SET password = ? WHERE id = ?');
+            $update->bind_param('si', $newHash, $id);
+            $update->execute();
+            $update->close();
+        }
+        redirect(set_login_session($account));
     }
 }
 ?>
@@ -281,6 +253,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="assets/css/auth-modern.css">
     <link rel="stylesheet" href="assets/css/system-ui.css">
     <script src="js/system-ui.js" defer></script>
+    <link rel="stylesheet" href="assets/css/glass.css">
+    <link rel="stylesheet" href="assets/css/light-clean.css">
+    <script src="js/glass-ui.js" defer></script>
 </head>
 <body class="auth-page">
     <?php require __DIR__ . '/includes/navbar.php'; ?>
@@ -293,12 +268,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </section>
         <section class="auth-card login-container">
             <h1>Login</h1>
-            <p>Use your officer or advisor account to continue.</p>
+            <p>Students, officers and advisors can sign in here.</p>
+            <?php if (isset($_GET['registered'])) { ?><p class="success" role="status">Account created. You can now log in.</p><?php } ?>
             <?php if ($error !== '') { ?><p class="error" role="alert"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p><?php } ?>
             <form class="auth-form" method="POST">
                 <div class="auth-field full">
-                    <label for="username">Username</label>
-                    <div class="input-wrap"><span class="field-icon" aria-hidden="true">&#128100;</span><input type="text" id="username" name="username" placeholder="Enter your username" autocomplete="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" required></div>
+                    <label for="username">Email, student ID or username</label>
+                    <div class="input-wrap"><span class="field-icon" aria-hidden="true">&#128100;</span><input type="text" id="username" name="username" placeholder="Email, student ID or username" autocomplete="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" required></div>
                 </div>
                 <div class="auth-field full">
                     <label for="password">Password</label>

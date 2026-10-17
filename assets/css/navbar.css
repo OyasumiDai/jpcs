@@ -22,6 +22,13 @@
 
 .jpcs-brand { gap: 10px; color: #fff; text-decoration: none; font-size: 20px; font-weight: 800; letter-spacing: 1px; }
 .jpcs-brand img { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; }
+.jpcs-brand { flex-shrink: 0; }
+.jpcs-brand-text { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; line-height: 1.2; }
+.jpcs-brand-subtitle { font-size: 11px; font-weight: 500; letter-spacing: .02em; color: var(--glass-muted, currentColor); }
+@media (max-width: 380px) {
+  .jpcs-brand { gap: 8px; }
+  .jpcs-brand-subtitle { max-width: 145px; font-size: 10px; }
+}
 .jpcs-logo-light { display: none; }
 html[data-theme="light"] .jpcs-logo-dark { display: none; }
 html[data-theme="light"] .jpcs-logo-light { display: block; }

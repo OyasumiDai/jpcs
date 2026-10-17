@@ -323,6 +323,9 @@ function officerEscape($value) {
     </style>
     <link rel="stylesheet" href="assets/css/system-ui.css">
     <script src="js/system-ui.js" defer></script>
+    <link rel="stylesheet" href="assets/css/glass.css">
+    <link rel="stylesheet" href="assets/css/light-clean.css">
+    <script src="js/glass-ui.js" defer></script>
 </head>
 <body class="app-page admin-page">
     <div class="sidebar">
