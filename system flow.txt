@@ -1,0 +1,126 @@
+1. Landing Page (index.php)
+Public entry point ng system.
+
+May sidebar links papunta sa:
+
+Officer Information (pofficer.php)
+
+Event Registration (registration.php)
+
+Admin Login (login.php)
+
+2. Officer Information (pofficer.php)
+Grid view ng lahat ng officers/adviser.
+
+Fixed size images kahit iba‑iba ang upload.
+
+Click image → popup modal:
+
+Large view ng photo.
+
+Name + Position displayed.
+
+Prev / Next navigation.
+
+Exit button.
+
+3. Event Registration (registration.php)
+Student fills out form: Name, Student ID, Course/Year/Section, Email, Contact.
+
+Registration saved as pending.
+
+Adviser/Officer reviews pending list (pending.php).
+
+Once approved → status becomes confirmed.
+
+4. Admin Login (login.php)
+Adviser/admin logs in.
+
+Role‑based dashboard:
+
+Adviser: full access (events, accounts, attendance).
+
+Officer: limited access (attendance, events).
+
+5. Dashboard (dashboard.php)
+Overview ng system.
+
+Quick links to modules:
+
+Officer Information
+
+Pending Registrations
+
+Event Attendance Scanner
+
+Attendance List per Event
+
+Register List
+
+Event Management
+
+Account Management (Adviser only)
+
+6. Event Management (events.php)
+Create new event (title, description, date, time, location, poster).
+
+Edit existing event.
+
+Mark event as done.
+
+Event cards displayed in tile layout:
+
+Poster image.
+
+Title, Date, Time, Location, Description, Status.
+
+Edit / Done buttons.
+
+7. Event Attendance Scanner (scanner.php)
+Officer selects upcoming event.
+
+Scanner interface opens.
+
+Students scanned via QR/ID → attendance recorded in DB.
+
+Real‑time marking of attendance.
+
+8. Attendance List per Event (attendance.php)
+Adviser/Officer selects event.
+
+Sections displayed.
+
+Clicking a section → attendance_section.php.
+
+9. Attendance Section (attendance_section.php)
+Displays all registered students for that section.
+
+Alphabetical order.
+
+Attendance status: ✔ Attended / ❌ Not Attended.
+
+Counts summary: Registered / Attended / Not Attended.
+
+Print view:
+
+Event Title + Section.
+
+Counts summary.
+
+Master list table.
+
+10. Register List (register_list.php)
+Master list of all registered students across events.
+
+Auto‑refresh counts habang ongoing.
+
+Print option for hardcopy.
+
+11. Account Management (accounts.php)
+Adviser only.
+
+Manage officer/adviser accounts.
+
+Adviser role updated (from “advisor” → “adviser”).
+
+Position also standardized to “Adviser”.

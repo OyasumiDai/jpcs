@@ -1,0 +1,202 @@
+<?php
+session_start();
+include 'db.php';
+
+// Check kung naka-login
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
+
+// Fetch user role
+$userID = $_SESSION['user_id'];
+$user = $conn->query("SELECT role, name FROM users WHERE id='$userID'")->fetch_assoc();
+$role = $user['role'];
+
+// MULTIPLE IMAGE UPLOAD
+if (isset($_POST['upload_images'])) {
+    $event_id = $_POST['event_id'];
+    $targetDir = "uploads/highlights/gallery/";
+    if (!is_dir($targetDir)) mkdir($targetDir, 0777, true);
+
+    foreach ($_FILES['images']['name'] as $key => $name) {
+        $filePath = $targetDir . time() . "_" . basename($name);
+        move_uploaded_file($_FILES['images']['tmp_name'][$key], $filePath);
+        $conn->query("INSERT INTO highlight_images (event_id, image_path, uploaded_at) 
+                      VALUES ('$event_id','$filePath', NOW())");
+    }
+
+    header("Location: dashboard.php?success=" . urlencode("Images added to highlight!"));
+    exit();
+}
+
+// Fetch Highlights (done events)
+$highlights = $conn->query("SELECT * FROM events WHERE status='done' ORDER BY event_date DESC");
+
+// Fetch Upcoming Events
+$upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY event_date ASC");
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JPCS Admin Dashboard</title>
+  <style>
+    /* styles same as before */
+    body { margin:0; font-family: Arial, sans-serif; display:flex; }
+    .sidebar { width:220px; background:#000; color:#f39c12; height:100vh; position:fixed; left:0; top:0; padding-top:20px; }
+    .sidebar h2 { text-align:center; margin-bottom:20px; }
+    .sidebar a { display:block; color:#f39c12; padding:12px 20px; text-decoration:none; font-weight:bold; }
+    .sidebar a:hover { background:#f39c12; color:#000; }
+    .content { margin-left:220px; padding:20px; flex:1; }
+    header { background:#f39c12; color:#000; padding:15px; text-align:center; border-radius:8px; }
+    .section { padding:40px 20px; text-align:center; }
+    .section h3 { color:#f39c12; font-size:2em; margin-bottom:20px; }
+    footer { background:#000; color:#f39c12; text-align:center; padding:15px; margin-top:40px; }
+    .events { display:flex; justify-content:center; gap:30px; flex-wrap:wrap; max-width:1000px; margin:auto; }
+    .event-card { flex:1; min-width:280px; background:#000; color:#f39c12; border-radius:8px; overflow:hidden; box-shadow:0 4px 8px rgba(0,0,0,0.3); }
+    .event-card img { width:100%; height:180px; object-fit:cover; cursor:pointer; }
+    .event-card div { padding:15px; }
+    .event-card p { color:#fff; }
+    #viewerModal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); justify-content:center; align-items:center; }
+    #viewerModal img { max-width:80%; max-height:80%; }
+    #viewerModal .close { position:absolute; top:20px; right:30px; color:#fff; font-size:30px; cursor:pointer; }
+    #viewerModal .nav { position:absolute; top:50%; font-size:40px; color:#fff; cursor:pointer; }
+    #viewerModal .prev { left:30px; }
+    #viewerModal .next { right:30px; }
+  </style>
+  <script>
+    let currentImages = [];
+    let currentIndex = 0;
+    function openViewer(images, index) {
+      currentImages = images;
+      currentIndex = index;
+      document.getElementById('viewerImg').src = currentImages[currentIndex].image_path;
+      document.getElementById('viewerModal').style.display = 'flex';
+    }
+    function closeViewer() { document.getElementById('viewerModal').style.display = 'none'; }
+    function nextImage() {
+      if (currentIndex < currentImages.length - 1) {
+        currentIndex++;
+        document.getElementById('viewerImg').src = currentImages[currentIndex].image_path;
+      }
+    }
+    function prevImage() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        document.getElementById('viewerImg').src = currentImages[currentIndex].image_path;
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="sidebar">
+    <h2><?php echo ucfirst($role); ?></h2>
+    <a href="dashboard.php">Dashboard</a>
+    <a href="officers.php">Officer Information</a>
+    <a href="pending.php">Student Registered Pending</a>
+    <a href="scanner.php">Event Attendance Scanner</a>
+    <a href="attendance.php">Attendance List per Event</a>
+    <a href="register_list.php">Register List</a>
+    <a href="events.php">Event Management</a>
+    <?php if ($role == 'admin_advisor') { ?>
+      <a href="accounts.php">Account Management</a>
+    <?php } ?>
+    <a href="logout.php">Logout</a>
+  </div>
+
+  <div class="content">
+    <header>
+      <h1>Junior Philippine Computer Society</h1>
+      <h2>City of Malabon University</h2>
+    </header>
+
+    <!-- Highlights Section -->
+    <div class="section">
+      <h3>Event Highlights</h3>
+      <div class="events">
+        <?php while($row = $highlights->fetch_assoc()) { ?>
+        <div class="event-card">
+          <?php if(!empty($row['poster'])) { ?>
+            <img src="<?php echo $row['poster']; ?>" alt="Poster">
+          <?php } else { ?>
+            <img src="uploads/events/default.jpg" alt="Poster">
+          <?php } ?>
+          <div>
+            <h4><?php echo $row['title']; ?></h4>
+            <p><strong>Date:</strong> <?php echo $row['event_date']; ?></p>
+            <p><?php echo $row['description']; ?></p>
+            <a href="dashboard.php?addimage=<?php echo $row['event_id']; ?>" class="btn-add">+ Add Image</a>
+            
+            <!-- Gallery thumbnails -->
+            <div class="gallery">
+              <?php
+              $gallery = $conn->query("SELECT * FROM highlight_images WHERE event_id=".$row['event_id']." ORDER BY uploaded_at DESC");
+              $images = [];
+              while($img = $gallery->fetch_assoc()) {
+                  $images[] = $img; // full row with id + image_path
+              }
+              foreach($images as $index => $img) {
+                  echo "<img src='".$img['image_path']."' onclick='openViewer(".json_encode($images).",".$index.")'>";
+              }
+              ?>
+            </div>
+          </div>
+        </div>
+        <?php } ?>
+      </div>
+    </div>
+
+    <!-- Upcoming Events -->
+    <div class="section">
+      <h3>Upcoming Events</h3>
+      <div class="events">
+        <?php while($row = $upcoming->fetch_assoc()) { ?>
+        <div class="event-card">
+          <?php if(!empty($row['poster']) && file_exists($row['poster'])) { ?>
+            <img src="<?php echo $row['poster']; ?>" alt="Poster">
+          <?php } else { ?>
+            <img src="uploads/events/default.jpg" alt="Poster">
+          <?php } ?>
+          <div>
+            <h4><?php echo $row['title']; ?></h4>
+            <p><strong>Date:</strong> <?php echo $row['event_date']; ?> 
+               <strong>Time:</strong> <?php echo $row['event_time']; ?></p>
+            <p><strong>Location:</strong> <?php echo $row['location']; ?></p>
+            <p><?php echo $row['description']; ?></p>
+          </div>
+        </div>
+        <?php } ?>
+      </div>
+    </div>
+
+    <!-- Add Image Modal -->
+    <?php if (isset($_GET['addimage'])) { ?>
+    <div class="modal">
+      <div class="modal-content">
+        <span class="close" onclick="window.location='dashboard.php'">&times;</span>
+        <h3>Add Images to Highlight</h3>
+        <form method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="event_id" value="<?php echo $_GET['addimage']; ?>">
+          <input type="file" name="images[]" accept="image/*" multiple required>
+          <button type="submit" name="upload_images">Upload</button>
+          <a href="dashboard.php"><button type="button">Cancel</button></a>
+        </form>
+      </div>
+    </div>
+    <?php } ?>
+
+    <!-- Gallery Viewer Modal -->
+    <div id="viewerModal">
+      <span class="close" onclick="closeViewer()">&times;</span>
+      <span class="nav prev" onclick="prevImage()">&#10094;</span>
+      <img id="viewerImg" src="">
+      <span class="nav next" onclick="nextImage()">&#10095;</span>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Junior Philippine Computer Society - City of Malabon University</p>
+    </footer>
+  </div>
+</body>
+</html>

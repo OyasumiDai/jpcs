@@ -1,0 +1,7 @@
+UPDATE users 
+SET role = 'admin_adviser', position = 'Adviser'
+WHERE role = 'admin_advisor' OR position = 'Advisor';
+
+
+
+dapat lahat ng admin_advisor sa  mga code papalitan ng admin_adviser 
