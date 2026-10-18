@@ -46,6 +46,7 @@ if (request_method_is('POST')) {
   <title>Register | JPCS</title>
   <link rel="stylesheet" href="css/theme.css">
   <script src="js/theme-init.js"></script>
+  <script src="css/theme.js" defer></script>
   <link rel="stylesheet" href="assets/css/navbar.css">
   <style><?php include __DIR__ . '/assets/css/auth-page.css'; ?></style>
   <link rel="stylesheet" href="assets/css/auth-modern.css">
@@ -53,11 +54,12 @@ if (request_method_is('POST')) {
     <script src="js/system-ui.js" defer></script>
     <link rel="stylesheet" href="assets/css/glass.css">
     <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/auth-compact.css">
     <script src="js/glass-ui.js" defer></script>
 </head>
-<body class="auth-page">
-  <?php require __DIR__ . '/includes/navbar.php'; ?>
+<body class="auth-page auth-compact">
   <main class="auth-layout">
+    <button class="auth-theme-toggle theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme"><span class="theme-icon" aria-hidden="true"></span></button>
     <section class="auth-intro">
       <img class="theme-logo-dark" src="assets/img/jpcs-logo.png" alt="JPCS logo">
       <img class="theme-logo-light" src="assets/img/jpcs-logo-light.png" alt="JPCS logo">
@@ -70,12 +72,12 @@ if (request_method_is('POST')) {
       <?php foreach ($errors as $error) echo '<div class="error" role="alert">'.e($error).'</div>'; ?>
       <form class="auth-form" method="post" id="registerForm">
         <div class="auth-fields">
-          <div class="auth-field full"><label for="full_name">Full name</label><div class="input-wrap"><span class="field-icon" aria-hidden="true">&#128100;</span><input id="full_name" name="full_name" value="<?php echo e($values['full_name']); ?>" placeholder="Your full name" autocomplete="name" required></div></div>
+          <div class="auth-field full"><label for="full_name">Full name</label><div class="input-wrap"><span class="field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5"></path></svg></span><input id="full_name" name="full_name" value="<?php echo e($values['full_name']); ?>" placeholder="Your full name" autocomplete="name" required></div></div>
           <div class="auth-field"><label for="student_id">Student ID</label><input id="student_id" name="student_id" value="<?php echo e($values['student_id']); ?>" placeholder="e.g. 2024-001" required></div>
           <div class="auth-field"><label for="email">Email address</label><input id="email" type="email" name="email" value="<?php echo e($values['email']); ?>" placeholder="you@example.com" autocomplete="email" required></div>
           <div class="auth-field"><label for="course_year">Course / year</label><select id="course_year" name="course_year" required><option value="">Select course/year</option><?php foreach ($courseOptions as $option) echo '<option '.($values['course_year'] === $option ? 'selected' : '').'>'.e($option).'</option>'; ?></select></div>
-          <div class="auth-field"><label for="password">Password</label><div class="input-wrap password-wrap"><input id="password" type="password" name="password" minlength="8" placeholder="At least 8 characters" autocomplete="new-password" required><button class="password-toggle" type="button" aria-label="Show password" data-password-toggle="password">&#128065;</button></div><div class="password-strength" aria-hidden="true"><span id="strengthBar"></span></div><small class="strength-text" id="strengthText">Use 8 or more characters.</small></div>
-          <div class="auth-field"><label for="confirm_password">Confirm password</label><div class="input-wrap password-wrap"><input id="confirm_password" type="password" name="confirm_password" minlength="8" placeholder="Repeat your password" autocomplete="new-password" required><button class="password-toggle" type="button" aria-label="Show password" data-password-toggle="confirm_password">&#128065;</button></div></div>
+          <div class="auth-field"><label for="password">Password</label><div class="input-wrap password-wrap"><input id="password" type="password" name="password" minlength="8" placeholder="At least 8 characters" autocomplete="new-password" required><button class="password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password" data-password-toggle="password"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle></svg></button></div><div class="password-strength" aria-hidden="true"><span id="strengthBar"></span></div><small class="strength-text" id="strengthText">Use 8 or more characters.</small></div>
+          <div class="auth-field"><label for="confirm_password">Confirm password</label><div class="input-wrap password-wrap"><input id="confirm_password" type="password" name="confirm_password" minlength="8" placeholder="Repeat your password" autocomplete="new-password" required><button class="password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password" data-password-toggle="confirm_password"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle></svg></button></div></div>
         </div>
         <label class="check" for="terms"><input id="terms" type="checkbox" name="terms" <?php echo $termsAccepted ? 'checked' : ''; ?> required> I agree to the JPCS terms and privacy notice.</label>
         <button class="auth-submit" type="submit">Create account</button>
@@ -91,6 +93,11 @@ if (request_method_is('POST')) {
         const visible = input.type === 'text';
         input.type = visible ? 'password' : 'text';
         this.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+        this.setAttribute('aria-pressed', visible ? 'false' : 'true');
+        this.setAttribute('title', visible ? 'Show password' : 'Hide password');
+        this.innerHTML = visible
+          ? '<svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle></svg>'
+          : '<svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle><path d="M4 4l16 16"></path></svg>';
       });
     });
     const password = document.getElementById('password');

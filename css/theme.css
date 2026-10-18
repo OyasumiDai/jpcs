@@ -16,8 +16,8 @@ html[data-theme="light"] {
     --border-color: rgba(234, 88, 12, 0.28);
     --input-bg: #ffffff;
     --hover-bg: #fff7ed;
-    --accent: #f97316;
-    --accent-hover: #ea580c;
+    --accent: #ff8a2a;
+    --accent-hover: #f97316;
     --shadow: 0 10px 28px rgba(124, 45, 18, 0.12);
 }
 

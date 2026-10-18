@@ -34,6 +34,7 @@ if (request_method_is('POST')) {
     <link rel="icon" type="image/png" href="assets/img/jpcs-logo.png">
     <link rel="stylesheet" href="css/theme.css">
     <script src="js/theme-init.js"></script>
+    <script src="css/theme.js" defer></script>
     <link rel="stylesheet" href="assets/css/navbar.css">
 
     <style>
@@ -255,11 +256,12 @@ if (request_method_is('POST')) {
     <script src="js/system-ui.js" defer></script>
     <link rel="stylesheet" href="assets/css/glass.css">
     <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/auth-compact.css">
     <script src="js/glass-ui.js" defer></script>
 </head>
-<body class="auth-page">
-    <?php require __DIR__ . '/includes/navbar.php'; ?>
+<body class="auth-page auth-compact">
     <main class="auth-layout">
+        <button class="auth-theme-toggle theme-toggle" type="button" data-theme-toggle aria-label="Switch theme" title="Switch theme"><span class="theme-icon" aria-hidden="true"></span></button>
         <section class="auth-intro">
             <img class="theme-logo-dark" src="assets/img/jpcs-logo.png" alt="JPCS logo">
             <img class="theme-logo-light" src="assets/img/jpcs-logo-light.png" alt="JPCS logo">
@@ -274,11 +276,11 @@ if (request_method_is('POST')) {
             <form class="auth-form" method="POST">
                 <div class="auth-field full">
                     <label for="username">Email, student ID or username</label>
-                    <div class="input-wrap"><span class="field-icon" aria-hidden="true">&#128100;</span><input type="text" id="username" name="username" placeholder="Email, student ID or username" autocomplete="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" required></div>
+                    <div class="input-wrap"><span class="field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5"></path></svg></span><input type="text" id="username" name="username" placeholder="Email, student ID or username" autocomplete="username" value="<?php echo htmlspecialchars($username, ENT_QUOTES, 'UTF-8'); ?>" required></div>
                 </div>
                 <div class="auth-field full">
                     <label for="password">Password</label>
-                    <div class="input-wrap password-wrap"><span class="field-icon" aria-hidden="true">&#128272;</span><input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required><button class="password-toggle" type="button" aria-label="Show password" data-password-toggle="password">&#128065;</button></div>
+                    <div class="input-wrap password-wrap"><span class="field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></span><input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required><button class="password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password" data-password-toggle="password"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle></svg></button></div>
                 </div>
                 <div class="auth-meta"><label class="check"><input type="checkbox" name="remember" id="remember"> Remember me</label><a href="mailto:jpcs@cmu.edu.ph?subject=JPCS%20password%20reset">Forgot password?</a></div>
                 <button class="auth-submit" type="submit">Login</button>
@@ -293,6 +295,11 @@ if (request_method_is('POST')) {
         const visible = input.type === 'text';
         input.type = visible ? 'password' : 'text';
         this.setAttribute('aria-label', visible ? 'Show password' : 'Hide password');
+        this.setAttribute('aria-pressed', visible ? 'false' : 'true');
+        this.setAttribute('title', visible ? 'Show password' : 'Hide password');
+        this.innerHTML = visible
+          ? '<svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle></svg>'
+          : '<svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle><path d="M4 4l16 16"></path></svg>';
       });
     </script>
 </body>

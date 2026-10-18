@@ -24,6 +24,14 @@ body {
   padding: 112px 0 40px !important;
 }
 
+.public-officer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:18px; margin-top:18px; }
+.public-officer-card { display:flex; align-items:center; gap:14px; min-width:0; padding:16px; border:1px solid var(--landing-border); border-radius:18px; background:color-mix(in srgb,var(--landing-surface) 90%,var(--landing-orange)); backdrop-filter:blur(12px); }
+.public-officer-card img { width:72px; height:72px; flex:0 0 72px; object-fit:cover; border:2px solid var(--landing-orange); border-radius:50%; }
+.public-officer-card h4,.public-officer-card p { margin:0; overflow-wrap:anywhere; }
+.public-officer-card h4 { color:var(--text-color,var(--landing-muted)); }
+.public-officer-card p { margin-top:6px; color:var(--landing-orange); font-size:13px; }
+.public-officer-empty { color:var(--landing-muted); }
+
 .sidebar { display: none !important; }
 
 .content > header,

@@ -1,0 +1,37 @@
+/* Single visual contract for Advisor and Officer panels. Colors live here only. */
+:root {
+  --bg:#0f0e0d; --surface:#1b1917; --border:#403b36; --text:#faf7f4; --text-muted:#b6afa7;
+  --brand:#ff5722; --brand-hover:#e64a19; --brand-soft:#35231b; --brand-ink:#ffac85; --on-brand:#111827;
+  --danger:#ffb4ab; --success:#8dddb0; --warning:#f3ca7d;
+  --surface-hover:#27231f; --scrim:#0009; --knob:#fffaf3; --knob-ink:#292524;
+  --chart-1:#ff8a54; --chart-2:#f3ca7d; --chart-3:#b6afa7; --chart-4:#8dddb0;
+  --admin-bg-overlay:rgba(21,20,19,.88); --admin-bg-glow:rgba(255,87,34,.15); --admin-bg-ambient:rgba(255,122,24,.10);
+  --admin-circuit:url('../img/circuit-background.png'); --admin-circuit-size:350px 350px;
+  --glass-surface:rgba(27,25,23,.56); --glass-surface-strong:rgba(27,25,23,.76); --glass-blur:22px; --glass-highlight:rgba(255,255,255,.16);
+  --shadow-1:0 2px 8px #0002; --shadow-2:0 8px 24px #0003; --shadow-3:0 20px 64px #0005;
+  --font-family:Inter,"Segoe UI",Arial,sans-serif; --font-page:28px; --font-section:20px; --font-card:16px; --font-body:14px; --font-caption:12px;
+  --weight-body:400; --weight-label:600; --weight-title:700;
+  --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px; --space-5:24px; --space-6:32px;
+  --radius-card:16px; --radius-control:10px; --radius-pill:999px;
+  --motion:240ms; --ease:cubic-bezier(.4,0,.2,1);
+  --z-topbar:100; --z-overlay:110; --z-sidebar:120; --z-dropdown:130; --z-modal:200; --z-tooltip:300; --z-toast:400;
+  --sidebar-expanded:280px; --sidebar-rail:80px; --sidebar-width:var(--sidebar-expanded); --nav-height:48px; --nav-icon-slot:54px; --icon-size:20px; --icon-stroke:1.8;
+  --topbar-height:72px; --page-max:1600px;
+  /* Compatibility aliases keep existing page markup independent of palette. */
+  --panel-text:var(--text); --panel-muted:var(--text-muted); --panel-line:var(--border); --panel-glass:var(--surface); --panel-tint:var(--brand-soft); --panel-accent-text:var(--brand-ink); --panel-danger:var(--danger);
+  --bg-color:var(--bg); --card-bg:var(--surface); --input-bg:var(--surface); --text-color:var(--text); --muted-color:var(--text-muted); --border-color:var(--border); --accent:var(--brand);
+  color-scheme:dark;
+}
+:root[data-theme="light"] {
+  --bg:#fffaf5; --surface:#fff; --border:#eee5df; --text:#1f2937; --text-muted:#74808d;
+  --brand:#ff7a18; --brand-hover:#e8660d; --brand-soft:#fff0e8; --brand-ink:#b84b10; --on-brand:#111827;
+  --danger:#b42318; --success:#167647; --warning:#8c5700; --surface-hover:#fff5ef; --scrim:#11182780;
+  --chart-1:#c94114; --chart-2:#8c5700; --chart-3:#6b7280; --chart-4:#167647;
+  --admin-bg-overlay:rgba(229,223,214,.94); --admin-bg-glow:rgba(255,122,24,.09); --admin-bg-ambient:rgba(255,87,34,.05);
+  --glass-surface:rgba(255,255,255,.72); --glass-surface-strong:rgba(255,255,255,.86); --glass-blur:22px; --glass-highlight:rgba(255,255,255,.88);
+  --shadow-1:0 2px 8px #11182706; --shadow-2:0 8px 24px #1118270d; --shadow-3:0 20px 64px #11182726;
+  color-scheme:light;
+}
+:root[data-admin-sidebar-collapsed="true"] { --sidebar-width:var(--sidebar-rail); }
+@media(max-width:860px){:root{--sidebar-width:0px}}
+@media(prefers-reduced-motion:reduce){:root{--motion:0ms}}

@@ -1,119 +1,55 @@
 <?php
-require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__.'/admin_features.php';
 require_admin();
-
-// Check login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
-
-function accountEscape($value) {
-    return htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
-}
-
-// CREATE
-if (isset($_POST['create'])) {
-    $username = $_POST['username'];
-    $name = $_POST['name'];
-    $role = $_POST['role'];
-    $position = $_POST['position'];
-    $password = $_POST['password'];
-    $confirm = $_POST['confirm_password'];
-
-    if ($password !== $confirm) {
-        header("Location: accounts.php?error=" . urlencode("Passwords do not match!") . "&createform=1");
-        exit();
-    }
-
-    $photo = null;
-
-    if (!empty($_FILES['photo']['name'])) {
-        $targetDir = "uploads/";
-
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0777, true);
+af_require_admin($conn);
+function accountEscape($value) { return e($value); }
+if (request_method_is('POST')) {
+    af_csrf();
+    $created = [];
+    $id = (int)($_POST['id'] ?? 0);
+    try {
+        $conn->begin_transaction();
+        // Lock all account rows to serialize role changes and duplicate checks.
+        $conn->query('SELECT id FROM users ORDER BY id FOR UPDATE');
+        $existing = $id ? af_user($conn, $id) : [];
+        if ($id && !$existing) throw new RuntimeException('Account not found.');
+        $username = af_text('username', 50);
+        $name = af_text('name', 100);
+        $position = af_text('position', 100, false);
+        $role = (string)($_POST['role'] ?? '');
+        if (!in_array($role, ['officer','admin_advisor','admin_adviser'], true)) throw new RuntimeException('Invalid role.');
+        // Match the deployed enum spelling without changing the schema.
+        $column = $conn->query("SHOW COLUMNS FROM users LIKE 'role'")->fetch_assoc()['Type'];
+        if ($role !== 'officer') $role = str_contains($column, "'admin_advisor'") ? 'admin_advisor' : 'admin_adviser';
+        if ($id === (int)$_SESSION['user_id'] && $role === 'officer') throw new RuntimeException('You cannot remove your own administrator access.');
+        if ($existing && $existing['role'] !== 'officer' && $role === 'officer') {
+            $count = $conn->query("SELECT COUNT(*) FROM users WHERE role IN ('admin_advisor','admin_adviser')")->fetch_row()[0];
+            if ($count <= 1) throw new RuntimeException('Keep at least one administrator.');
         }
-
-        $photo = $targetDir . basename($_FILES['photo']['name']);
-        move_uploaded_file($_FILES['photo']['tmp_name'], $photo);
-    }
-
-    $stmt = $conn->prepare("
-        INSERT INTO users (username, name, password, role, position, photo)
-        VALUES (?, ?, ?, ?, ?, ?)
-    ");
-    $stmt->bind_param("ssssss", $username, $name, $password, $role, $position, $photo);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: accounts.php?success=" . urlencode("Account created successfully!"));
-    exit();
-}
-
-// DELETE
-if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
-    $stmt = $conn->prepare("DELETE FROM users WHERE id=?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: accounts.php?success=" . urlencode("Account deleted successfully!"));
-    exit();
-}
-
-// UPDATE
-if (isset($_POST['update'])) {
-    $id = (int)$_POST['id'];
-    $username = $_POST['username'];
-    $name = $_POST['name'];
-    $role = $_POST['role'];
-    $position = $_POST['position'];
-    $password = $_POST['password'];
-    $confirm = $_POST['confirm_password'];
-
-    if ($password !== "" && $password !== $confirm) {
-        header("Location: accounts.php?edit=$id&error=" . urlencode("Passwords do not match!"));
-        exit();
-    }
-
-    $photo = $_POST['existing_photo'];
-
-    if (!empty($_FILES['photo']['name'])) {
-        $targetDir = "uploads/";
-
-        if (!is_dir($targetDir)) {
-            mkdir($targetDir, 0777, true);
+        $stmt = $conn->prepare('SELECT id FROM users WHERE username=? AND id<>?');
+        $stmt->bind_param('si', $username, $id); $stmt->execute();
+        if ($stmt->get_result()->num_rows) throw new RuntimeException('Username is already in use.');
+        $password = (string)($_POST['password'] ?? '');
+        $hash = (!$existing || $password !== '') ? af_password($password, (string)($_POST['confirm_password'] ?? '')) : $existing['password'];
+        $photo = af_upload('photo', $created) ?? ($existing['photo'] ?? null);
+        if ($existing) {
+            $stmt = $conn->prepare('UPDATE users SET username=?, name=?, role=?, position=?, photo=?, password=? WHERE id=?');
+            $stmt->bind_param('ssssssi', $username, $name, $role, $position, $photo, $hash, $id);
+        } else {
+            $stmt = $conn->prepare('INSERT INTO users (username,name,role,position,photo,password) VALUES (?,?,?,?,?,?)');
+            $stmt->bind_param('ssssss', $username, $name, $role, $position, $photo, $hash);
         }
-
-        $photo = $targetDir . basename($_FILES['photo']['name']);
-        move_uploaded_file($_FILES['photo']['tmp_name'], $photo);
+        $stmt->execute(); $conn->commit();
+        if ($id === (int)$_SESSION['user_id']) {
+            $_SESSION['username']=$username; $_SESSION['name']=$name; $_SESSION['position']=$position; $_SESSION['role']=$role;
+        }
+        redirect('accounts.php?success='.urlencode('Account saved. Password changes apply at next sign-in.'));
+    } catch (Throwable $ex) {
+        $conn->rollback(); af_cleanup($created);
+        $message = $ex instanceof mysqli_sql_exception ? 'Could not save account. Please try again.' : $ex->getMessage();
+        redirect('accounts.php?'.($id ? 'edit='.$id : 'createform=1').'&error='.urlencode($message));
     }
-
-    if ($password !== "") {
-        $stmt = $conn->prepare("
-            UPDATE users
-            SET username=?, name=?, role=?, position=?, photo=?, password=?
-            WHERE id=?
-        ");
-        $stmt->bind_param("ssssssi", $username, $name, $role, $position, $photo, $password, $id);
-    } else {
-        $stmt = $conn->prepare("
-            UPDATE users
-            SET username=?, name=?, role=?, position=?, photo=?
-            WHERE id=?
-        ");
-        $stmt->bind_param("sssssi", $username, $name, $role, $position, $photo, $id);
-    }
-
-    $stmt->execute();
-    $stmt->close();
-
-    header("Location: accounts.php?success=" . urlencode("Account updated successfully!"));
-    exit();
 }
-
 // Fetch all accounts
 // Fetch accounts in the requested position order.
 $result = $conn->query("
@@ -229,474 +165,18 @@ if (isset($_GET['edit'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="css/theme.css">
-<script src="js/theme-init.js"></script>
+<link rel="icon" type="image/png" href="assets/img/jpcs-logo.png?v=3">
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Account Management</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: flex;
-      font-family: "Segoe UI", Arial, sans-serif;
-      color: #fff;
-      background:
-        radial-gradient(ellipse at top right, rgba(255,120,0,.19), transparent 48%),
-        radial-gradient(ellipse at bottom left, rgba(255,120,0,.12), transparent 48%),
-        #090909;
-      background-attachment: fixed;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 20;
-      width: 220px;
-      height: 100vh;
-      padding: 20px 0;
-      overflow-y: auto;
-      background:
-        radial-gradient(ellipse at bottom left, rgba(255,120,0,.22), transparent 60%),
-        rgba(12,12,12,.94);
-      border-right: 1px solid rgba(255,153,51,.22);
-      box-shadow: 8px 0 35px rgba(0,0,0,.3);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .sidebar h2 {
-      margin: 8px 15px 25px;
-      color: #ff9b36;
-      text-align: center;
-      font-size: 25px;
-    }
-
-    .sidebar h2::after {
-      content: "";
-      display: block;
-      width: 38px;
-      height: 3px;
-      margin: 14px auto 0;
-      border-radius: 10px;
-      background: #ff8a18;
-      box-shadow: 0 0 14px rgba(255,138,24,.6);
-    }
-
-    .sidebar a {
-      display: block;
-      margin: 6px 10px;
-      padding: 12px 16px;
-      border-radius: 10px;
-      color: #d7d7d7;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 600;
-      line-height: 1.5;
-      transition: background .2s ease;
-    }
-
-    .sidebar a:hover {
-      color: #fff;
-      background: rgba(255,138,24,.12);
-    }
-
-    .sidebar a.active {
-      color: #fff;
-      background: linear-gradient(100deg, rgba(255,138,24,.28), rgba(255,138,24,.07));
-      box-shadow: inset 3px 0 0 #ff8a18;
-    }
-
-    .content {
-      flex: 1;
-      min-width: 0;
-      margin-left: 220px;
-      padding: 28px;
-    }
-
-    header {
-      padding: 28px;
-      border: 1px solid rgba(255,166,70,.3);
-      border-radius: 18px;
-      background:
-        linear-gradient(120deg, rgba(255,138,24,.15), transparent 65%),
-        rgba(22,22,22,.83);
-      box-shadow: 0 14px 35px rgba(0,0,0,.3);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: clamp(24px, 3vw, 34px);
-      letter-spacing: -.6px;
-    }
-
-    header h1::after {
-      content: "";
-      display: block;
-      width: 55px;
-      height: 3px;
-      margin-top: 15px;
-      border-radius: 10px;
-      background: #ff8a18;
-      box-shadow: 0 0 16px rgba(255,138,24,.5);
-    }
-
-    .toolbar {
-      display: flex;
-      justify-content: flex-end;
-      margin: 24px 0;
-    }
-
-    .btn {
-      display: inline-block;
-      padding: 9px 14px;
-      border: 1px solid transparent;
-      border-radius: 9px;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1.5;
-      white-space: nowrap;
-      cursor: pointer;
-    }
-
-    .btn-create,
-    .btn-edit,
-    .submit-btn {
-      color: #111;
-      background: linear-gradient(135deg, #ff9c30, #ff7814);
-      border-color: rgba(255,180,100,.3);
-      box-shadow: 0 4px 16px rgba(255,120,20,.15);
-    }
-
-    .btn-create:hover,
-    .btn-edit:hover,
-    .submit-btn:hover {
-      box-shadow: 0 4px 22px rgba(255,138,24,.35);
-    }
-
-    .btn-create {
-      padding: 12px 18px;
-      font-size: 14px;
-    }
-
-    .btn-delete {
-      color: #ffb3b3;
-      background: rgba(230,80,80,.1);
-      border-color: rgba(255,120,120,.3);
-    }
-
-    .btn-delete:hover {
-      background: rgba(230,80,80,.2);
-    }
-
-    .success,
-    .error {
-      margin-top: 20px;
-      padding: 14px 18px;
-      border: 1px solid;
-      border-radius: 12px;
-      line-height: 1.6;
-    }
-
-    .success {
-      color: #b5f0c7;
-      background: rgba(70,190,110,.1);
-      border-color: rgba(100,220,140,.3);
-    }
-
-    .error {
-      color: #ffb3b3;
-      background: rgba(230,80,80,.1);
-      border-color: rgba(255,120,120,.3);
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      border: 1px solid rgba(255,166,70,.22);
-      border-radius: 16px;
-      background: rgba(20,20,20,.9);
-      box-shadow: 0 12px 30px rgba(0,0,0,.25);
-    }
-
-    table {
-      width: 100%;
-      min-width: 900px;
-      border-collapse: collapse;
-    }
-
-    th,
-    td {
-      padding: 16px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.07);
-      text-align: left;
-      font-size: 14px;
-      line-height: 1.5;
-      vertical-align: middle;
-    }
-
-    th {
-      color: #ffb56b;
-      background: rgba(255,138,24,.14);
-      white-space: nowrap;
-    }
-
-    td {
-      color: #e7e7e7;
-    }
-
-    tbody tr:nth-child(even) {
-      background: rgba(255,255,255,.025);
-    }
-
-    tbody tr:hover {
-      background: rgba(255,138,24,.055);
-    }
-
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    .account-photo {
-      display: block;
-      width: 60px;
-      height: 60px;
-      object-fit: cover;
-      border-radius: 12px;
-      border: 1px solid rgba(255,166,70,.3);
-    }
-
-    .role-badge {
-      display: inline-block;
-      padding: 5px 9px;
-      border: 1px solid rgba(255,166,70,.22);
-      border-radius: 7px;
-      background: rgba(255,138,24,.07);
-      color: #ffb56b;
-      font-size: 12px;
-    }
-
-    .row-actions {
-      display: flex;
-      gap: 8px;
-    }
-
-    .empty-state {
-      padding: 30px;
-      text-align: center;
-      color: #aaa;
-    }
-
-    /* Create and Edit modals */
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: rgba(0,0,0,.78);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .modal-content {
-      width: 100%;
-      max-width: 500px;
-      max-height: calc(100dvh - 48px);
-      overflow-y: auto;
-      padding: 28px;
-      border: 1px solid rgba(255,166,70,.35);
-      border-radius: 20px;
-      background:
-        radial-gradient(ellipse at top right, rgba(255,138,24,.12), transparent 55%),
-        #151515;
-      box-shadow: 0 25px 70px rgba(0,0,0,.6), 0 0 35px rgba(255,138,24,.1);
-    }
-
-    .modal-content h3 {
-      margin: 0 0 22px;
-      font-size: 25px;
-    }
-
-    .modal-content h3::after {
-      content: "";
-      display: block;
-      width: 35px;
-      height: 3px;
-      margin-top: 12px;
-      border-radius: 10px;
-      background: #ff8a18;
-    }
-
-    label {
-      display: block;
-      margin: 14px 0 7px;
-      color: #e4e4e4;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    input,
-    select {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid rgba(255,255,255,.16);
-      border-radius: 9px;
-      outline: none;
-      background: #202020;
-      color: #fff;
-      font: inherit;
-      font-size: 14px;
-      color-scheme: dark;
-    }
-
-    input::placeholder {
-      color: #888;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #ff9b36;
-      box-shadow: 0 0 0 3px rgba(255,138,24,.1);
-    }
-
-    input[type="file"] {
-      padding: 9px;
-      font-size: 12px;
-    }
-
-    input[type="file"]::file-selector-button {
-      margin-right: 10px;
-      padding: 8px 10px;
-      border: 1px solid rgba(255,166,70,.3);
-      border-radius: 6px;
-      background: rgba(255,138,24,.12);
-      color: #ffb56b;
-      cursor: pointer;
-    }
-
-    .helper {
-      margin: 7px 0;
-      color: #aaa;
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .current-photo {
-      margin-top: 12px;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-    }
-
-    .modal-actions > * {
-      flex: 1;
-      padding: 11px 16px;
-      text-align: center;
-      font: inherit;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .cancel-btn {
-      color: #ddd;
-      border-color: rgba(255,255,255,.18);
-      background: rgba(255,255,255,.04);
-    }
-
-    .cancel-btn:hover {
-      background: rgba(255,255,255,.09);
-    }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid #ffb56b;
-      outline-offset: 4px;
-    }
-
-    @media (max-width: 700px) {
-      body {
-        display: block;
-      }
-
-      .sidebar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        padding: 16px 10px;
-        border-right: none;
-        border-bottom: 1px solid rgba(255,153,51,.22);
-      }
-
-      .sidebar h2 {
-        margin: 0 0 15px;
-      }
-
-      .sidebar a {
-        display: inline-block;
-        margin: 4px;
-        padding: 9px 12px;
-        font-size: 13px;
-      }
-
-      .content {
-        margin-left: 0;
-        padding: 18px;
-      }
-
-      header {
-        padding: 22px;
-      }
-
-      .modal {
-        padding: 16px;
-      }
-
-      .modal-content {
-        padding: 22px;
-        max-height: calc(100dvh - 32px);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .sidebar a {
-        transition: none;
-      }
-    }
-  </style>
-    <link rel="stylesheet" href="assets/css/system-ui.css">
-    <script src="js/system-ui.js" defer></script>
-    <link rel="stylesheet" href="assets/css/glass.css">
-    <link rel="stylesheet" href="assets/css/light-clean.css">
-    <script src="js/glass-ui.js" defer></script>
+<?php require __DIR__.'/includes/admin_head.php'; ?>
 </head>
 
-<body class="app-page admin-page">
-  <div class="sidebar">
-    <h2>Admin</h2>
-    <a href="dashboard.php">Dashboard</a>
-    <a href="officers.php">Officer Information</a>
-    <a href="pending.php">Student Registered Pending</a>
-    <a href="scanner.php">Event Attendance Scanner</a>
-    <a href="attendance.php">Attendance List per Event</a>
-    <a href="register_list.php">Register List</a>
-    <a href="events.php">Event Management</a>
-    <a href="accounts.php" class="active">Account Management</a>
-    <a href="logout.php">Logout</a>
-  </div>
+<body class="app-page admin-page jpcs-admin feature-accounts">
+  <?php require __DIR__ . '/includes/admin_sidebar.php'; ?>
 
   <div class="content">
     <header>
@@ -715,7 +195,7 @@ if (isset($_GET['edit'])) {
       </div>
     <?php } ?>
 
-    <div class="toolbar">
+    <p>Deactivation is unavailable with the current account schema. Role and password changes take full effect after existing sessions end.</p><div class="toolbar">
       <a href="accounts.php?createform=1" class="btn btn-create">
         + Create Account
       </a>
@@ -770,13 +250,7 @@ if (isset($_GET['edit'])) {
                       Edit
                     </a>
 
-                    <a
-                      href="accounts.php?delete=<?php echo (int)$row['id']; ?>"
-                      class="btn btn-delete"
-                      onclick="return confirm('Delete this account?')"
-                    >
-                      Delete
-                    </a>
+                    <a class="btn" href="accounts.php?edit=<?php echo (int)$row['id']; ?>#edit_password">Reset password</a>
                   </div>
                 </td>
               </tr>
@@ -805,7 +279,7 @@ if (isset($_GET['edit'])) {
             <div class="error"><?php echo accountEscape($_GET['error']); ?></div>
           <?php } ?>
 
-          <form method="POST" enctype="multipart/form-data">
+          <form method="POST" enctype="multipart/form-data"><?php af_field(); ?>
             <label for="create_username">Username</label>
             <input
               type="text"
@@ -827,7 +301,7 @@ if (isset($_GET['edit'])) {
 
             <label for="create_role">Role</label>
             <select id="create_role" name="role" required>
-              <option value="admin_adviser">Admin/Adviser</option>
+              <option value="admin_advisor">Admin/Adviser</option>
               <option value="officer">Officer</option>
             </select>
 
@@ -901,7 +375,7 @@ if (isset($_GET['edit'])) {
             <div class="error"><?php echo accountEscape($_GET['error']); ?></div>
           <?php } ?>
 
-          <form method="POST" enctype="multipart/form-data">
+          <form method="POST" enctype="multipart/form-data"><?php af_field(); ?>
             <input type="hidden" name="id" value="<?php echo (int)$editRow['id']; ?>">
             <input
               type="hidden"
@@ -961,7 +435,7 @@ if (isset($_GET['edit'])) {
               placeholder="New Password"
               autocomplete="new-password"
             >
-            <p class="helper">Leave blank to keep the current password.</p>
+            <p class="helper">Leave blank to keep the current password. To reset it, enter and confirm a new password (8–72 bytes).</p>
 
             <label for="edit_confirm">Confirm New Password</label>
             <input

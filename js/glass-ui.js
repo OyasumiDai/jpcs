@@ -61,7 +61,8 @@ document.addEventListener('DOMContentLoaded', function () {
       auth.prepend(close);
       const dismiss = function () { location.assign('index.php'); };
       close.addEventListener('click', dismiss);
-      dialog.addEventListener('click', function (event) { if (event.target === dialog) dismiss(); });
+      // Keep the form open when the user clicks outside the card.
+      dialog.addEventListener('click', function (event) { if (event.target === dialog) event.stopPropagation(); });
       dialog.addEventListener('cancel', function (event) { event.preventDefault(); dismiss(); });
       dialog.showModal();
       document.body.style.overflow = 'hidden';

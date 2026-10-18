@@ -1,12 +1,12 @@
 /* Light-only SaaS palette. Dark theme rules and tokens are intentionally untouched. */
 :root[data-theme="light"] {
-  --bg-primary: #FFFFFF; --bg-secondary: #F9FAFB;
-  --brand-primary: #FF5722; --brand-hover: #E64A19;
+  --bg-primary: #FFFCF8; --bg-secondary: #FFF8F0;
+  --brand-primary: #FF8A2A; --brand-hover: #F97316;
   --text-primary: #111827; --text-secondary: #6B7280; --border: #E5E7EB;
   --clean-shadow: 0 1px 3px rgb(17 24 39 / .06);
   --clean-shadow-hover: 0 5px 16px rgb(17 24 39 / .09);
-  --clean-ring: rgb(255 87 34 / .2);
-  --clean-tint: rgb(255 87 34 / .06);
+  --clean-ring: rgb(255 138 42 / .2);
+  --clean-tint: rgb(255 138 42 / .08);
   --clean-glass: rgb(255 255 255 / .7);
   --clean-hero-start: rgb(255 255 255 / .97);
   --clean-hero-end: rgb(249 250 251 / .84);
@@ -14,16 +14,16 @@
   --clean-error-bg: #FEF3F2; --clean-success-bg: #F0FDF4;
   --glass-page: var(--bg-primary); --glass-bg: var(--clean-glass);
   --glass-bg-hover: var(--bg-secondary); --glass-solid: var(--bg-secondary);
-  --glass-sheen: transparent; --glass-warm-glow: transparent; --glass-edge-glow: transparent;
+  --glass-sheen: transparent; --glass-warm-glow: rgb(255 138 42 / .10); --glass-edge-glow: transparent;
   --glass-border: var(--border); --glass-highlight: var(--bg-primary);
   --glass-text: var(--text-primary); --glass-muted: var(--text-secondary);
   --glass-accent: var(--brand-primary); --glass-input-bg: var(--bg-secondary);
   --glass-primary: var(--brand-primary); --glass-primary-end: var(--brand-primary);
   --glass-button-text: var(--bg-primary); --glass-shadow: rgb(17 24 39 / .06);
-  --glow-color: var(--clean-ring); --glass-ambient: transparent;
+  --glow-color: var(--clean-ring); --glass-ambient: rgb(255 154 61 / .06);
   --glass-backdrop: rgb(249 250 251 / .94); --glass-heading-end: var(--text-primary);
   --glass-error: var(--clean-error); --glass-success: var(--clean-success);
-  --cursor-glow: rgb(255 87 34 / .045); --circuit-overlay: rgb(255 255 255 / .98);
+  --cursor-glow: rgb(255 138 42 / .07); --circuit-overlay: rgb(255 248 240 / .86);
   --bg-color: var(--bg-primary); --sidebar-bg: var(--bg-primary); --card-bg: var(--bg-secondary);
   --text-color: var(--text-primary); --muted-color: var(--text-secondary);
   --border-color: var(--border); --input-bg: var(--bg-secondary); --hover-bg: var(--bg-secondary);
@@ -36,11 +36,11 @@ html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) {
   --sc-bg: var(--bg-primary); --sc-surface: var(--bg-secondary); --sc-surface-2: var(--bg-secondary);
   --sc-text: var(--text-primary); --sc-muted: var(--text-secondary); --sc-line: var(--border);
   --sc-line-strong: var(--border); --sc-accent: var(--brand-primary); --sc-accent-dark: var(--brand-hover); --sc-accent-soft: var(--clean-tint);
-  background: var(--bg-primary) !important; color: var(--text-primary) !important;
+  background: radial-gradient(circle at 8% 10%, rgb(255 154 61 / .12), transparent 28%), radial-gradient(circle at 94% 86%, rgb(255 138 42 / .08), transparent 30%), var(--bg-primary) !important; color: var(--text-primary) !important;
 }
-/* Keep the circuit artwork very faint, with no colored background wash. */
+/* Keep the circuit artwork visible through a soft, warm orange wash. */
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page)::before,
-html[data-theme="light"] body .glass-auth-modal::before { opacity: .3; }
+html[data-theme="light"] body .glass-auth-modal::before { opacity: .46; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-panel,.glass-card,.card,.stat-card,.dashboard-card,.info-card,.panel,.table-panel,.welcome,.mv-card,.highlight-card,.event-card,.officer-card,.modal-content,.auth-layout,footer) {
   background: var(--bg-secondary) !important; color: var(--text-primary) !important;
   border: 1px solid var(--border) !important; border-radius: 12px !important;
@@ -63,11 +63,11 @@ html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(input,te
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(input,select,textarea):focus { border-color: var(--brand-primary) !important; box-shadow: 0 0 0 3px var(--clean-ring) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(a,button,input,select,textarea,[tabindex]):focus-visible { outline: 3px solid var(--brand-primary) !important; outline-offset: 3px; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-button,.btn-glow,.auth-submit,.jpcs-nav-button.solid,.btn.primary,.btn-add,button[type="submit"],input[type="submit"]) {
-  background: var(--brand-primary) !important; color: var(--bg-primary) !important; border: 1px solid var(--brand-primary) !important;
+  background: linear-gradient(135deg, #FFAD55 0%, #FF8A2A 48%, #F97316 100%) !important; color: #FFF7ED !important; border: 1px solid #FF8A2A !important;
   font-size: 19px !important; font-weight: 700 !important; line-height: 1.25; min-height: 44px;
   box-shadow: var(--clean-shadow) !important; filter: none !important;
 }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-button,.btn-glow,.auth-submit,.jpcs-nav-button.solid,.btn.primary,.btn-add,button[type="submit"],input[type="submit"]):is(:hover,:active) { background: var(--brand-hover) !important; border-color: var(--brand-hover) !important; box-shadow: var(--clean-shadow-hover) !important; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-button,.btn-glow,.auth-submit,.jpcs-nav-button.solid,.btn.primary,.btn-add,button[type="submit"],input[type="submit"]):is(:hover,:active) { background: linear-gradient(135deg, #FFC06F 0%, #FF9A3D 48%, #F97316 100%) !important; border-color: #F97316 !important; box-shadow: var(--clean-shadow-hover) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-nav-button.outline,.glass-secondary) { background: var(--bg-primary) !important; color: var(--text-primary) !important; border: 1px solid var(--border) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-nav-button.outline,.glass-secondary):hover { border-color: var(--brand-primary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-navbar,.sidebar) { background: var(--bg-primary) !important; border-color: var(--border) !important; box-shadow: var(--clean-shadow) !important; }
@@ -76,13 +76,14 @@ html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.highlig
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(th,td,.table-wrapper,.table-container,.ui-table-scroll) { border-color: var(--border) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) td { background: var(--bg-primary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(th,tr:hover td) { background: var(--bg-secondary) !important; }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner { background-image: linear-gradient(90deg,var(--clean-hero-start),var(--clean-hero-end)),url('../img/jpcs-campus-hero.png'); border: 1px solid var(--border); box-shadow: var(--clean-shadow); border-radius: 12px; }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner::after { background: none; }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner::before { opacity: .12; }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.hero-banner h1,.hero-banner__chapter,.hero-banner__chapter strong) { color: var(--text-primary) !important; text-shadow: none; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner { background-image: linear-gradient(90deg, rgba(255, 255, 255, .88) 0%, rgba(255, 250, 244, .76) 48%, rgba(255, 174, 88, .34) 100%), url('../img/jpcs-campus-hero.png'); border: 1px solid rgba(255, 138, 42, .35); box-shadow: 0 18px 50px rgba(124, 45, 18, .12); border-radius: 12px; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner::after { background: linear-gradient(90deg, transparent 28%, rgba(255, 154, 61, .22) 72%, rgba(255, 138, 42, .30)); }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner::before { background: url('../img/hero-network.svg') center / cover no-repeat; opacity: .42; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.hero-banner h1,.hero-banner__chapter,.hero-banner__chapter strong) { color: var(--text-primary) !important; text-shadow: 0 2px 12px rgba(255, 255, 255, .55); }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-accent { color: var(--brand-primary); }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner__contact { background: var(--bg-primary); border-color: var(--border); }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner__mark img { filter: none; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner__contact { background: linear-gradient(90deg, rgba(255, 255, 255, .82), rgba(255, 244, 230, .88)); border-color: rgba(255, 138, 42, .2); }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner__contact a { color: var(--text-primary) !important; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner__mark img { filter: drop-shadow(0 15px 24px rgba(124, 45, 18, .16)); }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .auth-intro { background: var(--bg-secondary); }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.auth-card .error,.error) { color: var(--clean-error) !important; background: var(--clean-error-bg) !important; border: 1px solid var(--clean-error) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.auth-card .success,.success) { color: var(--clean-success) !important; background: var(--clean-success-bg) !important; border: 1px solid var(--clean-success) !important; }

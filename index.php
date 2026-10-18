@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/includes/student_auth.php';
+require_once __DIR__ . '/includes/public_officers.php';
+ensure_public_officers_table($conn);
 
 $student = current_student();
 
@@ -9,6 +11,7 @@ $highlights = $conn->query("SELECT * FROM events WHERE status='done' ORDER BY ev
 
 // Fetch upcoming events for calendar
 $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY event_date ASC");
+$publicOfficers = $conn->query("SELECT id, name, position, photo FROM officer_profiles ORDER BY id ASC");
 ?>
 
 <!DOCTYPE html>
@@ -820,6 +823,20 @@ if(!empty($images)) {
       <span class="nav prev" onclick="prevImage()">&#10094;</span>
       <img id="viewerImg" src="">
       <span class="nav next" onclick="nextImage()">&#10095;</span>
+    </div>
+
+    <div class="section public-officer-section">
+      <h3>JPCS Officers</h3>
+      <p>Meet the officers who help lead the Junior Philippine Computer Society.</p>
+      <div class="public-officer-grid">
+        <?php while ($officer = $publicOfficers->fetch_assoc()) { ?>
+        <article class="public-officer-card">
+          <img src="<?= e(image_url($officer['photo'])) ?>" alt="<?= e($officer['name']) ?>">
+          <div><h4><?= e($officer['name']) ?></h4><p><?= e($officer['position'] ?: 'JPCS Officer') ?></p></div>
+        </article>
+        <?php } ?>
+      </div>
+      <?php if ($publicOfficers->num_rows === 0) { ?><p class="public-officer-empty">Officer information will be posted here soon.</p><?php } ?>
     </div>
 
     <div class="section">

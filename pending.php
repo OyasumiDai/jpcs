@@ -60,6 +60,34 @@ if ($selectedEventID === false) {
     $selectedEventID = null;
 }
 
+// Dashboard deep links open the review context; they never perform an action.
+$reviewID = filter_var($_GET['review'] ?? '', FILTER_VALIDATE_INT);
+if ($reviewID !== false && $reviewID > 0) {
+    $reviewStmt = $conn->prepare('SELECT event_id FROM registrations WHERE id=?');
+    $reviewStmt->bind_param('i', $reviewID);
+    $reviewStmt->execute();
+    $reviewRow = $reviewStmt->get_result()->fetch_assoc();
+    $reviewStmt->close();
+    if ($reviewRow) {
+        $selectedEventID = (int) $reviewRow['event_id'];
+    }
+}
+
+// Read-only, authenticated badge endpoint for the admin shell and dashboard.
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['counts'] ?? '') === '1') {
+    $countRows = $conn->query("SELECT event_id, COUNT(*) AS pending FROM registrations WHERE status='pending' GROUP BY event_id");
+    $byEvent = [];
+    $pendingTotal = 0;
+    while ($countRow = $countRows->fetch_assoc()) {
+        $byEvent[(string) $countRow['event_id']] = (int) $countRow['pending'];
+        $pendingTotal += (int) $countRow['pending'];
+    }
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    echo json_encode(['pending' => $pendingTotal, 'events' => (object) $byEvent]);
+    exit;
+}
+
 function pendingDirectory($directory) {
     if (!is_dir($directory) &&
         !mkdir($directory, 0755, true) &&
@@ -441,7 +469,8 @@ $notice = $_SESSION['pending_notice'] ?? null;
 unset($_SESSION['pending_notice']);
 
 $events = $conn->query("
-    SELECT id, title, event_date, poster, status
+    SELECT id, title, event_date, poster, status,
+           (SELECT COUNT(*) FROM registrations r WHERE r.event_id=events.id AND r.status='pending') AS pending_count
     FROM events WHERE status='upcoming'
     ORDER BY event_date DESC
 ");
@@ -462,9 +491,10 @@ if ($selectedEventID !== null) {
         $stmt = $conn->prepare("
             SELECT * FROM registrations
             WHERE event_id=?
-            ORDER BY registered_at ASC, id ASC
+            ORDER BY (id=?) DESC, registered_at ASC, id ASC
         ");
-        $stmt->bind_param('i', $selectedEventID);
+        $reviewSortID = $reviewID !== false ? $reviewID : -1;
+        $stmt->bind_param('ii', $selectedEventID, $reviewSortID);
         $stmt->execute();
         $rows = $stmt->get_result();
 
@@ -484,186 +514,16 @@ if ($selectedEventID !== null) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="stylesheet" href="css/theme.css">
-<script src="js/theme-init.js"></script>
+<link rel="icon" type="image/png" href="assets/img/jpcs-logo.png?v=3">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Student Registered Pending</title>
-    <style>
-        * { box-sizing:border-box; }
-        body {
-            margin:0; min-height:100vh; display:flex;
-            font-family:"Segoe UI",Arial,sans-serif; color:#fff;
-            background:
-                radial-gradient(ellipse at top right,rgba(255,125,0,.2),transparent 45%),
-                radial-gradient(ellipse at bottom left,rgba(255,125,0,.14),transparent 45%),
-                #090909;
-            background-attachment:fixed;
-        }
-        .sidebar {
-            width:220px; height:100vh; position:fixed;
-            left:0; top:0; padding-top:20px; overflow-y:auto; z-index:20;
-            background:
-                radial-gradient(ellipse at bottom left,rgba(255,125,0,.23),transparent 60%),
-                rgba(12,12,12,.94);
-            border-right:1px solid rgba(255,152,31,.28);
-            box-shadow:6px 0 30px rgba(0,0,0,.3);
-            backdrop-filter:blur(16px);
-            -webkit-backdrop-filter:blur(16px);
-        }
-        .sidebar h2 {
-            text-align:center; margin-bottom:24px;
-            color:#fff; font-size:27px; overflow-wrap:anywhere;
-        }
-        .sidebar h2::after {
-            content:""; display:block; width:42px; height:3px;
-            margin:12px auto 0; border-radius:20px; background:#ff850a;
-            box-shadow:0 0 14px rgba(255,133,10,.65);
-        }
-        .sidebar a {
-            display:block; margin:6px 10px; padding:12px 16px;
-            color:#e5ded7; text-decoration:none; font-weight:600;
-            font-size:14px; line-height:1.5; border-radius:10px;
-        }
-        .sidebar a[href="pending.php"] {
-            color:#fff;
-            background:linear-gradient(110deg,rgba(255,133,10,.35),rgba(255,133,10,.08));
-            box-shadow:inset 3px 0 0 #ff850a,
-                inset 0 0 0 1px rgba(255,133,10,.45),
-                0 0 20px rgba(255,125,0,.12);
-        }
-        .sidebar a:hover { color:#fff; background:rgba(255,133,10,.18); }
-        .content { margin-left:220px; padding:20px; flex:1; min-width:0; }
-        header {
-            padding:24px 20px; text-align:center;
-            border:1px solid rgba(255,166,70,.3); border-radius:18px;
-            background:
-                radial-gradient(ellipse at bottom right,rgba(255,133,10,.2),transparent 65%),
-                rgba(24,21,18,.88);
-            box-shadow:0 12px 35px rgba(0,0,0,.25),
-                inset 0 1px 0 rgba(255,255,255,.07);
-            backdrop-filter:blur(16px);
-        }
-        header h1 {
-            margin:0; color:#fff; font-size:clamp(25px,3vw,36px);
-            font-weight:800; line-height:1.3;
-        }
-        .section { padding:24px 20px; }
-        .section h2,.section h3 {
-            color:#ffae55; line-height:1.5; overflow-wrap:anywhere;
-        }
-        .section h3 { margin:28px 0 20px; font-size:25px; }
-        .section h3::after {
-            content:""; display:block; width:45px; height:3px;
-            margin-top:12px; border-radius:20px; background:#ff850a;
-            box-shadow:0 0 14px rgba(255,133,10,.5);
-        }
-        .grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
-        .card {
-            width:200px; border:1px solid rgba(255,166,70,.3);
-            border-radius:16px; overflow:hidden; text-align:center;
-            background:
-                radial-gradient(ellipse at bottom right,rgba(255,133,10,.18),transparent 65%),
-                rgba(25,21,18,.88);
-            box-shadow:0 10px 28px rgba(0,0,0,.3);
-        }
-        .card:hover {
-            border-color:rgba(255,152,31,.75);
-            box-shadow:0 12px 32px rgba(0,0,0,.35),0 0 24px rgba(255,125,0,.15);
-        }
-        .card a { display:block; height:100%; color:#fff; text-decoration:none; }
-        .card img { display:block; width:100%; height:250px; object-fit:cover; }
-        .card h4 { margin:16px 12px; line-height:1.6; overflow-wrap:anywhere; }
-        .event-date { color:#ffae55; font-size:13px; font-weight:400; }
-        .table-container {
-            margin-top:20px; overflow-x:auto;
-            border:1px solid rgba(255,166,70,.3); border-radius:14px;
-            background:rgba(24,21,18,.88);
-            box-shadow:0 12px 35px rgba(0,0,0,.25);
-        }
-        table { width:100%; min-width:850px; border-collapse:collapse; }
-        th,td {
-            padding:15px 12px; text-align:center; font-size:14px; line-height:1.6;
-            border-bottom:1px solid rgba(255,255,255,.09); overflow-wrap:anywhere;
-        }
-        th { color:#ffba70; background:rgba(255,133,10,.16); font-weight:700; }
-        td { color:#eee7e0; }
-        tr:nth-child(even) td { background:rgba(255,255,255,.025); }
-        tr:hover td { background:rgba(255,133,10,.055); }
-        tr:last-child td { border-bottom:0; }
-        .actions { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; }
-        .actions form { margin:0; }
-        .btn-confirm,.btn-remove,.btn-back {
-            display:inline-block; padding:9px 15px; border-radius:9px;
-            text-decoration:none; font:650 13px/1.5 "Segoe UI",Arial,sans-serif;
-            cursor:pointer;
-        }
-        .btn-confirm {
-            color:#17100a; background:linear-gradient(135deg,#ffa52f,#ff7900);
-            border:1px solid rgba(255,184,107,.5);
-            box-shadow:0 4px 15px rgba(255,125,0,.16);
-        }
-        .btn-confirm:hover { background:linear-gradient(135deg,#ffb64c,#ff921a); }
-        .btn-remove {
-            color:#fff; background:rgba(255,255,255,.04);
-            border:1px solid rgba(255,255,255,.3);
-        }
-        .btn-remove:hover {
-            border-color:#ffae55; background:rgba(255,133,10,.12);
-        }
-        .btn-back {
-            color:#ffae55; background:rgba(255,133,10,.08);
-            border:1px solid rgba(255,166,70,.3); margin-bottom:15px;
-        }
-        .btn-back:hover { background:rgba(255,133,10,.18); }
-        .success,.error {
-            margin:20px 0 15px; padding:14px 18px;
-            color:#fff; background:rgba(255,133,10,.12);
-            border:1px solid rgba(255,166,70,.5); border-radius:12px;
-            line-height:1.7; overflow-wrap:anywhere;
-        }
-        .error { border-width:2px; }
-        .empty-state,.hint { color:#d3cac1; line-height:1.7; }
-        .empty-state { text-align:center; padding:20px; }
-        a:focus-visible,button:focus-visible {
-            outline:3px solid #ffae55; outline-offset:4px;
-        }
-        @media(max-width:700px) {
-            body { display:block; }
-            .sidebar {
-                position:relative; width:100%; height:auto; padding:16px 10px;
-                border-right:0; border-bottom:1px solid rgba(255,152,31,.28);
-            }
-            .sidebar h2 { margin:0 0 16px; }
-            .sidebar a {
-                display:inline-block; margin:4px; padding:10px 12px; font-size:13px;
-            }
-            .content { margin-left:0; padding:16px; }
-            .section { padding:24px 0; }
-            .card { max-width:100%; }
-        }
-    </style>
-    <link rel="stylesheet" href="assets/css/system-ui.css">
-    <script src="js/system-ui.js" defer></script>
-    <link rel="stylesheet" href="assets/css/glass.css">
-    <link rel="stylesheet" href="assets/css/light-clean.css">
-    <script src="js/glass-ui.js" defer></script>
+
+<?php require __DIR__.'/includes/admin_head.php'; ?>
 </head>
-<body class="app-page admin-page">
-<div class="sidebar">
-    <h2><?= pendingEscape(ucfirst($role)) ?></h2>
-    <a href="dashboard.php">Dashboard</a>
-    <a href="officers.php">Officer Information</a>
-    <a href="pending.php">Student Registered Pending</a>
-    <a href="scanner.php">Event Attendance Scanner</a>
-    <a href="attendance.php">Attendance List per Event</a>
-    <a href="register_list.php">Register List</a>
-    <a href="events.php">Event Management</a>
-    <?php if (in_array($role, ['admin_adviser', 'admin_advisor'], true)) { ?>
-        <a href="accounts.php">Account Management</a>
-    <?php } ?>
-    <a href="logout.php">Logout</a>
-</div>
+<body class="app-page admin-page feature-pending">
+<?php require __DIR__ . '/includes/admin_sidebar.php'; ?>
 
 <div class="content">
     <header><h1>Student Registered Pending</h1></header>
@@ -681,6 +541,7 @@ if ($selectedEventID !== null) {
     <div class="section">
     <?php if (!$eventInfo) { ?>
         <h3>Select Event</h3>
+        <p>Pending counts update every 30 seconds. Open an event to review registrations.</p>
         <div class="grid">
         <?php if ($events->num_rows > 0) { ?>
             <?php while ($row = $events->fetch_assoc()) { ?>
@@ -691,6 +552,7 @@ if ($selectedEventID !== null) {
                         ) ?>" alt="Event Poster">
                         <h4>
                             <?= pendingEscape($row['title']) ?><br>
+                            <span data-pending-event="<?= (int) $row['id'] ?>"><?= (int) $row['pending_count'] ?></span> pending<br>
                             <span class="event-date">
                                 (<?= pendingEscape($row['event_date']) ?>)
                             </span>
@@ -709,9 +571,18 @@ if ($selectedEventID !== null) {
             $eventInfo['title'] . ' (' . $eventInfo['event_date'] . ')'
         ) ?></h2>
 
+        <p role="status">Pending now: <strong data-pending-event="<?= (int) $selectedEventID ?>"><?= count($pendingStudents) ?></strong>.
+            Loaded for review: <?= count($pendingStudents) ?> pending and <?= count($confirmedStudents) ?> confirmed.
+            <a href="pending.php?event_id=<?= (int) $selectedEventID ?>">Refresh lists</a>
+        </p>
+        <?php if ($reviewID !== false && $reviewID > 0) { ?>
+            <p class="hint">Reviewing registration #<?= (int) $reviewID ?>. It is listed first below if available.</p>
+        <?php } ?>
+        <p><a class="btn-back" href="scanner.php?event_id=<?= (int) $selectedEventID ?>">Open scanner</a>
+           <a class="btn-back" href="register_list.php?event_id=<?= (int) $selectedEventID ?>">Registration report</a></p>
         <h3>Pending Registrations</h3>
         <div class="table-container">
-            <table>
+            <table data-admin-table aria-label="Pending registrations">
                 <thead>
                     <tr>
                         <th>Name</th><th>Student ID</th>
@@ -721,7 +592,7 @@ if ($selectedEventID !== null) {
                 </thead>
                 <tbody>
                 <?php foreach ($pendingStudents as $row) { ?>
-                    <tr>
+                    <tr id="registration-<?= (int) $row['id'] ?>" <?= (int) $reviewID === (int) $row['id'] ? 'style="outline:2px solid currentColor"' : '' ?>>
                         <td><?= pendingEscape($row['student_name']) ?></td>
                         <td><?= pendingEscape($row['student_id']) ?></td>
                         <td><?= pendingEscape($row['course_year_section']) ?></td>
@@ -738,6 +609,7 @@ if ($selectedEventID !== null) {
                                     <input type="hidden" name="registration_id"
                                            value="<?= (int) $row['id'] ?>">
                                     <button name="action" value="confirm"
+                                            <?= $eventInfo['status'] !== 'upcoming' ? 'disabled title="This event is closed"' : '' ?>
                                             class="btn-confirm">Confirm</button>
                                 </form>
 
@@ -770,7 +642,7 @@ if ($selectedEventID !== null) {
         </p>
 
         <div class="table-container">
-            <table>
+            <table data-admin-table aria-label="Confirmed registrations">
                 <thead>
                     <tr>
                         <th>Name</th><th>Student ID</th>
@@ -780,7 +652,7 @@ if ($selectedEventID !== null) {
                 </thead>
                 <tbody>
                 <?php foreach ($confirmedStudents as $row) { ?>
-                    <tr>
+                    <tr id="registration-<?= (int) $row['id'] ?>" <?= (int) $reviewID === (int) $row['id'] ? 'style="outline:2px solid currentColor"' : '' ?>>
                         <td><?= pendingEscape($row['student_name']) ?></td>
                         <td><?= pendingEscape($row['student_id']) ?></td>
                         <td><?= pendingEscape($row['course_year_section']) ?></td>
@@ -810,5 +682,24 @@ if ($selectedEventID !== null) {
     <?php } ?>
     </div>
 </div>
+<script>
+(() => {
+    async function refreshPendingBadges() {
+        if (document.hidden) return;
+        try {
+            const response = await fetch('pending.php?counts=1', {cache: 'no-store'});
+            if (!response.ok) return;
+            const counts = await response.json();
+            if (!Number.isInteger(counts.pending) || !counts.events) return;
+            document.querySelectorAll('[data-pending-event]').forEach(badge => {
+                badge.textContent = counts.events[badge.dataset.pendingEvent] || 0;
+            });
+            document.dispatchEvent(new CustomEvent('admin:pending-count', {detail: counts}));
+        } catch (error) { /* Keep the last successful count if offline. */ }
+    }
+    refreshPendingBadges();
+    setInterval(refreshPendingBadges, 30000);
+})();
+</script>
 </body>
 </html>
