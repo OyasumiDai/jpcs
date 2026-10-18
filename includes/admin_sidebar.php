@@ -76,7 +76,7 @@ $sidebarLink = static function (string $href, string $label, string $icon, bool 
   <div class="admin-sidebar__divider"></div>
   <nav class="admin-sidebar__nav" aria-label="Admin navigation">
     <p class="admin-sidebar__section-label">Overview</p>
-    <?php echo $sidebarLink('dashboard.php', 'Dashboard', '<svg viewBox="0 0 24 24"><path d="M3 12 12 4l9 8"></path><path d="M5 10v10h14V10M9 20v-6h6v6"></path></svg>'); ?>
+    <?php echo $sidebarLink('dashboard.php', 'Dashboard', '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>'); ?>
     <?php echo $sidebarLink('officers.php', 'Officer Information', '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.6-3.3 2.6-5 6-5s5.4 1.7 6 5"></path><path d="M16 5.5a3 3 0 0 1 0 5.8M17 15c2.1.5 3.4 1.9 4 5"></path></svg>'); ?>
     <p class="admin-sidebar__section-label">Members &amp; Attendance</p>
     <?php echo $sidebarLink('pending.php', 'Student Registered Pending', '<svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5"></path></svg>', true, $sidebarPending); ?>
@@ -93,6 +93,7 @@ $sidebarLink = static function (string $href, string $label, string $icon, bool 
       <span class="admin-sidebar__avatar"><?php if ($sidebarPhotoUrl !== '') { ?><img src="<?php echo e($sidebarPhotoUrl); ?>" alt=""><?php } else { echo e($sidebarInitials); } ?></span>
       <span><strong>My Profile</strong><small><?php echo e($sidebarName); ?> · <?php echo e($sidebarRoleLabel); ?></small></span>
     </a>
+    <a class="admin-sidebar__public" href="index.php" title="Landing Page" data-tooltip="Landing Page"><span class="admin-sidebar__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M4 12h16M12 4c2 2.2 3 4.9 3 8s-1 5.8-3 8c-2-2.2-3-4.9-3-8s1-5.8 3-8Z"></path></svg></span><span class="admin-sidebar__label">Landing Page</span></a>
     <a class="admin-sidebar__logout" href="logout.php" title="Logout" data-tooltip="Logout"><span class="admin-sidebar__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 5H5v14h5M14 8l4 4-4 4M9 12h9"></path></svg></span><span class="admin-sidebar__label">Logout</span></a>
   </div>
 </aside>

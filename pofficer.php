@@ -1,6 +1,13 @@
 <?php
 require_once __DIR__ . '/includes/student_auth.php';
-require_student();
+require_once __DIR__ . '/includes/auth.php';
+
+$officerPageUser = current_user();
+$officerPagePanelAccess = !empty($officerPageUser['id'])
+  && in_array((string) ($officerPageUser['role'] ?? ''), ['officer', 'admin_advisor', 'admin_adviser'], true);
+if (current_student() === null && !$officerPagePanelAccess) {
+  redirect('student_login.php');
+}
 
 // Get all officers and advisor/admin
 $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_advisor' ORDER BY id ASC");

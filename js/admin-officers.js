@@ -135,7 +135,8 @@
     editForm.querySelector('[name="profile_id"]').value = isProfile ? id : '';
     editForm.querySelector('[name="name"]').value = item.dataset.name || '';
     editForm.querySelector('[name="position"]').value = item.dataset.officerPositionValue || '';
-    editForm.querySelector('[name="remove_photo"]').checked = false;
+    const removePhoto = editForm.querySelector('[name="remove_photo"]');
+    if (removePhoto) removePhoto.checked = false;
     editForm.querySelectorAll('[data-edit-error-for]').forEach(error => { error.textContent = ''; });
     editPhoto?.setCustomValidity('');
     if (editPreview) editPreview.innerHTML = item.dataset.officerPhoto ? `<img src="${item.dataset.officerPhoto}" alt="Current profile photo">` : '<span aria-hidden="true">+</span>';

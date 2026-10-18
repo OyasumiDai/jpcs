@@ -1,6 +1,13 @@
 <?php
 require_once __DIR__ . '/includes/student_auth.php';
-require_student();
+require_once __DIR__ . '/includes/auth.php';
+
+$registrationUser = current_user();
+$registrationPanelAccess = !empty($registrationUser['id'])
+    && in_array((string) ($registrationUser['role'] ?? ''), ['officer', 'admin_advisor', 'admin_adviser'], true);
+if (current_student() === null && !$registrationPanelAccess) {
+    redirect('student_login.php');
+}
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -540,7 +547,7 @@ $events = $conn->query(
             line-height: 1.6;
         }
 
-        button {
+        .content form button {
             width: 100%;
             min-height: 48px;
             margin-top: 26px;
@@ -556,13 +563,13 @@ $events = $conn->query(
             box-shadow: 0 6px 22px rgba(255, 115, 0, 0.24);
         }
 
-        button:hover {
+        .content form button:hover {
             background: linear-gradient(135deg, #ffb64c, #ff921a);
             box-shadow: 0 6px 30px rgba(255, 133, 10, 0.4);
         }
 
         a:focus-visible,
-        button:focus-visible {
+        .content form button:focus-visible {
             outline: 3px solid #ffae55;
             outline-offset: 4px;
         }
