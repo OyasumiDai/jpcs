@@ -225,7 +225,7 @@ if (isset($_GET['edit'])) {
 
                 <td>
                   <span class="role-badge">
-                    <?php echo accountEscape($row['role']); ?>
+                    <?php echo accountEscape(role_label($row['role'])); ?>
                   </span>
                 </td>
 

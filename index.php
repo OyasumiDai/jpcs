@@ -704,11 +704,13 @@ $publicOfficers = $conn->query("SELECT id, name, position, photo FROM officer_pr
     }
   </script>
   <link rel="stylesheet" href="assets/css/landing-page.css">
-  <link rel="stylesheet" href="assets/css/hero-banner.css">
+  <link rel="stylesheet" href="assets/css/hero-banner.css?v=<?= filemtime(__DIR__ . '/assets/css/hero-banner.css') ?>">
     <link rel="stylesheet" href="assets/css/system-ui.css">
     <script src="js/system-ui.js" defer></script>
     <link rel="stylesheet" href="assets/css/glass.css">
-    <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/light-clean.css?v=<?= filemtime(__DIR__ . '/assets/css/light-clean.css') ?>">
+    <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
     <script src="js/glass-ui.js" defer></script>
 </head>
 <body class="public-page">

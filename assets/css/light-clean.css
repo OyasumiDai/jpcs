@@ -43,42 +43,39 @@ html[data-theme="light"] body:is(.app-page,.public-page,.auth-page)::before,
 html[data-theme="light"] body .glass-auth-modal::before { opacity: .46; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-panel,.glass-card,.card,.stat-card,.dashboard-card,.info-card,.panel,.table-panel,.welcome,.mv-card,.highlight-card,.event-card,.officer-card,.modal-content,.auth-layout,footer) {
   background: var(--bg-secondary) !important; color: var(--text-primary) !important;
-  border: 1px solid var(--border) !important; border-radius: 12px !important;
+  border-color: var(--border) !important;
   box-shadow: var(--clean-shadow) !important;
   transition: background-color .25s ease, border-color .25s ease, box-shadow .25s ease, transform .25s ease;
 }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-panel,.auth-layout,.modal-content) { background: var(--clean-glass) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-card,.mv-card,.highlight-card,.event-card,.officer-card):hover { border-color: var(--brand-primary) !important; box-shadow: var(--clean-shadow-hover) !important; }
-html[data-theme="light"] body.public-page .content > .section { padding: 28px 24px; border-radius: 12px; }
-html[data-theme="light"] body.public-page .content > .section:nth-of-type(even) { background: var(--bg-secondary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(h1,h2,h3,h4,h5,h6,strong,label,th,td) { color: var(--text-primary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(p,small,.strength-text,.field-icon,.jpcs-brand-subtitle) { color: var(--text-secondary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) a { color: var(--text-primary) !important; text-decoration-color: var(--brand-primary); text-underline-offset: 4px; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.auth-link,.auth-meta,.auth-back) a,
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) a.auth-back { text-decoration: underline; text-decoration-color: var(--brand-primary); }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(input:not([type="submit"]),select,textarea) { background: var(--bg-secondary) !important; color: var(--text-primary) !important; border: 1px solid var(--border) !important; border-radius: 12px !important; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(input:not([type="submit"]),select,textarea) { background: var(--bg-secondary) !important; color: var(--text-primary) !important; border-color: var(--border) !important; }
 /* Slate placeholders get a white field so their normal-size contrast remains AA. */
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]),textarea) { background: var(--bg-primary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(input,textarea)::placeholder { color: var(--text-secondary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(input,select,textarea):focus { border-color: var(--brand-primary) !important; box-shadow: 0 0 0 3px var(--clean-ring) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(a,button,input,select,textarea,[tabindex]):focus-visible { outline: 3px solid var(--brand-primary) !important; outline-offset: 3px; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-button,.btn-glow,.auth-submit,.jpcs-nav-button.solid,.btn.primary,.btn-add,button[type="submit"],input[type="submit"]) {
-  background: linear-gradient(135deg, #FFAD55 0%, #FF8A2A 48%, #F97316 100%) !important; color: #FFF7ED !important; border: 1px solid #FF8A2A !important;
-  font-size: 19px !important; font-weight: 700 !important; line-height: 1.25; min-height: 44px;
+  background: linear-gradient(135deg, #FFAD55 0%, #FF8A2A 48%, #F97316 100%) !important; color: #FFF7ED !important; border-color: #FF8A2A !important;
   box-shadow: var(--clean-shadow) !important; filter: none !important;
 }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.glass-button,.btn-glow,.auth-submit,.jpcs-nav-button.solid,.btn.primary,.btn-add,button[type="submit"],input[type="submit"]):is(:hover,:active) { background: linear-gradient(135deg, #FFC06F 0%, #FF9A3D 48%, #F97316 100%) !important; border-color: #F97316 !important; box-shadow: var(--clean-shadow-hover) !important; }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-nav-button.outline,.glass-secondary) { background: var(--bg-primary) !important; color: var(--text-primary) !important; border: 1px solid var(--border) !important; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-nav-button.outline,.glass-secondary) { background: var(--bg-primary) !important; color: var(--text-primary) !important; border-color: var(--border) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-nav-button.outline,.glass-secondary):hover { border-color: var(--brand-primary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-navbar,.sidebar) { background: var(--bg-primary) !important; border-color: var(--border) !important; box-shadow: var(--clean-shadow) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-nav-links a.active,.sidebar a[aria-current="page"],.glass-auth-tabs a[aria-current="page"]) { color: var(--text-primary) !important; background: var(--clean-tint) !important; box-shadow: inset 0 -2px 0 var(--brand-primary) !important; }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.highlight-icon,.jpcs-avatar,.status-badge,.hero-glass-badge) { background: var(--clean-tint) !important; color: var(--text-primary) !important; border: 1px solid var(--border); box-shadow: none; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.jpcs-avatar,.status-badge,.hero-glass-badge) { background: var(--clean-tint) !important; color: var(--text-primary) !important; border-color: var(--border); box-shadow: none; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(th,td,.table-wrapper,.table-container,.ui-table-scroll) { border-color: var(--border) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) td { background: var(--bg-primary) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(th,tr:hover td) { background: var(--bg-secondary) !important; }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner { background-image: linear-gradient(90deg, rgba(255, 255, 255, .88) 0%, rgba(255, 250, 244, .76) 48%, rgba(255, 174, 88, .34) 100%), url('../img/jpcs-campus-hero.png'); border: 1px solid rgba(255, 138, 42, .35); box-shadow: 0 18px 50px rgba(124, 45, 18, .12); border-radius: 12px; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner { background-image: linear-gradient(90deg, rgba(255, 255, 255, .88) 0%, rgba(255, 250, 244, .76) 48%, rgba(255, 174, 88, .34) 100%), url('../img/jpcs-campus-hero.png'); border-color: rgba(255, 138, 42, .35); box-shadow: 0 18px 50px rgba(124, 45, 18, .12); }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner::after { background: linear-gradient(90deg, transparent 28%, rgba(255, 154, 61, .22) 72%, rgba(255, 138, 42, .30)); }
-html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner::before { background: url('../img/hero-network.svg') center / cover no-repeat; opacity: .42; }
+html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner::before { background: url('../img/hero-network-light.svg?v=3') right center / cover no-repeat; opacity: .8; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.hero-banner h1,.hero-banner__chapter,.hero-banner__chapter strong) { color: var(--text-primary) !important; text-shadow: 0 2px 12px rgba(255, 255, 255, .55); }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-accent { color: var(--brand-primary); }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .hero-banner__contact { background: linear-gradient(90deg, rgba(255, 255, 255, .82), rgba(255, 244, 230, .88)); border-color: rgba(255, 138, 42, .2); }
@@ -88,10 +85,9 @@ html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) .auth-intro 
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.auth-card .error,.error) { color: var(--clean-error) !important; background: var(--clean-error-bg) !important; border: 1px solid var(--clean-error) !important; }
 html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) :is(.auth-card .success,.success) { color: var(--clean-success) !important; background: var(--clean-success-bg) !important; border: 1px solid var(--clean-success) !important; }
 html[data-theme="light"] body.public-page .hero-banner { min-width: 0; width: 100%; max-width: 100%; }
-@media (min-width:781px) and (max-width:1100px) {
-  html[data-theme="light"] body.public-page .hero-banner { grid-template-columns: minmax(0,1.3fr) minmax(0,.7fr); }
-  html[data-theme="light"] body.public-page .hero-banner h1 { white-space: normal; font-size: clamp(30px,4vw,44px); }
-  html[data-theme="light"] body.public-page .hero-banner__contact { flex-wrap: wrap; }
-}
-@media (max-width:760px) { html[data-theme="light"] body.public-page .content > .section { padding: 24px 12px; } }
+/* Same banner geometry in both themes; only colours differ by theme. */
+@media (min-width:781px) and (max-width:1100px) { html body.public-page .hero-banner__contact { flex-wrap: wrap; } }
 @media (prefers-reduced-motion:reduce) { html[data-theme="light"] body:is(.app-page,.public-page,.auth-page) * { transition: none !important; } }
+/* Student pages: keep the centred section headings and their underline aligned (overrides smilecare-app.css). */
+html body.student-page :is(.page-title, .content > .section > h3) { text-align: center !important; }
+html body.student-page :is(.page-title, .content > .section > h3)::after { margin: 12px auto 0 !important; }

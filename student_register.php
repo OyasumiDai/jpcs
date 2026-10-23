@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/includes/student_auth.php';
+require_once __DIR__ . '/includes/masterlist.php';
 
 $errors = [];
 $values = ['full_name' => '', 'student_id' => '', 'email' => '', 'course_year' => ''];
@@ -21,9 +22,24 @@ if (request_method_is('POST')) {
     if ($password !== $confirmPassword) $errors[] = 'Passwords do not match.';
     if (!$termsAccepted) $errors[] = 'Please accept the terms and privacy notice.';
 
+    // Once a masterlist exists, only listed Student IDs can sign up; name and course come from the list.
+    if (!$errors && masterlist_count($conn) > 0) {
+        $listed = masterlist_find($conn, $values['student_id']);
+        if ($listed === null) {
+            $errors[] = 'Your Student ID is not on the JPCS masterlist. Check the number, or ask your class officer to add you.';
+        } else {
+            $values['student_id'] = $listed['student_id_no'];
+            $values['full_name'] = $listed['student_name'];
+            $listedCourse = masterlist_course_year($listed['course_year_section']);
+            if (in_array($listedCourse, $courseOptions, true)) $values['course_year'] = $listedCourse;
+        }
+    }
+
     if (!$errors) {
-        $stmt = $conn->prepare('SELECT id FROM student_accounts WHERE student_id = ? OR email = ? LIMIT 1');
-        $stmt->bind_param('ss', $values['student_id'], $values['email']);
+        // Compare IDs without dashes/spaces so 2024-00253 and 202400253 are the same student.
+        $normalizedId = masterlist_normalize_id($values['student_id']);
+        $stmt = $conn->prepare("SELECT id FROM student_accounts WHERE REPLACE(REPLACE(student_id, '-', ''), ' ', '') = ? OR email = ? LIMIT 1");
+        $stmt->bind_param('ss', $normalizedId, $values['email']);
         $stmt->execute();
         if ($stmt->get_result()->num_rows > 0) $errors[] = 'That student ID or email is already registered.';
         $stmt->close();
@@ -54,6 +70,8 @@ if (request_method_is('POST')) {
     <script src="js/system-ui.js" defer></script>
     <link rel="stylesheet" href="assets/css/glass.css">
     <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
     <link rel="stylesheet" href="assets/css/auth-compact.css">
     <script src="js/glass-ui.js" defer></script>
 </head>

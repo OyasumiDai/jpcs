@@ -42,7 +42,7 @@ if (request_method_is('POST')) {
 <main class="content"><header class="page-header"><h1>My Profile</h1></header><section class="profile-card">
 <?php if ($message) { ?><p role="alert" class="profile-message error"><?= e($message) ?></p><?php } ?>
 <?php if (isset($_SESSION['af_notice'])) { ?><p role="status" class="profile-message success"><?= e($_SESSION['af_notice']) ?></p><?php unset($_SESSION['af_notice']); } ?>
-<p><?= e($user['position']) ?> · <?= e($user['role']) ?></p>
+<p><?= e($user['position']) ?> · <?= e(role_label($user['role'])) ?></p>
 <h2>Personal details</h2><form class="profile-form" method="post" enctype="multipart/form-data"><?php af_field(); ?><input type="hidden" name="action" value="details">
 <img id="profile-photo" src="<?= e(image_url($user['photo'])) ?>" alt="Your profile photo" width="120" height="120" class="profile-photo">
 <label for="name">Full name</label><input id="name" name="name" maxlength="100" required value="<?= e($_POST['name'] ?? $user['name']) ?>">

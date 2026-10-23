@@ -256,6 +256,8 @@ if (request_method_is('POST')) {
     <script src="js/system-ui.js" defer></script>
     <link rel="stylesheet" href="assets/css/glass.css">
     <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
     <link rel="stylesheet" href="assets/css/auth-compact.css">
     <script src="js/glass-ui.js" defer></script>
 </head>

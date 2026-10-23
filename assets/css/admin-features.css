@@ -84,18 +84,41 @@
 .admin-page .officer-card h4 { margin: var(--space-3) 0 var(--space-1); }
 .admin-page .officer-card :is(h4, p) { padding-inline: var(--space-3); overflow-wrap: anywhere; }
 .admin-page .officer-card p { margin: 0 0 var(--space-4); }
-.feature-pending .card { width: 200px; max-width: 100%; overflow: hidden; text-align: center; }
-.feature-pending .card a { display: block; height: 100%; }
-.feature-pending .card img { display: block; width: 100%; height: 250px; object-fit: cover; }
-.feature-pending .card h4 { margin: var(--space-4) var(--space-3); overflow-wrap: anywhere; }
-.admin-page .events .event-card { display: flex; flex-direction: column; width: 220px; max-width: 100%; overflow: hidden; }
-.admin-page .events .event-card img { display: block; width: 100%; height: 150px; object-fit: cover; }
-.admin-page .events .event-card > div { display: flex; flex: 1; flex-direction: column; padding: var(--space-4); text-align: center; }
-.admin-page .events .event-card :is(h3, h4, p) { overflow-wrap: anywhere; }
-.admin-page .events .event-card a { display: block; margin-top: auto; }
-.feature-attendance .event-card { text-align: center; }
-.feature-attendance .event-card h3 { flex: 1; margin: 0; padding: var(--space-4); }
-.feature-attendance .event-card a { margin: 0 var(--space-3) var(--space-4); }
+/* Event picker cards (Pending, Scanner, Attendance, Register List): one responsive grid, one card design. */
+.admin-page .events, .feature-pending .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); justify-content: stretch; gap: var(--space-5); }
+.admin-page .events > p, .feature-pending .grid > p { grid-column: 1 / -1; }
+.admin-page .events .event-card, .feature-pending .card { position: relative; display: flex; flex-direction: column; width: auto; min-width: 0; overflow: hidden; padding: 0; text-align: left; transition: transform var(--motion) var(--ease), box-shadow var(--motion) var(--ease), border-color var(--motion) var(--ease); }
+.admin-page .events .event-card:is(:hover, :focus-within), .feature-pending .card:is(:hover, :focus-within) { transform: translateY(-4px); border-color: var(--brand-ink); box-shadow: var(--shadow-2), 0 0 0 1px var(--brand-soft); }
+.admin-page .events .event-card img, .feature-pending .card img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 0; transition: transform 600ms var(--ease); }
+.admin-page .events .event-card:hover img, .feature-pending .card:hover img { transform: scale(1.04); }
+.admin-page .events .event-card > div { display: flex; flex: 1; flex-direction: column; gap: var(--space-1); padding: var(--space-4); text-align: left; }
+.admin-page .events .event-card :is(h3, h4) { margin: 0; font-size: var(--font-card); line-height: 1.3; overflow-wrap: anywhere; }
+.admin-page .events .event-card p { margin: 0 0 var(--space-3); color: var(--text-muted); font-size: var(--font-caption); overflow-wrap: anywhere; }
+.admin-page .events .event-card a { display: flex; width: 100%; margin-top: auto; min-height: 40px; align-items: center; justify-content: center; border: 1px solid var(--brand); border-radius: var(--radius-control); background: var(--brand-soft); color: var(--brand-ink); font-weight: var(--weight-label); text-decoration: none; transition: background var(--motion) var(--ease), color var(--motion) var(--ease); }
+.admin-page .events .event-card a:hover { background: var(--brand); color: var(--on-brand); }
+.admin-page .events .event-card a::after { content: ""; position: absolute; inset: 0; } /* whole card is clickable */
+.feature-attendance .event-card :is(h3, p) { padding-inline: var(--space-4); }
+.feature-attendance .event-card h3 { padding-top: var(--space-4); }
+.feature-attendance .event-card a { width: auto !important; margin: auto var(--space-4) var(--space-4) !important; }
+.feature-pending .card a { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; }
+.feature-pending .card h4 { display: flex; flex-direction: column; gap: var(--space-1); margin: 0; padding: var(--space-4); font-size: var(--font-card); line-height: 1.3; overflow-wrap: anywhere; }
+.feature-pending .card h4 br { display: none; }
+.feature-pending .card h4 .pending-pill { display: inline-block; width: fit-content; padding: var(--space-1) var(--space-2); border-radius: var(--radius-pill); background: var(--brand-soft); color: var(--brand-ink); font-size: var(--font-caption); }
+.feature-pending .card .event-date { color: var(--text-muted); font-size: var(--font-caption); font-weight: var(--weight-body); }
+/* Attendance filters: one compact row on wide screens. */
+.feature-attendance form.actions { display: grid; grid-template-columns: minmax(0, 1fr) minmax(160px, 220px) auto auto; align-items: center; column-gap: var(--space-3); row-gap: var(--space-2); }
+.feature-attendance form.actions > label { grid-row: 1; margin: 0; }
+.feature-attendance form.actions > label[for="event-status"] { grid-column: 2; }
+.feature-attendance form.actions > :is(input, select, button, a) { grid-row: 2; width: 100%; margin: 0; }
+.feature-attendance form.actions > select { grid-column: 2; }
+.feature-attendance form.actions > a { display: inline-flex; align-items: center; min-height: 40px; }
+@media (max-width: 600px) { .feature-attendance form.actions { grid-template-columns: 1fr 1fr; } .feature-attendance form.actions > :is(label, input, select) { grid-column: 1 / -1 !important; grid-row: auto; } .feature-attendance form.actions > :is(button, a) { grid-row: auto; justify-content: center; } }
+/* Event status badges. */
+.status-badge.is-upcoming { background: var(--brand-soft); color: var(--brand-ink); }
+.status-badge.is-done { background: var(--surface-hover); color: var(--success); }
+.admin-page td .status-badge { justify-self: start; width: fit-content; }
+.admin-page td .row-actions { flex-wrap: nowrap; align-items: center; gap: var(--space-2); }
+.admin-page td .row-actions .inline-action { display: contents; }
 .admin-page .section { padding-block: var(--space-5); }
 .admin-page :is(.actions, .row-actions, .toolbar, .modal-actions) { display: flex; flex-wrap: wrap; gap: var(--space-3); }
 .admin-page :is(.actions, .toolbar) { margin-block: var(--space-5); }
@@ -144,9 +167,11 @@
 .admin-page .event-image-preview { max-width: 180px; max-height: 160px; }
 .admin-page .inline-action { display: inline; }
 .admin-page .profile-card { width: 100%; max-width: 760px; margin-inline: auto; padding: var(--space-5); border-radius: var(--radius-card); }
-.admin-page .profile-form { max-width: 480px; }
+.admin-page .profile-form { max-width: none; }
+.admin-page .profile-card h2 { margin: var(--space-6) 0 0; padding-top: var(--space-5); border-top: 1px solid var(--border); font-size: var(--font-section); }
+.admin-page .profile-card h2:first-of-type { margin-top: var(--space-3); padding-top: 0; border-top: 0; }
 .admin-page .profile-form button { margin-top: var(--space-4); }
-.admin-page .profile-photo { object-fit: cover; border-radius: var(--radius-control); }
+.admin-page .profile-photo { margin-top: var(--space-3); object-fit: cover; border-radius: var(--radius-control); }
 
 @media (max-width: 600px) {
   .admin-page table.admin-mobile-table { min-width: 0; }
@@ -177,3 +202,71 @@
   :is(.feature-attendance-section, .feature-register-list) tr { break-inside: avoid; }
   .feature-attendance-section .status-badge { padding: 0; white-space: normal; }
 }
+/* Student masterlist: upload, preview states, management and section access. */
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.feature-admin-features .ml-intro { max-width: 760px; margin-top: calc(-1 * var(--space-2)); }
+.feature-admin-features .ml-tabs { margin-block: var(--space-4) var(--space-5); }
+.feature-admin-features .ml-upload { max-width: 760px; }
+.ml-drop { position: relative; display: grid; gap: var(--space-1); justify-items: center; margin-top: var(--space-4); padding: var(--space-6) var(--space-4); border: 1.5px dashed var(--border); border-radius: var(--radius-card); background: var(--surface); text-align: center; cursor: pointer; transition: border-color var(--motion) var(--ease), background var(--motion) var(--ease); }
+.ml-drop:is(:hover, :focus-within, .is-dragging) { border-color: var(--brand); background: var(--brand-soft); }
+.ml-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.ml-drop span { color: var(--text-muted); font-size: var(--font-caption); font-weight: var(--weight-body); }
+.ml-drop .ml-file-name { color: var(--brand-ink); font-weight: var(--weight-label); }
+.ml-hint { font-size: var(--font-caption); }
+.ml-tally { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.ml-problems-toggle { display: inline-flex !important; align-items: center; gap: var(--space-2); margin: 0 0 0 auto !important; font-weight: var(--weight-body) !important; }
+.ml-status { display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-1) var(--space-2); border-radius: var(--radius-pill); font-size: var(--font-caption); font-weight: var(--weight-label); white-space: nowrap; }
+.ml-status.is-new { background: color-mix(in srgb, var(--success) 16%, transparent); color: var(--success); }
+.ml-status.is-update { background: var(--brand-soft); color: var(--brand-ink); }
+.ml-status:is(.is-duplicate, .is-invalid-id, .is-missing-name) { background: color-mix(in srgb, var(--danger) 16%, transparent); color: var(--danger); }
+.ml-status.is-locked { background: var(--surface-hover); color: var(--text-muted); }
+.ml-preview-table td small { display: block; margin-top: var(--space-1); color: var(--text-muted); }
+.ml-preview-table input[type=text] { min-height: 36px; }
+.ml-preview-table tr:is([data-status=duplicate], [data-status=invalid-id], [data-status=missing-name]) td { background: color-mix(in srgb, var(--danger) 6%, transparent); }
+.ml-preview-table tr.is-excluded td:not(:first-child) { opacity: .55; }
+.ml-actions { align-items: center; }
+.ml-save-summary { color: var(--text-muted); font-size: var(--font-caption); }
+.ml-count { margin: 0 0 var(--space-3); }
+.ml-edit-form { display: grid; grid-template-columns: minmax(140px, 180px) minmax(0, 1fr); align-items: end; gap: var(--space-3); }
+.ml-edit-form .ml-section-fields, .ml-edit-form .row-actions { grid-column: 1 / -1; }
+.ml-edit-form label { margin: 0; }
+.ml-pagination .btn[aria-current=page] { background: var(--brand-soft); border-color: var(--brand-ink); color: var(--brand-ink); }
+.ml-access { margin-bottom: var(--space-4); }
+.ml-access h2 small { color: var(--text-muted); font-size: var(--font-caption); font-weight: var(--weight-body); }
+.ml-access fieldset { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-3); margin: 0; padding: 0; border: 0; }
+.ml-access-year { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); }
+.ml-access-year strong { flex-basis: 100%; font-size: var(--font-caption); }
+.ml-access-year label { display: inline-flex !important; align-items: center; gap: var(--space-1); margin: 0 !important; }
+/* Pending review: masterlist badge next to each name. */
+.ml-badge { display: inline-flex; margin-left: var(--space-2); padding: 2px var(--space-2); border-radius: var(--radius-pill); font-size: var(--font-caption); font-weight: var(--weight-label); vertical-align: middle; }
+.ml-badge.is-listed { background: color-mix(in srgb, var(--success) 16%, transparent); color: var(--success); }
+.ml-badge.is-unlisted { background: var(--surface-hover); color: var(--text-muted); }
+.ml-name-note { display: block; color: var(--text-muted); }
+@media (max-width: 760px) { .ml-edit-form { grid-template-columns: 1fr; } .ml-problems-toggle { margin-left: 0 !important; } }
+.content .ml-drop { display: grid; margin-bottom: 0; font-weight: var(--weight-label); }
+/* Stacked (phone) tables: secondary notes stay under their value instead of the label column. */
+@media (max-width: 600px) { .content .admin-mobile-table td > small { grid-column: 2; } }
+/* Batch / year level / section pickers and the organised masterlist view. */
+.ml-step { margin: var(--space-4) 0 var(--space-2); color: var(--text); font-weight: var(--weight-label); }
+.ml-section-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-3); }
+.ml-section-fields label, .ml-filters label { display: grid !important; gap: var(--space-1); margin: 0 !important; font-size: var(--font-caption); color: var(--text-muted); }
+.ml-section-fields select { color: var(--text); }
+.ml-target { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: calc(-1 * var(--space-2)) 0 var(--space-3); }
+.ml-target span { padding: var(--space-1) var(--space-3); border-radius: var(--radius-pill); background: var(--brand-soft); color: var(--brand-ink); font-size: var(--font-caption); font-weight: var(--weight-label); }
+.ml-filters { align-items: end; }
+.ml-filters label { flex: 0 1 170px; }
+.ml-filters .ml-search { flex: 1 1 240px; }
+.ml-filters :is(select, input) { width: 100%; }
+.ml-overview { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3); margin-bottom: var(--space-3); }
+.ml-overview .ml-count { margin: 0; }
+.ml-batch-heading { margin: var(--space-5) 0 var(--space-3); font-size: var(--font-section); }
+.ml-group { margin-bottom: var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-card); background: var(--glass-surface); overflow: hidden; }
+.ml-group > summary { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); padding: var(--space-3) var(--space-4); cursor: pointer; list-style: none; }
+.ml-group > summary::-webkit-details-marker { display: none; }
+.ml-group > summary::before { content: ""; width: 8px; height: 8px; margin-right: var(--space-2); border-right: 2px solid var(--brand-ink); border-bottom: 2px solid var(--brand-ink); transform: rotate(-45deg); transition: transform var(--motion) var(--ease); align-self: center; }
+.ml-group[open] > summary::before { transform: rotate(45deg); }
+.ml-group > summary:hover { background: var(--surface-hover); }
+.ml-group-title { flex: 1; font-weight: var(--weight-title); color: var(--text); }
+.ml-group-meta { color: var(--text-muted); font-size: var(--font-caption); }
+.ml-group .table-wrapper { margin: 0; border: 0; border-top: 1px solid var(--border); border-radius: 0; box-shadow: none !important; }
+.ml-group td:first-child { width: 48px; color: var(--text-muted); }

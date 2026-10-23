@@ -86,10 +86,10 @@ for ($day=1;$day<=(int)$first->format('t');$day++) { $date=$month.'-'.sprintf('%
 <?php } else { ?>
 <div class="table-wrapper"><table><thead><tr><th>Poster</th><th>Event</th><th>Date</th><th>Time</th><th>Location</th><th>Status</th><th>Actions</th></tr></thead><tbody>
 <?php foreach ($events as $event) { ?>
-<tr id="event-<?= (int)$event['id'] ?>"><td><a href="<?= e(image_url($event['poster'])) ?>" target="_blank" rel="noopener"><img src="<?= e(image_url($event['poster'])) ?>" alt="<?= e($event['title']) ?> poster" width="64" height="80" class="event-poster"></a></td><td><strong><?= e($event['title']) ?></strong><details><summary>Description</summary><?= nl2br(e($event['description'])) ?></details></td><td><?= e($event['event_date']) ?></td><td><?= e(substr($event['event_time'] ?? '',0,5)) ?></td><td><?= e($event['location']) ?></td><td><?= e($event['status']) ?></td><td>
+<tr id="event-<?= (int)$event['id'] ?>"><td><a href="<?= e(image_url($event['poster'])) ?>" target="_blank" rel="noopener"><img src="<?= e(image_url($event['poster'])) ?>" alt="<?= e($event['title']) ?> poster" width="64" height="80" class="event-poster"></a></td><td><strong><?= e($event['title']) ?></strong><details><summary>Description</summary><?= nl2br(e($event['description'])) ?></details></td><td><?= e($event['event_date']) ?></td><td><?= e(substr($event['event_time'] ?? '',0,5)) ?></td><td><?= e($event['location']) ?></td><td><span class="status-badge is-<?= e($event['status']) ?>"><?= e(ucfirst((string) $event['status'])) ?></span></td><td><div class="row-actions">
 <?php if ($isAdmin) { ?><a class="btn" href="?edit=<?= (int)$event['id'] ?>">Edit</a>
 <?php if ($event['status']==='upcoming') { ?><form method="post" class="inline-action"><?php af_field(); ?><input type="hidden" name="id" value="<?= (int)$event['id'] ?>"><button name="done" value="1" type="submit">Mark done</button></form><?php } } ?>
-<a href="register_list.php?event_id=<?= (int)$event['id'] ?>">Registrations</a></td></tr>
+<a class="btn btn-ghost" href="register_list.php?event_id=<?= (int)$event['id'] ?>">Registrations</a></div></td></tr>
 <?php } if (!$events) { ?><tr><td colspan="7">No events yet.</td></tr><?php } ?></tbody></table></div>
 <?php }
 if ($isAdmin && (isset($_GET['createform']) || $edit)) { $form=$edit ?: []; ?>

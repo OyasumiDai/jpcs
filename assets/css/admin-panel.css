@@ -82,3 +82,18 @@ body.jpcs-admin .content :is(.year-box,.calendar-day,.print-summary,.summary){
 }
 body.jpcs-admin .content :is(.table-wrapper,.table-container,.dash-table-wrap){box-shadow:var(--shadow-1)}
 body.jpcs-admin .content th{background:color-mix(in srgb,var(--glass-surface-strong) 76%,var(--brand-soft))}
+/* Interaction feedback: press, hover, entry motion and busy states. Disabled by reduced-motion. */
+.content :is(button,.btn,.btn-back,.back-btn,.print-btn,.btn-confirm,.btn-remove,.dash-button,.button,.btn-primary,.btn-secondary,.btn-danger){transition:background var(--motion) var(--ease),border-color var(--motion) var(--ease),transform 120ms var(--ease),box-shadow var(--motion) var(--ease)}
+.content :is(button,.btn,.btn-back,.back-btn,.print-btn,.btn-confirm,.btn-remove,.dash-button,.button,.btn-primary,.btn-secondary,.btn-danger):active:not(:disabled){transform:scale(.97)}
+.content :is(button[type=submit],.btn-primary,.btn-create,.btn-confirm,.submit-btn):hover{box-shadow:0 6px 18px color-mix(in srgb,var(--brand) 30%,transparent)}
+.content tbody tr{transition:background var(--motion) var(--ease)}.content tbody tr:hover{background:var(--surface-hover)}
+.content :is(.success,.error,.warning)[role]{animation:admin-note-in .35s var(--ease) backwards}
+.content>*{animation:admin-rise .45s var(--ease) backwards}
+.content>:nth-child(2){animation-delay:40ms}.content>:nth-child(3){animation-delay:80ms}.content>:nth-child(4){animation-delay:120ms}.content>:nth-child(n+5){animation-delay:160ms}
+.content .is-loading{position:relative;color:transparent!important;pointer-events:none}
+.content .is-loading::after{content:"";position:absolute;inset:50% auto auto 50%;width:16px;height:16px;margin:-8px 0 0 -8px;border:2px solid currentColor;border-color:var(--text) transparent var(--text) transparent;border-radius:50%;animation:admin-spin .7s linear infinite}
+.content :is(button[type=submit],.btn-primary,.btn-confirm).is-loading::after{border-color:var(--on-brand) transparent var(--on-brand) transparent}
+@keyframes admin-rise{from{opacity:0;transform:translateY(10px)}}
+@keyframes admin-note-in{from{opacity:0;transform:translateY(-6px)}}
+@keyframes admin-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.content>*,.content :is(.success,.error,.warning)[role]{animation:none}.content .is-loading::after{animation-duration:2s}}

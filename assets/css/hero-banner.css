@@ -5,7 +5,6 @@
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
   min-height: 390px;
-  aspect-ratio: 2.7 / 1;
   overflow: hidden;
   border: 1px solid rgba(255, 166, 70, .38);
   border-radius: 24px;
@@ -15,14 +14,13 @@
   box-shadow: 0 18px 50px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .1);
   animation: hero-banner-in .75s ease both;
 }
-.hero-banner::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("../img/hero-network.svg") right center / 56% 120% no-repeat; opacity: .6; pointer-events: none; }
+.hero-banner::before { content: ""; position: absolute; inset: 0; z-index: -1; background: url("../img/hero-network.svg?v=3") right center / cover no-repeat; opacity: .6; pointer-events: none; }
 .hero-banner::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, transparent 50%, rgba(255, 112, 0, .18)); pointer-events: none; }
-.hero-banner__content { align-self: center; min-width: 0; overflow: visible; padding: 42px clamp(26px, 5vw, 70px) 96px; }
+.hero-banner__content { align-self: center; min-width: 0; container-type: inline-size; overflow: visible; padding: 42px clamp(26px, 5vw, 70px) 95px; }
 .hero-banner__kicker { margin: 0 0 15px; color: #ffad55; font-size: 12px; font-weight: 800; letter-spacing: .25em; }
-.hero-banner h1 { margin: 0; padding-left: 10px; overflow: visible; color: #fffaf4; font-family: "Arial Narrow", "Roboto Condensed", Impact, sans-serif; font-size: clamp(34px, 5vw, 68px); font-stretch: condensed; font-weight: 900; line-height: .96; letter-spacing: .012em; word-spacing: .06em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 3px 22px rgba(0,0,0,.36); }
-.hero-banner h1 > .hero-accent:first-child { display: inline-block; margin-left: .12em; }
+.hero-banner h1 { margin: 0; padding-left: 10px; overflow: visible; color: #fffaf4; font-family: "Arial Narrow", "Roboto Condensed", Impact, sans-serif; font-size: clamp(48px, 15cqi, 140px); font-stretch: condensed; font-weight: 900; line-height: 1.08; letter-spacing: .035em; word-spacing: .06em; text-transform: uppercase; white-space: nowrap; text-shadow: 0 3px 22px rgba(0,0,0,.36); }
 .hero-accent { color: #ff7a00; }
-.hero-banner__chapter { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin: 24px 0 0; color: #f4e8dd; font-family: "Arial Narrow", "Roboto Condensed", Impact, sans-serif; font-size: clamp(12px, 1.3vw, 17px); font-weight: 700; letter-spacing: .08em; }
+.hero-banner__chapter { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; margin: 36px 0 0; color: #f4e8dd; font-family: "Arial Narrow", "Roboto Condensed", Impact, sans-serif; font-size: clamp(12px, 1.3vw, 17px); font-weight: 700; letter-spacing: .08em; }
 .hero-banner__chapter strong { color: #fff; font-size: 1.12em; letter-spacing: .04em; }
 .hero-banner__mark { display: grid; place-items: center; align-self: center; min-width: 0; padding: 30px 52px 78px 10px; }
 .hero-banner__mark img { width: min(100%, 330px); aspect-ratio: 1; object-fit: contain; filter: drop-shadow(0 15px 24px rgba(0,0,0,.4)); }
@@ -34,5 +32,5 @@
 html[data-theme="light"] .hero-banner { background-image: linear-gradient(90deg, rgba(43, 24, 13, .88) 0%, rgba(119, 55, 18, .62) 50%, rgba(236, 132, 51, .34) 100%), url("../img/jpcs-campus-hero.png"); }
 html[data-theme="light"] .hero-banner__contact { background: rgba(71, 34, 14, .55); }
 @keyframes hero-banner-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-@media (max-width: 780px) { .hero-banner { grid-template-columns: 1fr; min-height: 620px; aspect-ratio: auto; background-position: 62% center; } .hero-banner::before { background-size: 120% auto; background-position: center 20%; } .hero-banner__content { align-self: start; padding: 48px 26px 0; text-align: center; } .hero-banner h1 { font-size: clamp(42px, 12vw, 66px); white-space: normal; } .hero-banner__chapter { justify-content: center; } .hero-banner__mark { padding: 12px 20px 92px; } .hero-banner__mark img { width: min(56vw, 230px); } .hero-banner__contact { flex-direction: column; align-items: flex-start; gap: 9px; padding: 14px 22px; } }
+@media (max-width: 780px) { .hero-banner { grid-template-columns: 1fr; min-height: 620px; aspect-ratio: auto; background-position: 62% center; } .hero-banner::before { background-position: 70% center; } .hero-banner__content { align-self: start; padding: 48px 26px 0; text-align: center; } .hero-banner h1 { font-size: clamp(40px, 13cqi, 112px); } .hero-banner__chapter { justify-content: center; } .hero-banner__mark { padding: 12px 20px 92px; } .hero-banner__mark img { width: min(56vw, 230px); } .hero-banner__contact { flex-direction: column; align-items: flex-start; gap: 9px; padding: 14px 22px; } }
 @media (prefers-reduced-motion: reduce) { .hero-banner { animation: none; } }

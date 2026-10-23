@@ -1,0 +1,287 @@
+/* JPCS glassmorphism theme. Loaded last on every page: aurora backdrop, frosted surfaces,
+   a warm low-glare light palette and pointer-driven highlights (see js/glass-theme.js). */
+
+/* ---------- Palette ---------- */
+:root {
+  --gt-bg: #0e0b0a;
+  --gt-text: #f6efe9;
+  --gt-muted: #b9aea5;
+  --gt-line: rgba(255, 236, 220, .11);
+  --gt-glass: rgba(34, 27, 23, .46);
+  --gt-glass-strong: rgba(38, 30, 25, .66);
+  --gt-glass-hover: rgba(255, 255, 255, .06);
+  --gt-edge: rgba(255, 255, 255, .14);
+  --gt-sheen: rgba(255, 255, 255, .07);
+  --gt-shadow: 0 18px 48px rgba(0, 0, 0, .38);
+  --gt-shadow-soft: 0 6px 18px rgba(0, 0, 0, .25);
+  --gt-brand: #ff6b2c;
+  --gt-brand-hover: #ff8246;
+  --gt-brand-soft: rgba(255, 107, 44, .16);
+  --gt-brand-ink: #ffb085;
+  --gt-on-brand: #1c0d04;
+  --gt-spot: rgba(255, 140, 70, .16);
+  --gt-blob-1: rgba(255, 98, 31, .34);
+  --gt-blob-2: rgba(255, 166, 64, .2);
+  --gt-blob-3: rgba(124, 77, 255, .16);
+  --gt-blob-4: rgba(255, 70, 120, .12);
+  --gt-circuit: rgba(255, 170, 110, .09);
+  --gt-blur: 22px;
+}
+:root[data-theme="light"] {
+  --gt-bg: #fbf5ee;
+  --gt-text: #2f2621;
+  --gt-muted: #75675d;
+  --gt-line: rgba(126, 82, 48, .13);
+  --gt-glass: rgba(255, 255, 255, .5);
+  --gt-glass-strong: rgba(255, 252, 248, .74);
+  --gt-glass-hover: rgba(242, 107, 29, .07);
+  --gt-edge: rgba(255, 255, 255, .85);
+  --gt-sheen: rgba(255, 255, 255, .55);
+  --gt-shadow: 0 18px 44px rgba(150, 90, 45, .12);
+  --gt-shadow-soft: 0 6px 16px rgba(150, 90, 45, .08);
+  --gt-brand: #f2701f;
+  --gt-brand-hover: #e0610f;
+  --gt-brand-soft: rgba(242, 112, 31, .12);
+  --gt-brand-ink: #a9480b;
+  --gt-on-brand: #2a1305;
+  --gt-spot: rgba(255, 150, 80, .16);
+  --gt-blob-1: rgba(255, 176, 122, .5);
+  --gt-blob-2: rgba(255, 215, 160, .55);
+  --gt-blob-3: rgba(206, 190, 255, .42);
+  --gt-blob-4: rgba(255, 192, 203, .38);
+  --gt-circuit: rgba(190, 120, 70, .07);
+}
+
+/* Admin design tokens follow the palette. */
+:root, :root[data-theme="light"] {
+  --bg: var(--gt-bg); --text: var(--gt-text); --text-muted: var(--gt-muted); --border: var(--gt-line);
+  --surface: var(--gt-glass-strong); --surface-hover: var(--gt-glass-hover);
+  --brand: var(--gt-brand); --brand-hover: var(--gt-brand-hover); --brand-soft: var(--gt-brand-soft); --brand-ink: var(--gt-brand-ink); --on-brand: var(--gt-on-brand);
+  --glass-surface: var(--gt-glass); --glass-surface-strong: var(--gt-glass-strong); --glass-highlight: var(--gt-edge); --glass-blur: var(--gt-blur);
+  --shadow-1: var(--gt-shadow-soft); --shadow-2: var(--gt-shadow); --shadow-3: 0 28px 70px rgba(0, 0, 0, .3);
+  --radius-card: 20px; --radius-control: 12px;
+}
+:root[data-theme="light"] { --shadow-3: 0 28px 70px rgba(150, 90, 45, .18); --success: #1d7a4c; --warning: #93600a; --danger: #b4322a; }
+
+/* Public-page tokens (glass.css / light-clean.css / system-ui.css) follow the same palette. */
+:root, :root[data-theme="light"] {
+  --glass-page: var(--gt-bg); --glass-bg: var(--gt-glass); --glass-bg-hover: var(--gt-glass-strong); --glass-solid: var(--gt-glass-strong);
+  --glass-border: var(--gt-line); --glass-text: var(--gt-text); --glass-muted: var(--gt-muted); --glass-accent: var(--gt-brand-ink);
+  --glass-input-bg: var(--gt-glass-strong); --glass-primary: var(--gt-brand); --glass-primary-end: var(--gt-brand-hover); --glass-button-text: var(--gt-on-brand);
+  --glass-heading-end: var(--gt-text); --circuit-overlay: transparent;
+  --glass-backdrop: color-mix(in srgb, var(--gt-bg) 22%, transparent);
+  --ui-bg: transparent; --ui-panel: var(--gt-glass); --ui-text: var(--gt-text); --ui-muted: var(--gt-muted); --ui-line: var(--gt-line);
+  --text-primary: var(--gt-text); --text-secondary: var(--gt-muted); --brand-primary: var(--gt-brand);
+}
+
+/* ---------- Aurora backdrop ---------- */
+html { background: var(--gt-bg) !important; }
+html body:is(.app-page, .public-page, .auth-page, .admin-page, .jpcs-admin) { background: transparent !important; background-image: none !important; color: var(--gt-text); }
+html::before, html::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
+html::before {
+  inset: -20%;
+  background:
+    radial-gradient(38% 42% at 12% 18%, var(--gt-blob-1), transparent 70%),
+    radial-gradient(34% 40% at 88% 82%, var(--gt-blob-2), transparent 70%),
+    radial-gradient(30% 36% at 82% 22%, var(--gt-blob-3), transparent 70%),
+    radial-gradient(32% 38% at 22% 88%, var(--gt-blob-4), transparent 70%);
+  filter: blur(30px);
+  animation: gt-drift 28s ease-in-out infinite alternate;
+}
+html::after {
+  background: var(--gt-circuit);
+  -webkit-mask: url("../img/circuit-background.png") 0 0 / 350px 350px repeat;
+  mask: url("../img/circuit-background.png") 0 0 / 350px 350px repeat luminance;
+}
+/* The older glass.css backdrop layer is replaced by the aurora above. */
+html body:is(.app-page, .public-page, .auth-page)::before, html body .glass-auth-modal::before { background: none !important; }
+/* Plain section wrappers on public pages stay clear so the backdrop shows through. */
+html body:is(.public-page, .student-page) .content > :is(.section, header) { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
+html body .glass-auth-modal { background: color-mix(in srgb, var(--gt-bg) 30%, transparent) !important; }
+
+@keyframes gt-drift {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
+  50% { transform: translate3d(3%, -2%, 0) rotate(4deg) scale(1.05); }
+  100% { transform: translate3d(-3%, 2%, 0) rotate(-3deg) scale(1.02); }
+}
+
+/* ---------- Frosted surfaces ---------- */
+html body .gt-glass,
+body.admin-page :is(.admin-sidebar, .admin-topbar, .admin-menu__panel, .admin-command, .admin-toast, .drawer),
+body.admin-page .content :is(.card, .panel-card, .panel, .officer-card, .event-card, .summary-card, .table-panel, .list-panel, .scanner-panel, .summary-panel, .profile-card, .modal-content, .stat-card, .table-wrapper, .table-container, .dash-table-wrap, .empty-state, .dash-empty, .year-box),
+html body:is(.public-page, .student-page) :is(.jpcs-navbar, .highlight-card, .mv-card, .event-card, .officer-card, .glass-panel, .glass-card, .card, .panel),
+html body.student-page .content > .section > form,
+html body.auth-page .auth-layout {
+  background-color: var(--gt-glass) !important;
+  background-image:
+    radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), var(--gt-spot), transparent 45%),
+    linear-gradient(135deg, var(--gt-sheen), transparent 42%) !important;
+  border: 1px solid var(--gt-line) !important;
+  box-shadow: var(--gt-shadow), inset 0 1px 0 var(--gt-edge) !important;
+  -webkit-backdrop-filter: blur(var(--gt-blur)) saturate(1.35);
+  backdrop-filter: blur(var(--gt-blur)) saturate(1.35);
+}
+body.admin-page :is(.admin-sidebar, .admin-topbar) { background-color: var(--gt-glass-strong) !important; }
+html body:is(.public-page, .student-page) .jpcs-navbar { background-color: var(--gt-glass-strong) !important; }
+
+/* Text and controls inherit the palette everywhere. */
+html body:is(.app-page, .public-page, .auth-page, .admin-page) :is(h1, h2, h3, h4, label, strong) { color: var(--gt-text); }
+html body:is(.app-page, .public-page, .auth-page, .admin-page) :is(p, small, .muted) { color: var(--gt-muted); }
+html body:is(.app-page, .public-page, .auth-page, .admin-page) :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]), select, textarea) {
+  background: var(--gt-glass-strong) !important;
+  color: var(--gt-text) !important;
+  border: 1px solid var(--gt-line) !important;
+  border-radius: var(--radius-control, 12px);
+  transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+}
+html body:is(.app-page, .public-page, .auth-page, .admin-page) :is(input, select, textarea)::placeholder { color: var(--gt-muted); opacity: .8; }
+html body:is(.app-page, .public-page, .auth-page, .admin-page) :is(input:not([type=checkbox]):not([type=radio]), select, textarea):hover { border-color: color-mix(in srgb, var(--gt-brand) 40%, var(--gt-line)) !important; }
+html body:is(.app-page, .public-page, .auth-page, .admin-page) :is(input:not([type=checkbox]):not([type=radio]), select, textarea):focus {
+  outline: none;
+  border-color: var(--gt-brand) !important;
+  box-shadow: 0 0 0 4px var(--gt-brand-soft) !important;
+}
+html body.student-page .content > .section > form :is(label, h3) { color: var(--gt-text) !important; }
+
+/* Primary actions: one warm gradient in both themes. */
+html[data-theme] body:is(.app-page, .public-page, .auth-page, .admin-page) :is(button[type=submit], .btn-primary, .btn-create, .btn-confirm, .submit-btn, .auth-submit, .jpcs-nav-button:not(.outline)) {
+  background: linear-gradient(135deg, var(--gt-brand), var(--gt-brand-hover)) !important;
+  border-color: transparent !important;
+  color: var(--gt-on-brand) !important;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--gt-brand) 32%, transparent), inset 0 1px 0 rgba(255, 255, 255, .3) !important;
+}
+html[data-theme] body:is(.app-page, .public-page, .auth-page, .admin-page) :is(button[type=submit], .btn-primary, .btn-create, .btn-confirm, .submit-btn, .auth-submit, .jpcs-nav-button:not(.outline)):hover {
+  filter: brightness(1.06);
+  box-shadow: 0 12px 28px color-mix(in srgb, var(--gt-brand) 42%, transparent), inset 0 1px 0 rgba(255, 255, 255, .35) !important;
+}
+body.admin-page .content :is(button:not([type=submit]), .btn:not(.btn-primary):not(.btn-create), .btn-back, .back-btn, .print-btn) {
+  background: var(--gt-glass-strong);
+  border-color: var(--gt-line);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* Tables sit on glass, so rows stay transparent. */
+body.admin-page .content th { background: color-mix(in srgb, var(--gt-brand-soft) 60%, transparent) !important; }
+body.admin-page .content tbody tr:hover { background: var(--gt-glass-hover); }
+html body.app-page:not(.admin-page) td { background: transparent !important; }
+
+/* Sidebar: active link glows. */
+body.admin-page .admin-sidebar__link.is-active {
+  background: linear-gradient(90deg, var(--gt-brand-soft), transparent) !important;
+  box-shadow: inset 3px 0 var(--gt-brand) !important;
+}
+body.admin-page :is(.admin-sidebar__link, .admin-sidebar__profile, .admin-sidebar__public, .admin-sidebar__logout) { transition: background .2s ease, color .2s ease, transform .2s ease; }
+body.admin-page :is(.admin-sidebar__link, .admin-sidebar__public):hover { transform: translateX(3px); }
+
+/* Badges read clearly on glass. */
+.status-badge.is-done, .status-badge.attended { background: color-mix(in srgb, var(--success, #8dddb0) 16%, transparent) !important; color: var(--success, #8dddb0) !important; }
+.status-badge.is-upcoming, .role-badge { background: var(--gt-brand-soft) !important; color: var(--gt-brand-ink) !important; }
+
+/* Hero banner keeps its photo; only its frame becomes glass-edged. */
+html body .hero-banner { box-shadow: var(--gt-shadow), inset 0 1px 0 var(--gt-edge) !important; }
+html[data-theme="light"] body .hero-banner__contact { background: var(--gt-glass-strong) !important; -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+
+/* ---------- Interaction ---------- */
+.gt-ripple { position: absolute; border-radius: 50%; transform: scale(0); background: currentColor; opacity: .22; pointer-events: none; animation: gt-ripple .6s ease-out forwards; }
+@keyframes gt-ripple { to { transform: scale(2.6); opacity: 0; } }
+.gt-tilt { transition: transform .25s ease, box-shadow .25s ease !important; transform-style: preserve-3d; will-change: transform; }
+/* Theme switch, fallback: every surface cross-fades together. */
+html.gt-theme-shift, html.gt-theme-shift body *, html.gt-theme-shift body *::before, html.gt-theme-shift body *::after {
+  transition: background-color .5s cubic-bezier(.4, 0, .2, 1), color .5s cubic-bezier(.4, 0, .2, 1), border-color .5s cubic-bezier(.4, 0, .2, 1), box-shadow .5s cubic-bezier(.4, 0, .2, 1), fill .5s ease, stroke .5s ease !important;
+}
+/* Theme switch, view transition: the old theme frosts over and dissolves while the new one sharpens into focus. */
+::view-transition-old(root), ::view-transition-new(root) { mix-blend-mode: normal; }
+::view-transition-old(root) { animation: gt-frost-out .65s cubic-bezier(.4, 0, .2, 1) both; }
+::view-transition-new(root) { animation: gt-frost-in .65s cubic-bezier(.4, 0, .2, 1) both; }
+@keyframes gt-frost-out {
+  from { opacity: 1; filter: blur(0) saturate(1); transform: scale(1); }
+  to { opacity: 0; filter: blur(14px) saturate(1.3); transform: scale(1.015); }
+}
+@keyframes gt-frost-in {
+  from { opacity: 0; filter: blur(14px) saturate(1.3); transform: scale(.985); }
+  to { opacity: 1; filter: blur(0) saturate(1); transform: scale(1); }
+}
+
+@media (max-width: 760px) { :root { --gt-blur: 16px; } html::before { filter: blur(24px); } }
+@media (prefers-reduced-motion: reduce) { html::before { animation: none; } ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; } .gt-ripple { display: none; } .gt-tilt { transform: none !important; } }
+@media print { html::before, html::after { display: none; } html, html body { background: #fff !important; } }
+
+/* ---------- Same geometry in both themes ---------- */
+/* Only colours may differ between light and dark; sizes are set once here. */
+html .theme-toggle .theme-icon { font-size: 22px; }
+
+/* ---------- One colour per role, on every page ---------- */
+/* Primary: the warm gradient. Includes the landing-page call-to-action buttons. */
+html[data-theme] body.public-page .content a.btn:not([href*="login"]) {
+  background: linear-gradient(135deg, var(--gt-brand), var(--gt-brand-hover)) !important;
+  border: 1px solid transparent !important;
+  color: var(--gt-on-brand) !important;
+  box-shadow: 0 8px 22px color-mix(in srgb, var(--gt-brand) 32%, transparent), inset 0 1px 0 rgba(255, 255, 255, .3) !important;
+}
+/* Secondary: frosted glass with brand-ink text (Login / Logout / outline buttons). */
+html[data-theme] body:is(.public-page, .app-page, .auth-page) :is(.content a.btn[href*="login"], .jpcs-nav-button.outline, .glass-secondary) {
+  background: var(--gt-glass-strong) !important;
+  border: 1px solid var(--gt-line) !important;
+  color: var(--gt-brand-ink) !important;
+  box-shadow: none !important;
+}
+html[data-theme] body:is(.public-page, .app-page, .auth-page) :is(.content a.btn[href*="login"], .jpcs-nav-button.outline, .glass-secondary):hover {
+  border-color: var(--gt-brand) !important;
+  background: var(--gt-brand-soft) !important;
+}
+/* Text links: brand-ink everywhere; quiet links use the muted text colour. */
+html[data-theme] body:is(.public-page, .app-page, .auth-page, .admin-page) :is(.content a:not([class]):not(.hero-banner a), .auth-link a, .auth-meta a, .footer-links a, .footer-social a) { color: var(--gt-brand-ink) !important; }
+html[data-theme] body:is(.public-page, .app-page, .auth-page, .admin-page) :is(.content a:not([class]):not(.hero-banner a), .auth-link a, .auth-meta a, .footer-links a, .footer-social a):hover { color: var(--gt-brand) !important; }
+html[data-theme] body .footer-social a { border-color: var(--gt-line) !important; }
+html[data-theme] body a.auth-back { color: var(--gt-muted) !important; }
+html[data-theme] body a.auth-back:hover { color: var(--gt-brand-ink) !important; }
+html[data-theme] body .password-toggle { color: var(--gt-brand-ink) !important; }
+/* Navigation: idle items muted, current item tinted brand. */
+html[data-theme] body:is(.public-page, .app-page, .auth-page) :is(.jpcs-nav-links a, .glass-auth-tabs a) { color: var(--gt-muted) !important; background: transparent !important; }
+html[data-theme] body:is(.public-page, .app-page, .auth-page) :is(.jpcs-nav-links a:hover, .glass-auth-tabs a:hover) { color: var(--gt-text) !important; background: var(--gt-glass-hover) !important; }
+html[data-theme] body:is(.public-page, .app-page, .auth-page) :is(.jpcs-nav-links a.active, .jpcs-nav-links a[aria-current="page"], .glass-auth-tabs a[aria-current="page"]) {
+  color: var(--gt-brand-ink) !important;
+  background: var(--gt-brand-soft) !important;
+  box-shadow: inset 0 -2px 0 var(--gt-brand) !important;
+}
+/* Theme switch: the admin look on every page. */
+html[data-theme] body .theme-toggle {
+  background: var(--gt-glass-strong) !important;
+  border: 1px solid var(--gt-brand-ink) !important;
+  box-shadow: var(--gt-shadow-soft), 0 0 0 4px var(--gt-brand-soft) !important;
+  color: var(--gt-on-brand) !important;
+}
+html[data-theme] body .theme-toggle::after { background: var(--gt-brand) !important; box-shadow: var(--gt-shadow-soft) !important; }
+html[data-theme="dark"] body .theme-toggle::after { background: #fffaf3 !important; }
+html[data-theme] body .theme-toggle .theme-icon { color: var(--gt-on-brand) !important; text-shadow: none !important; }
+html[data-theme="dark"] body .theme-toggle .theme-icon { color: #292524 !important; }
+/* Hero initials use the brand orange in both themes. */
+html[data-theme] body .hero-banner .hero-accent { color: var(--gt-brand) !important; }
+/* Close (×) buttons are secondary controls: frosted in both themes. */
+html[data-theme] body .glass-close {
+  background: var(--gt-glass-strong) !important;
+  border: 1px solid var(--gt-line) !important;
+  color: var(--gt-text) !important;
+  box-shadow: none !important;
+}
+html[data-theme] body .glass-close:hover { border-color: var(--gt-brand) !important; color: var(--gt-brand-ink) !important; background: var(--gt-brand-soft) !important; }
+/* Hero contact links keep the banner text colour. */
+html[data-theme] body .hero-banner__contact a { color: inherit; }
+/* Links read the same in both themes: no underline until hovered. */
+html[data-theme] body:is(.auth-page, .public-page, .app-page) :is(.auth-link a, .auth-meta a, a.auth-back) { text-decoration: none !important; }
+html[data-theme] body:is(.auth-page, .public-page, .app-page) :is(.auth-link a, .auth-meta a, a.auth-back):hover { text-decoration: underline !important; text-decoration-color: var(--gt-brand) !important; }
+/* Signed-in initial badge: solid brand in both themes. */
+html[data-theme] body:is(.public-page, .app-page) .jpcs-avatar { background: var(--gt-brand) !important; color: var(--gt-on-brand) !important; border-color: transparent !important; }
+/* Registration form: note shown when details were filled in from the masterlist. */
+html body .masterlist-notice { margin: 0 auto 16px; max-width: 600px; padding: 12px 16px; border: 1px solid color-mix(in srgb, var(--gt-brand) 40%, transparent); border-radius: 12px; background: var(--gt-brand-soft); color: var(--gt-text); text-align: left; }
+/* Submit buttons that are not the main action keep their own look: secondary = frosted, danger = red outline. */
+html[data-theme] body:is(.app-page, .admin-page) .content :is(button.btn-secondary, button.btn-danger)[type=submit] {
+  background: var(--gt-glass-strong) !important;
+  border: 1px solid var(--gt-line) !important;
+  box-shadow: none !important;
+  color: var(--gt-text) !important;
+}
+html[data-theme] body:is(.app-page, .admin-page) .content button.btn-danger[type=submit] { border-color: color-mix(in srgb, var(--danger) 55%, transparent) !important; color: var(--danger) !important; }
+html[data-theme] body:is(.app-page, .admin-page) .content :is(button.btn-secondary, button.btn-danger)[type=submit]:hover { filter: none; border-color: var(--gt-brand) !important; background: var(--gt-brand-soft) !important; box-shadow: none !important; }
+html[data-theme] body:is(.app-page, .admin-page) .content button.btn-danger[type=submit]:hover { border-color: var(--danger) !important; background: color-mix(in srgb, var(--danger) 12%, transparent) !important; }

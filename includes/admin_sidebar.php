@@ -83,6 +83,7 @@ $sidebarLink = static function (string $href, string $label, string $icon, bool 
     <?php echo $sidebarLink('scanner.php', 'Event Attendance Scanner', '<svg viewBox="0 0 24 24"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"></path><path d="M8 12h8M8 15h5"></path></svg>'); ?>
     <?php echo $sidebarLink('attendance.php', 'Attendance List per Event', '<svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>'); ?>
     <?php echo $sidebarLink('register_list.php', 'Register List', '<svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h6M8 16h4"></path></svg>'); ?>
+    <?php echo $sidebarLink('masterlist.php', 'Student Masterlist', '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"></path><path d="M14 3v5h5"></path><path d="M9 12h7M9 16h7M9 8h2"></path></svg>'); ?>
     <p class="admin-sidebar__section-label">Events &amp; Settings</p>
     <?php echo $sidebarLink('events.php', 'Event Management', '<svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path></svg>'); ?>
     <?php echo $sidebarLink('accounts.php', 'Account Management', '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3"></circle><path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5"></path><path d="M19 3v4M17 5h4"></path></svg>', $sidebarIsAdmin); ?>

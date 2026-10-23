@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/student_auth.php';
 require_once __DIR__ . '/includes/auth.php';
+require_once __DIR__ . '/includes/masterlist.php';
+require_once __DIR__ . '/includes/registration_confirm.php';
 
 $registrationUser = current_user();
 $registrationPanelAccess = !empty($registrationUser['id'])
@@ -21,8 +23,7 @@ require_once __DIR__ . '/PHPMailer/src/SMTP.php';
  * Ilagay ang generated Gmail App Password sa loob ng quotes.
  * Dapat galing ito sa account na nasa $gmailAddress.
  */
-$gmailAddress = 'samanthayvette041@gmail.com';
-$gmailAppPassword = 'qwxj ugjw wioo ofqn';
+['address' => $gmailAddress, 'app_password' => $gmailAppPassword] = jpcs_mail_config();
 
 $successMessage = '';
 $errorMessage = '';
@@ -44,12 +45,7 @@ $values = [
     'contact' => ''
 ];
 
-$courseOptions = [
-    'BSIT 4th Year' => ['A', 'B'],
-    'BSIT 3rd Year' => ['A', 'B', 'C', 'D'],
-    'BSIT 2nd Year' => ['A', 'B', 'C', 'D'],
-    'BSIT 1st Year' => ['A', 'B', 'C', 'D']
-];
+$courseOptions = masterlist_section_groups();
 
 $allowedCourses = [];
 
@@ -59,8 +55,20 @@ foreach ($courseOptions as $year => $sections) {
     }
 }
 
-// Remove formatting spaces from the generated App Password.
-$gmailAppPassword = preg_replace('/\s+/', '', $gmailAppPassword);
+// A signed-in student's form starts from their own masterlist entry.
+$registrationStudent = current_student();
+$masterlistNotice = '';
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' && $registrationStudent !== null) {
+    $values['student_id'] = $registrationStudent['student_number'];
+    $ownEntry = masterlist_find($conn, $registrationStudent['student_number']);
+    if ($ownEntry) {
+        $values = array_replace($values, masterlist_split_name($ownEntry['student_name']));
+        if (in_array($ownEntry['course_year_section'], $allowedCourses, true)) {
+            $values['course_year_section'] = $ownEntry['course_year_section'];
+        }
+        $masterlistNotice = 'Your details were filled in from the JPCS masterlist. Registrations from listed students are confirmed automatically.';
+    }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
     foreach ($values as $key => $value) {
@@ -188,6 +196,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                     );
 
                     $saved = $stmt->execute();
+                    $newRegistrationId = (int) $stmt->insert_id;
                     $stmt->close();
 
                     if (!$saved) {
@@ -205,7 +214,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register'])) {
                 . 'database configuration.';
         }
 
-        if ($saved && $event) {
+        // Listed students are confirmed right away: only for the signed-in student's own ID,
+        // or when an officer/adviser registers them, so nobody can confirm someone else's ID.
+        $autoConfirmed = false;
+        if ($saved && $event && masterlist_find($conn, $student_id) !== null) {
+            $ownId = $registrationStudent !== null
+                && masterlist_normalize_id($registrationStudent['student_number']) === masterlist_normalize_id($student_id);
+            if ($ownId || $registrationPanelAccess) {
+                try {
+                    $confirmation = jpcs_confirm_registration($conn, $newRegistrationId, (int) $event_id, 'confirm', 'Masterlist (auto)');
+                    $autoConfirmed = true;
+                    if ($confirmation['type'] === 'success') {
+                        $successMessage = 'You are on the JPCS masterlist, so your registration is confirmed. '
+                            . 'Your QR code was emailed to ' . $email . '.';
+                    } else {
+                        $successMessage = 'You are on the JPCS masterlist, so your registration is confirmed. '
+                            . 'Control Number: ' . $confirmation['control_number'] . '.';
+                        $errorMessage = 'The QR email could not be sent yet; an officer can resend it from Student Registered Pending.';
+                    }
+                } catch (\Throwable $confirmError) {
+                    error_log('JPCS masterlist auto-confirm: ' . $confirmError->getMessage());
+                }
+            }
+        }
+        if ($autoConfirmed) {
+            foreach ($values as $key => $value) {
+                $values[$key] = '';
+            }
+        } elseif ($saved && $event) {
             $mail = new PHPMailer(true);
 
             try {
@@ -675,6 +711,8 @@ $events = $conn->query(
     <script src="js/system-ui.js" defer></script>
     <link rel="stylesheet" href="assets/css/glass.css">
     <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
     <script src="js/glass-ui.js" defer></script>
 </head>
 <body class="app-page student-page">
@@ -693,6 +731,10 @@ $events = $conn->query(
                 <div class="success" role="status">
                     <?php echo h($successMessage); ?>
                 </div>
+            <?php } ?>
+
+            <?php if ($masterlistNotice !== '' && $successMessage === '') { ?>
+                <div class="masterlist-notice" role="status"><?php echo h($masterlistNotice); ?></div>
             <?php } ?>
 
             <?php if ($errorMessage !== '') { ?>

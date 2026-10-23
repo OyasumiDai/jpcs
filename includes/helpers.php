@@ -17,6 +17,16 @@ function request_method_is(string $method): bool
     return strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET') === strtoupper($method);
 }
 
+// Human-readable account role; stored role values stay unchanged.
+function role_label(?string $role): string
+{
+    return match ((string) $role) {
+        'admin_advisor', 'admin_adviser' => 'Adviser',
+        'officer' => 'Officer',
+        default => ucwords(str_replace('_', ' ', (string) $role)),
+    };
+}
+
 function image_url(?string $path, string $fallback = 'assets/img/default.svg'): string
 {
     $path = trim((string) $path);

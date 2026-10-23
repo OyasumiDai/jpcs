@@ -404,6 +404,8 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
     <script src="js/system-ui.js" defer></script>
     <link rel="stylesheet" href="assets/css/glass.css">
     <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
     <script src="js/glass-ui.js" defer></script>
 </head>
 <body class="app-page student-page officer-page">

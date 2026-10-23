@@ -2,8 +2,10 @@
   <div class="hero-banner__content">
     <p class="hero-banner__kicker">CMU • CCS</p>
     <h1 id="hero-title">
-      <span class="hero-accent">J</span>UNIOR <span class="hero-accent">P</span>HILIPPINE<br>
-      <span class="hero-accent">C</span>OMPUTER <span class="hero-accent">S</span>OCIETY
+      <span class="hero-accent">J</span>UNIOR<br>
+      <span class="hero-accent">P</span>HILIPPINE<br>
+      <span class="hero-accent">C</span>OMPUTER<br>
+      <span class="hero-accent">S</span>OCIETY
     </h1>
     <p class="hero-banner__chapter">CITY OF MALABON UNIVERSITY CHAPTER <strong>2026 - 2027</strong></p>
   </div>

@@ -2,17 +2,8 @@
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 
-use PHPMailer\PHPMailer\PHPMailer;
-
-require_once __DIR__ . '/PHPMailer/src/Exception.php';
-require_once __DIR__ . '/PHPMailer/src/PHPMailer.php';
-require_once __DIR__ . '/PHPMailer/src/SMTP.php';
-
-// SAME SETTINGS AS YOUR WORKING registration.php
-$gmailAddress = 'samanthayvette041@gmail.com';
-$gmailAppPassword = 'qwxj ugjw wioo ofqn'; // Paste the working Gmail App Password here.
-
-$gmailAppPassword = preg_replace('/\s+/', '', $gmailAppPassword);
+require_once __DIR__ . '/includes/registration_confirm.php';
+require_once __DIR__ . '/includes/masterlist.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -88,83 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($_GET['counts'] ?? '') === '1') {
     exit;
 }
 
-function pendingDirectory($directory) {
-    if (!is_dir($directory) &&
-        !mkdir($directory, 0755, true) &&
-        !is_dir($directory)) {
-        throw new RuntimeException('Cannot create folder: ' . basename($directory));
-    }
-
-    if (!is_writable($directory)) {
-        throw new RuntimeException('Folder is not writable: ' . basename($directory));
-    }
-}
-
-// Generate the existing personalized event pass.
-function pendingPass($student) {
-    $template = trim((string) ($student['pass_image'] ?? ''));
-
-    if ($template === '') {
-        return null;
-    }
-
-    $path = __DIR__ . '/' . ltrim($template, '/\\');
-
-    if (!is_file($path)) {
-        throw new RuntimeException('The uploaded event pass template is missing.');
-    }
-
-    if (!function_exists('imagecreatefromstring')) {
-        throw new RuntimeException(
-            'PHP GD is required to generate the event pass.'
-        );
-    }
-
-    $image = @imagecreatefromstring(file_get_contents($path));
-
-    if ($image === false) {
-        throw new RuntimeException('Cannot read the event pass image.');
-    }
-
-    try {
-        $black = imagecolorallocate($image, 0, 0, 0);
-        $font = null;
-
-        foreach ([
-            __DIR__ . '/fonts/Cartoon_Regular.ttf',
-            __DIR__ . '/fonts/Cartoon_Regular'
-        ] as $candidate) {
-            if (is_file($candidate)) {
-                $font = $candidate;
-                break;
-            }
-        }
-
-        $nameText = 'Name: ' . $student['student_name'];
-        $controlText = 'Control No: ' . $student['control_number'];
-
-        if ($font && function_exists('imagettftext')) {
-            imagettftext($image, 20, 0, 50, 200, $black, $font, $nameText);
-            imagettftext($image, 20, 0, 50, 240, $black, $font, $controlText);
-        } else {
-            imagestring($image, 5, 50, 180, $nameText, $black);
-            imagestring($image, 5, 50, 220, $controlText, $black);
-        }
-
-        pendingDirectory(__DIR__ . '/passes');
-
-        $output = __DIR__ . '/passes/pass_' . (int) $student['id'] . '.png';
-
-        if (!imagepng($image, $output)) {
-            throw new RuntimeException('Cannot save the generated event pass.');
-        }
-
-        return $output;
-    } finally {
-        imagedestroy($image);
-    }
-}
-
 // Confirm, resend, and remove are POST actions.
 // Refreshing the page will not repeat these actions.
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -227,225 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Registration removed.';
             $messageType = 'success';
         } else {
-            if ($action === 'confirm' && $student['status'] !== 'pending') {
-                throw new RuntimeException(
-                    'Already confirmed. Use Resend Email below.'
-                );
-            }
-
-            if ($action === 'resend' && $student['status'] !== 'confirmed') {
-                throw new RuntimeException('Confirm this registration first.');
-            }
-
-            if ($action === 'confirm' && $student['event_status'] !== 'upcoming') {
-                throw new RuntimeException('This event is no longer upcoming.');
-            }
-
-            if (!filter_var($student['email'], FILTER_VALIDATE_EMAIL)) {
-                throw new RuntimeException(
-                    'The student email address is invalid.'
-                );
-            }
-
-            if ($gmailAppPassword === '' ||
-                stripos($gmailAppPassword, 'YOUR') !== false ||
-                stripos($gmailAppPassword, 'REPLACE') !== false) {
-                throw new RuntimeException(
-                    'Email is not configured. Put the working registration.php '
-                    . 'Gmail App Password into $gmailAppPassword in pending.php.'
-                );
-            }
-
-            if (!is_file(__DIR__ . '/phpqrcode/qrlib.php')) {
-                throw new RuntimeException('Missing phpqrcode/qrlib.php.');
-            }
-
-            if (!function_exists('imagepng')) {
-                throw new RuntimeException(
-                    'Enable the PHP GD extension to generate QR images.'
-                );
-            }
-
-            require_once __DIR__ . '/phpqrcode/qrlib.php';
-
-            $controlNumber = trim((string) $student['control_number']);
-            $needsNewControl = ($controlNumber === '');
-
-            if ($controlNumber !== '') {
-                $stmt = $conn->prepare("
-                    SELECT COUNT(*) AS total
-                    FROM registrations
-                    WHERE control_number=? AND id<>?
-                ");
-                $stmt->bind_param('si', $controlNumber, $id);
-                $stmt->execute();
-                $duplicateCount = (int) $stmt->get_result()
-                    ->fetch_assoc()['total'];
-                $stmt->close();
-
-                $needsNewControl = $duplicateCount > 0;
-            }
-
-            if ($needsNewControl && $controlNumber !== '') {
-                $stmt = $conn->prepare("
-                    SELECT COUNT(*) AS total
-                    FROM attendance
-                    WHERE event_id=? AND participant_id=?
-                ");
-                $stmt->bind_param('is', $eventID, $controlNumber);
-                $stmt->execute();
-                $attendanceCount = (int) $stmt->get_result()
-                    ->fetch_assoc()['total'];
-                $stmt->close();
-
-                if ($attendanceCount > 0) {
-                    throw new RuntimeException(
-                        'This duplicate control number already has attendance. '
-                        . 'Resolve that attendance before replacing the QR.'
-                    );
-                }
-            }
-
-            if ($needsNewControl) {
-                do {
-                    $controlNumber = 'EVT-' . $eventID . '-' . $id . '-'
-                        . strtoupper(bin2hex(random_bytes(4)));
-
-                    $stmt = $conn->prepare("
-                        SELECT COUNT(*) AS total
-                        FROM registrations WHERE control_number=?
-                    ");
-                    $stmt->bind_param('s', $controlNumber);
-                    $stmt->execute();
-                    $exists = (int) $stmt->get_result()->fetch_assoc()['total'];
-                    $stmt->close();
-                } while ($exists > 0);
-            }
-
-            $student['control_number'] = $controlNumber;
-
-            pendingDirectory(__DIR__ . '/qrcodes');
-
-            // Filename uses the unique registration ID.
-            $qrFile = __DIR__ . '/qrcodes/registration_' . $id . '.png';
-
-            QRcode::png($controlNumber, $qrFile, QR_ECLEVEL_L, 5);
-
-            if (!is_file($qrFile) || filesize($qrFile) === 0) {
-                throw new RuntimeException('QR image generation failed.');
-            }
-
-            $passFile = pendingPass($student);
-
-            // Save confirmation before sending so the QR is valid on receipt.
-            // If sending fails, the student stays visible in the resend table.
-            if ($action === 'confirm') {
-                $adminName = $user['name'];
-
-                $stmt = $conn->prepare("
-                    UPDATE registrations
-                    SET status='confirmed', confirmed_by=?, control_number=?
-                    WHERE id=? AND event_id=? AND status='pending'
-                ");
-                $stmt->bind_param(
-                    'ssii', $adminName, $controlNumber, $id, $eventID
-                );
-            } else {
-                $stmt = $conn->prepare("
-                    UPDATE registrations SET control_number=?
-                    WHERE id=? AND event_id=? AND status='confirmed'
-                ");
-                $stmt->bind_param('sii', $controlNumber, $id, $eventID);
-            }
-
-            $stmt->execute();
-
-            if ($action === 'confirm' && $stmt->affected_rows !== 1) {
-                $stmt->close();
-                throw new RuntimeException(
-                    'Registration changed. Refresh before trying again.'
-                );
-            }
-
-            $stmt->close();
-
-            $mail = new PHPMailer(true);
-
-            try {
-                $mail->isSMTP();
-                $mail->Host = 'smtp.gmail.com';
-                $mail->SMTPAuth = true;
-                $mail->Username = $gmailAddress;
-                $mail->Password = $gmailAppPassword;
-                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                $mail->Port = 587;
-                $mail->CharSet = 'UTF-8';
-                $mail->Timeout = 30;
-
-                $mail->setFrom($gmailAddress, 'JPCS Malabon');
-                $mail->addAddress(
-                    $student['email'], $student['student_name']
-                );
-
-                $safeName = pendingEscape($student['student_name']);
-                $safeTitle = pendingEscape($student['title']);
-                $safeDate = pendingEscape($student['event_date']);
-                $safeControl = pendingEscape($controlNumber);
-
-                $passText = $passFile
-                    ? 'Your QR code and event pass are attached.'
-                    : 'Your QR code is attached.';
-
-                $mail->isHTML(true);
-                $mail->Subject = 'Registration Confirmed - ' . $student['title'];
-
-                $mail->Body = "
-                    <h3>Hi $safeName,</h3>
-                    <p>Your registration for <b>$safeTitle</b>
-                    on <b>$safeDate</b> is <b>CONFIRMED</b>.</p>
-                    <p>Control Number: <b>$safeControl</b></p>
-                    <p>$passText Please present your QR code
-                    at the event entrance.</p>
-                    <p>If you received an older QR code,
-                    use the QR attached to this email.</p>
-                    <p>Regards,<br>JPCS Malabon Admin</p>
-                ";
-
-                $mail->AltBody =
-                    "Hi {$student['student_name']},\n\n"
-                    . "Confirmed: {$student['title']}\n"
-                    . "Date: {$student['event_date']}\n"
-                    . "Control Number: $controlNumber\n\n"
-                    . "$passText Use this email's QR at the entrance.\n\n"
-                    . "JPCS Malabon Admin";
-
-                $mail->addAttachment($qrFile, 'JPCS-QR-' . $id . '.png');
-
-                if ($passFile) {
-                    $mail->addAttachment($passFile, 'EventPass.png');
-                }
-
-                $mail->send();
-
-                $message = 'Confirmation email sent to ' . $student['email']
-                    . '. Control Number: ' . $controlNumber;
-                $messageType = 'success';
-            } catch (Throwable $mailError) {
-                $details = $mail->ErrorInfo ?: $mailError->getMessage();
-
-                // Do not display the App Password in an error.
-                $details = str_replace(
-                    [$gmailAppPassword, chunk_split($gmailAppPassword, 4, ' ')],
-                    '[REDACTED]',
-                    $details
-                );
-
-                error_log('JPCS confirmation email: ' . $details);
-
-                $message = 'Registration is confirmed, but email failed. '
-                    . 'Use Resend Email below after fixing this error. '
-                    . 'Mailer Error: ' . $details;
-            }
+            $result = jpcs_confirm_registration($conn, $id, $eventID, $action, (string) $user['name']);
+            $message = $result['message'];
+            $messageType = $result['type'];
         }
     } catch (Throwable $error) {
         $message = $error->getMessage();
@@ -477,6 +175,7 @@ $events = $conn->query("
 
 $eventInfo = null;
 $pendingStudents = [];
+$pendingListed = [];
 $confirmedStudents = [];
 $pageError = '';
 
@@ -506,6 +205,8 @@ if ($selectedEventID !== null) {
             }
         }
         $stmt->close();
+        // Masterlist status for the review table (one query for the whole event).
+        $pendingListed = masterlist_lookup_many($conn, array_column($pendingStudents, 'student_id'));
     } else {
         $pageError = 'Event not found. Please select another event.';
     }
@@ -552,7 +253,7 @@ if ($selectedEventID !== null) {
                         ) ?>" alt="Event Poster">
                         <h4>
                             <?= pendingEscape($row['title']) ?><br>
-                            <span data-pending-event="<?= (int) $row['id'] ?>"><?= (int) $row['pending_count'] ?></span> pending<br>
+                            <span class="pending-pill"><span data-pending-event="<?= (int) $row['id'] ?>"><?= (int) $row['pending_count'] ?></span> pending</span>
                             <span class="event-date">
                                 (<?= pendingEscape($row['event_date']) ?>)
                             </span>
@@ -591,9 +292,9 @@ if ($selectedEventID !== null) {
                     </tr>
                 </thead>
                 <tbody>
-                <?php foreach ($pendingStudents as $row) { ?>
+                <?php foreach ($pendingStudents as $row) { $listedRow = $pendingListed[masterlist_normalize_id((string) $row['student_id'])] ?? null; ?>
                     <tr id="registration-<?= (int) $row['id'] ?>" <?= (int) $reviewID === (int) $row['id'] ? 'style="outline:2px solid currentColor"' : '' ?>>
-                        <td><?= pendingEscape($row['student_name']) ?></td>
+                        <td><?= pendingEscape($row['student_name']) ?><?php if ($listedRow) { ?><span class="ml-badge is-listed" title="<?= pendingEscape($listedRow['course_year_section']) ?>">On masterlist</span><?php if (masterlist_normalize_name((string) $row['student_name']) !== $listedRow['student_name']) { ?><small class="ml-name-note">Listed as <?= pendingEscape($listedRow['student_name']) ?></small><?php } ?><?php } else { ?><span class="ml-badge is-unlisted">Not on masterlist</span><?php } ?></td>
                         <td><?= pendingEscape($row['student_id']) ?></td>
                         <td><?= pendingEscape($row['course_year_section']) ?></td>
                         <td><?= pendingEscape($row['email']) ?></td>

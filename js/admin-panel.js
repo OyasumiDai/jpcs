@@ -58,6 +58,23 @@
     window.JPCSAdmin = Object.assign(window.JPCSAdmin || {}, { toast(message) {
       const node = document.createElement('div'); node.className = 'admin-toast'; node.textContent = message; toastRegion.append(node); setTimeout(() => node.remove(), 6000);
     } });
+    // Echo server-rendered success messages as a toast so the result is noticed without scrolling.
+    document.querySelectorAll('.content .success').forEach(note => { const text = note.textContent.trim(); if (text) window.JPCSAdmin.toast(text); });
+    // Busy state on submit; a second submit of the same form is ignored until the page changes.
+    // Buttons are not disabled, because a disabled submitter would drop its name/value from the request.
+    document.addEventListener('submit', event => {
+      const form = event.target;
+      if (event.defaultPrevented || !(form instanceof HTMLFormElement) || form.target) return;
+      if (form.dataset.submitting === 'true') { event.preventDefault(); return; }
+      form.dataset.submitting = 'true';
+      const button = event.submitter || form.querySelector('button[type=submit],button:not([type])');
+      button?.classList.add('is-loading'); button?.setAttribute('aria-busy', 'true');
+    });
+    window.addEventListener('pageshow', event => {
+      if (!event.persisted) return;
+      document.querySelectorAll('form[data-submitting]').forEach(form => delete form.dataset.submitting);
+      document.querySelectorAll('.is-loading').forEach(button => { button.classList.remove('is-loading'); button.removeAttribute('aria-busy'); });
+    });
     // Build navigation from the rendered sidebar, never from an unrestricted route list.
     const dialog = document.createElement('dialog'); dialog.className = 'admin-command'; dialog.setAttribute('aria-label', 'Search admin pages');
     dialog.innerHTML = '<header><strong>Go to a page</strong><button type="button" aria-label="Close search">Close</button></header><input type="search" aria-label="Search pages" placeholder="Search pages"><nav aria-label="Search results"></nav>';
