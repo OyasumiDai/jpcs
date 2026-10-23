@@ -2,6 +2,10 @@
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 
+// Attendance per event now lives in registrations.php.
+$eventParam = filter_var($_GET['event_id'] ?? '', FILTER_VALIDATE_INT);
+redirect('registrations.php' . ($eventParam ? '?event_id=' . (int) $eventParam . '&tab=attendance' : ''));
+
 // Check login
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");

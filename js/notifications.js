@@ -28,7 +28,7 @@
       <div class="notify-panel__title"><h2 id="notify-title">Notifications</h2><p data-notify-summary>Loading…</p></div>
       <button type="button" class="notify-close" aria-label="Close notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
     </header>
-    <a class="notify-attention" href="pending.php" data-notify-attention hidden>
+    <a class="notify-attention" href="registrations.php" data-notify-attention hidden>
       <span class="notify-attention__count" data-notify-pending>0</span>
       <span><strong>Needs your attention</strong><small data-notify-pending-text>registrations waiting for review</small></span>
       <span class="notify-attention__go">Review <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></span>

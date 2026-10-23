@@ -28,7 +28,7 @@ if ($isPanelUser && isset($conn) && $conn instanceof mysqli) {
     }
   }
 }
-$panelReturnLabel = in_array($panelRole, ['admin_advisor', 'admin_adviser'], true) ? 'Advisor Panel' : 'Officer Panel';
+$panelReturnLabel = in_array($panelRole, ['admin_advisor', 'admin_adviser'], true) ? 'Adviser Panel' : 'Officer Panel';
 ?>
 <link rel="stylesheet" href="css/theme.css?v=<?= filemtime(dirname(__DIR__) . '/css/theme.css') ?>">
 <script src="js/theme-init.js?v=<?= filemtime(dirname(__DIR__) . '/js/theme-init.js') ?>"></script>

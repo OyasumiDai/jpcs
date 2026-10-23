@@ -272,7 +272,7 @@ if (request_method_is('POST')) {
         </section>
         <section class="auth-card login-container">
             <h1>Login</h1>
-            <p>Students, officers and advisors can sign in here.</p>
+            <p>Students, officers and advisers can sign in here.</p>
             <?php if (isset($_GET['registered'])) { ?><p class="success" role="status">Account created. You can now log in.</p><?php } ?>
             <?php if ($error !== '') { ?><p class="error" role="alert"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p><?php } ?>
             <form class="auth-form" method="POST">

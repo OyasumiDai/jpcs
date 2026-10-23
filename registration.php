@@ -712,186 +712,180 @@ $events = $conn->query(
     <link rel="stylesheet" href="assets/css/glass.css?v=<?= filemtime(__DIR__ . '/assets/css/glass.css') ?>">
     <link rel="stylesheet" href="assets/css/light-clean.css?v=<?= filemtime(__DIR__ . '/assets/css/light-clean.css') ?>">
     <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <link rel="stylesheet" href="assets/css/registration.css?v=<?= filemtime(__DIR__ . '/assets/css/registration.css') ?>">
     <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
     <script src="js/glass-ui.js?v=<?= filemtime(__DIR__ . '/js/glass-ui.js') ?>" defer></script>
 </head>
-<body class="app-page student-page">
+<body class="app-page student-page registration-page">
     <?php require __DIR__ . '/includes/navbar.php'; ?>
+    <?php
+    $regEvents = $events ? $events->fetch_all(MYSQLI_ASSOC) : [];
+    $regSelectedId = (string) $values['event_id'];
+    ?>
 
-    <div class="content">
+    <div class="content rg-page">
         <header>
             <h1>Junior Philippine Computer Society</h1>
             <h2>City of Malabon University</h2>
         </header>
 
-        <div class="section">
-            <h3>Event Registration Form</h3>
+        <section class="rg-hero" aria-labelledby="rg-title">
+            <p class="rg-eyebrow">Events</p>
+            <h2 class="rg-title" id="rg-title">Event Registration</h2>
+            <p class="rg-lead">Pick an upcoming event and fill in your details. You'll get a confirmation email with your QR code once you're confirmed.</p>
+        </section>
 
-            <?php if ($successMessage !== '') { ?>
-                <div class="success" role="status">
-                    <?php echo h($successMessage); ?>
-                </div>
-            <?php } ?>
+        <?php if ($successMessage !== '') { ?>
+            <div class="rg-result is-success" role="status">
+                <span class="rg-result__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></span>
+                <div><strong>You're registered!</strong><p><?php echo h($successMessage); ?></p></div>
+            </div>
+        <?php } ?>
+        <?php if ($errorMessage !== '') { ?>
+            <div class="rg-result is-error" role="alert">
+                <span class="rg-result__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 8v5M12 16.5h.01"></path><circle cx="12" cy="12" r="9"></circle></svg></span>
+                <div><strong><?php echo $successMessage !== '' ? 'Heads up' : 'Please check the form'; ?></strong><p><?php echo h($errorMessage); ?></p></div>
+            </div>
+        <?php } ?>
+        <?php if ($masterlistNotice !== '' && $successMessage === '') { ?>
+            <div class="rg-result is-info" role="status">
+                <span class="rg-result__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"></path><path d="M14 3v5h5M9 13l2 2 4-4"></path></svg></span>
+                <div><strong>Filled in from the masterlist</strong><p><?php echo h($masterlistNotice); ?></p></div>
+            </div>
+        <?php } ?>
 
-            <?php if ($masterlistNotice !== '' && $successMessage === '') { ?>
-                <div class="masterlist-notice" role="status"><?php echo h($masterlistNotice); ?></div>
-            <?php } ?>
+        <?php if (!$regEvents) { ?>
+            <div class="rg-empty">
+                <span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path></svg></span>
+                <strong>No upcoming events right now</strong>
+                <p>Check back soon — new events will appear here as soon as they're announced.</p>
+            </div>
+        <?php } else { ?>
+        <div class="rg-layout">
+            <form method="POST" class="rg-form" data-rg-form novalidate>
+                <div class="rg-progress" aria-hidden="true"><span data-rg-progress></span></div>
 
-            <?php if ($errorMessage !== '') { ?>
-                <div class="error" role="alert">
-                    <?php echo h($errorMessage); ?>
-                </div>
-            <?php } ?>
-
-            <form method="POST">
-                <div class="field">
-                    <label for="event_id">Select Upcoming Event:</label>
-                    <select id="event_id" name="event_id" required>
-                        <option value="">-- Choose Event --</option>
-
-                        <?php while ($row = $events->fetch_assoc()) { ?>
-                            <option
-                                value="<?php echo h($row['id']); ?>"
-                                <?php
-                                if (
-                                    (string)$values['event_id'] ===
-                                    (string)$row['id']
-                                ) {
-                                    echo 'selected';
-                                }
-                                ?>>
-                                <?php
-                                echo h(
-                                    $row['title'] .
-                                    ' (' . $row['event_date'] . ')'
-                                );
-                                ?>
-                            </option>
+                <fieldset class="rg-step" data-rg-step>
+                    <legend><span class="rg-step__num">1</span> Choose an event</legend>
+                    <div class="rg-events" role="radiogroup" aria-label="Upcoming events">
+                        <?php foreach ($regEvents as $i => $event) {
+                            $eventId = (string) $event['id'];
+                            $checked = $regSelectedId === $eventId || ($regSelectedId === '' && count($regEvents) === 1);
+                            $time = substr((string) ($event['event_time'] ?? ''), 0, 5);
+                        ?>
+                            <label class="rg-event">
+                                <input type="radio" name="event_id" value="<?php echo h($eventId); ?>" required<?php echo $checked ? ' checked' : ''; ?>
+                                    data-title="<?php echo h($event['title']); ?>" data-date="<?php echo h(date('M j, Y', strtotime((string) $event['event_date']))); ?>">
+                                <span class="rg-event__poster"><img src="<?php echo h(image_url($event['poster'] ?? null)); ?>" alt="" loading="lazy"></span>
+                                <span class="rg-event__body">
+                                    <strong><?php echo h($event['title']); ?></strong>
+                                    <span class="rg-event__meta">
+                                        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path></svg><?php echo h(date('D, M j, Y', strtotime((string) $event['event_date']))); ?></span>
+                                        <?php if ($time !== '') { ?><span><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l2.5 2"></path></svg><?php echo h(date('g:i A', strtotime($time))); ?></span><?php } ?>
+                                        <?php if (trim((string) ($event['location'] ?? '')) !== '') { ?><span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.5-6-11a6 6 0 0 1 12 0c0 5.5-6 11-6 11z"></path><circle cx="12" cy="10" r="2.2"></circle></svg><?php echo h($event['location']); ?></span><?php } ?>
+                                    </span>
+                                </span>
+                                <span class="rg-event__check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m6 12.5 4 4L18 8"></path></svg></span>
+                            </label>
                         <?php } ?>
-                    </select>
-                </div>
-
-                <div class="name-fields">
-                    <div class="field">
-                        <label for="surname">Surname:</label>
-                        <input
-                            type="text"
-                            id="surname"
-                            name="surname"
-                            autocomplete="family-name"
-                            value="<?php echo h($values['surname']); ?>"
-                            required>
                     </div>
+                    <p class="rg-error" data-rg-error-for="event_id" hidden>Choose the event you want to join.</p>
+                </fieldset>
 
-                    <div class="field">
-                        <label for="given_name">Given Name:</label>
-                        <input
-                            type="text"
-                            id="given_name"
-                            name="given_name"
-                            autocomplete="given-name"
-                            value="<?php echo h($values['given_name']); ?>"
-                            required>
+                <fieldset class="rg-step" data-rg-step>
+                    <legend><span class="rg-step__num">2</span> Your details</legend>
+                    <div class="rg-grid rg-grid--name">
+                        <div class="rg-field">
+                            <label for="surname">Surname</label>
+                            <input type="text" id="surname" name="surname" autocomplete="family-name" placeholder="Dela Cruz" value="<?php echo h($values['surname']); ?>" required>
+                            <p class="rg-error" hidden>Enter your surname.</p>
+                        </div>
+                        <div class="rg-field">
+                            <label for="given_name">Given name</label>
+                            <input type="text" id="given_name" name="given_name" autocomplete="given-name" placeholder="Juan" value="<?php echo h($values['given_name']); ?>" required>
+                            <p class="rg-error" hidden>Enter your given name.</p>
+                        </div>
+                        <div class="rg-field rg-field--mi">
+                            <label for="middle_initial">M.I. <span class="rg-optional">optional</span></label>
+                            <input type="text" id="middle_initial" name="middle_initial" maxlength="2" pattern="[A-Za-z][.]?" placeholder="R" aria-describedby="middle_hint" value="<?php echo h($values['middle_initial']); ?>">
+                            <p class="rg-error" hidden>One letter only.</p>
+                        </div>
                     </div>
-
-                    <div class="field">
-                        <label for="middle_initial">Middle Initial:</label>
-                        <input
-                            type="text"
-                            id="middle_initial"
-                            name="middle_initial"
-                            maxlength="2"
-                            pattern="[A-Za-z][.]?"
-                            aria-describedby="middle_hint"
-                            value="<?php echo h($values['middle_initial']); ?>">
-                    </div>
-                </div>
-
-                <p class="hint" id="middle_hint">
-                    Middle initial is optional. Enter one letter, such as R.
-                </p>
-
-                <div class="field">
-                    <label for="student_id">Student Number / ID:</label>
-                    <input
-                        type="text"
-                        id="student_id"
-                        name="student_id"
-                        value="<?php echo h($values['student_id']); ?>"
-                        required>
-                </div>
-
-                <div class="field">
-                    <label for="course_year_section">
-                        Course / Year &amp; Section:
-                    </label>
-
-                    <select
-                        id="course_year_section"
-                        name="course_year_section"
-                        required>
-                        <option value="">
-                            -- Select Course / Year &amp; Section --
-                        </option>
-
-                        <?php foreach ($courseOptions as $year => $sections) { ?>
-                            <optgroup label="<?php echo h($year); ?>">
-                                <?php foreach ($sections as $section) {
-                                    $courseValue = $year . ' - ' . $section;
-                                    $courseLabel =
-                                        str_replace('BSIT ', '', $year) .
-                                        ' - ' . $section;
-                                ?>
-                                    <option
-                                        value="<?php echo h($courseValue); ?>"
-                                        <?php
-                                        if (
-                                            $values['course_year_section'] ===
-                                            $courseValue
-                                        ) {
-                                            echo 'selected';
-                                        }
-                                        ?>>
-                                        <?php echo h($courseLabel); ?>
-                                    </option>
+                    <p class="rg-hint" id="middle_hint">Middle initial is optional — enter one letter, such as R.</p>
+                    <div class="rg-grid">
+                        <div class="rg-field">
+                            <label for="student_id">Student number / ID</label>
+                            <input type="text" id="student_id" name="student_id" inputmode="numeric" autocomplete="off" placeholder="2024-00253" value="<?php echo h($values['student_id']); ?>" required>
+                            <p class="rg-error" hidden>Enter your student number.</p>
+                        </div>
+                        <div class="rg-field">
+                            <label for="course_year_section">Course / year &amp; section</label>
+                            <select id="course_year_section" name="course_year_section" required data-rg-section>
+                                <option value="">Select course, year &amp; section</option>
+                                <?php foreach ($courseOptions as $year => $sections) { ?>
+                                    <optgroup label="<?php echo h($year); ?>">
+                                        <?php foreach ($sections as $section) { $courseValue = $year . ' - ' . $section; ?>
+                                            <option value="<?php echo h($courseValue); ?>"<?php echo $values['course_year_section'] === $courseValue ? ' selected' : ''; ?>><?php echo h(str_replace('BSIT ', '', $year) . ' - ' . $section); ?></option>
+                                        <?php } ?>
+                                    </optgroup>
                                 <?php } ?>
-                            </optgroup>
-                        <?php } ?>
-                    </select>
-                </div>
+                            </select>
+                            <p class="rg-error" hidden>Choose your year level and section.</p>
+                        </div>
+                    </div>
+                </fieldset>
 
-                <div class="field">
-                    <label for="email">Personal Email:</label>
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        autocomplete="email"
-                        value="<?php echo h($values['email']); ?>"
-                        required>
-                </div>
+                <fieldset class="rg-step" data-rg-step>
+                    <legend><span class="rg-step__num">3</span> How we'll reach you</legend>
+                    <div class="rg-grid">
+                        <div class="rg-field">
+                            <label for="email">Personal email</label>
+                            <input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" value="<?php echo h($values['email']); ?>" required>
+                            <p class="rg-error" hidden>Enter a valid email — your QR code is sent here.</p>
+                        </div>
+                        <div class="rg-field">
+                            <label for="contact">Contact number</label>
+                            <input type="tel" id="contact" name="contact" autocomplete="tel" inputmode="tel" placeholder="0917 123 4567" value="<?php echo h($values['contact']); ?>" required>
+                            <p class="rg-error" hidden>Enter a mobile number, e.g. 0917 123 4567.</p>
+                        </div>
+                    </div>
+                </fieldset>
 
-                <div class="field">
-                    <label for="contact">Contact Number:</label>
-                    <input
-                        type="text"
-                        id="contact"
-                        name="contact"
-                        autocomplete="tel"
-                        value="<?php echo h($values['contact']); ?>"
-                        required>
+                <div class="rg-submit">
+                    <button type="submit" name="register" value="1" data-rg-submit>
+                        <span class="rg-submit__label">Register for event</span>
+                        <span class="rg-submit__busy" aria-hidden="true">Registering…</span>
+                    </button>
+                    <p>By registering you agree that JPCS may email you about this event.</p>
                 </div>
-
-                <button type="submit" name="register">Register</button>
             </form>
+
+            <aside class="rg-summary" aria-label="Registration summary">
+                <h3>Your registration</h3>
+                <div class="rg-summary__event" data-rg-sum-event>
+                    <span class="rg-summary__poster"><img data-rg-sum-poster alt="" hidden></span>
+                    <div><strong data-rg-sum-title>No event selected</strong><small data-rg-sum-date>Choose an event to continue</small></div>
+                </div>
+                <dl>
+                    <div><dt>Name</dt><dd data-rg-sum="name">—</dd></div>
+                    <div><dt>Student no.</dt><dd data-rg-sum="student_id">—</dd></div>
+                    <div><dt>Section</dt><dd data-rg-sum="course_year_section">—</dd></div>
+                    <div><dt>Email</dt><dd data-rg-sum="email">—</dd></div>
+                </dl>
+                <div class="rg-summary__progress"><span data-rg-percent>0%</span> complete</div>
+                <ol class="rg-summary__steps">
+                    <li>Register here — status <b>Pending</b></li>
+                    <li>An officer confirms you (listed students are confirmed instantly)</li>
+                    <li>Your QR code arrives by email — show it at the entrance</li>
+                </ol>
+            </aside>
         </div>
+        <?php } ?>
 
         <footer>
-            <p>
-                &copy; 2026 Junior Philippine Computer Society -
-                City of Malabon University
-            </p>
+            <p>&copy; 2026 Junior Philippine Computer Society - City of Malabon University</p>
         </footer>
     </div>
+    <script src="js/registration.js?v=<?php echo filemtime(__DIR__ . '/js/registration.js'); ?>" defer></script>
 </body>
 </html>

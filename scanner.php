@@ -341,7 +341,7 @@ $upcoming = $conn->query("
                 <h2>Latest scans</h2>
                 <p><?= (int) $totalAttended ?> recorded scans, newest first. Refresh to include scans from other devices.</p>
                 <a class="btn-back" href="scanner.php?event_id=<?= (int) $eventID ?>">Refresh scans</a>
-                <a class="btn-back" href="attendance_event.php?event_id=<?= (int) $eventID ?>">Attendance report</a>
+                <a class="btn-back" href="registrations.php?event_id=<?= (int) $eventID ?>&amp;tab=attendance">Attendance report</a>
 
                 <div class="table-container">
                     <table data-admin-table aria-label="Recorded attendance, newest first">

@@ -39,7 +39,7 @@ function officerInitials(string $name): string {
     foreach ($parts as $part) if ($part !== '') $initials .= strtoupper(substr($part, 0, 1));
     return officerEscape(substr($initials !== '' ? $initials : 'JPCS', 0, 2));
 }
-function officerRoleLabel(string $role): string { return in_array($role, ['admin_advisor', 'admin_adviser'], true) ? 'Advisor' : 'Officer'; }
+function officerRoleLabel(string $role): string { return in_array($role, ['admin_advisor', 'admin_adviser'], true) ? 'Adviser' : 'Officer'; }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -59,10 +59,10 @@ function officerRoleLabel(string $role): string { return in_array($role, ['admin
     <section class="officer-summary" aria-label="Officer summary">
         <article class="officer-summary-card"><span class="officer-summary-label">Total officers</span><strong><?= count($officers) ?></strong></article>
         <article class="officer-summary-card"><span class="officer-summary-label">Positions filled</span><strong><?= count($positionSet) ?></strong></article>
-        <article class="officer-summary-card"><span class="officer-summary-label">Advisor and officer roles</span><strong><?= count(array_unique(array_map(static fn(array $item): string => officerRoleLabel((string) $item['role']), $officers))) ?></strong></article>
+        <article class="officer-summary-card"><span class="officer-summary-label">Adviser and officer roles</span><strong><?= count(array_unique(array_map(static fn(array $item): string => officerRoleLabel((string) $item['role']), $officers))) ?></strong></article>
     </section>
     <section class="officer-toolbar panel-card" aria-label="Officer filters">
-        <div class="officer-toolbar-main"><label class="officer-search"><span class="sr-only">Search officers</span><input type="search" data-officer-search placeholder="Search name, position, ID or email" autocomplete="off"></label><label><span class="sr-only">Filter by position</span><select data-officer-position><option value="">All positions</option><?php foreach ($positions as $position) { ?><option value="<?= officerEscape(strtolower($position)) ?>"><?= officerEscape($position) ?></option><?php } ?></select></label><label><span class="sr-only">Filter by role</span><select data-officer-role><option value="">All roles</option><option value="advisor">Advisor</option><option value="officer">Officer</option></select></label><label><span class="sr-only">Sort officers</span><select data-officer-sort><option value="hierarchy">Position hierarchy</option><option value="name">Name A–Z</option><option value="newest">Newest added</option></select></label></div>
+        <div class="officer-toolbar-main"><label class="officer-search"><span class="sr-only">Search officers</span><input type="search" data-officer-search placeholder="Search name, position, ID or email" autocomplete="off"></label><label><span class="sr-only">Filter by position</span><select data-officer-position><option value="">All positions</option><?php foreach ($positions as $position) { ?><option value="<?= officerEscape(strtolower($position)) ?>"><?= officerEscape($position) ?></option><?php } ?></select></label><label><span class="sr-only">Filter by role</span><select data-officer-role><option value="">All roles</option><option value="advisor">Adviser</option><option value="officer">Officer</option></select></label><label><span class="sr-only">Sort officers</span><select data-officer-sort><option value="hierarchy">Position hierarchy</option><option value="name">Name A–Z</option><option value="newest">Newest added</option></select></label></div>
         <div class="officer-toolbar-actions"><span class="officer-result-count" data-officer-count><?= count($officers) ?> officers</span><button class="btn btn-secondary" type="button" data-officer-clear>Clear filters</button><div class="officer-view-toggle" role="group" aria-label="Officer view"><button type="button" class="is-active" data-officer-view="cards" aria-pressed="true">Cards</button><button type="button" data-officer-view="table" aria-pressed="false">Table</button></div></div>
     </section>
     <p class="officer-empty admin-table-empty" data-officer-empty hidden>No officers match your current filters.</p>

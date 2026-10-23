@@ -1,17 +1,21 @@
 <?php
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/includes/student_auth.php';
+require_once __DIR__ . '/includes/auth.php';
 require_once __DIR__ . '/includes/public_officers.php';
 ensure_public_officers_table($conn);
 
 $student = current_student();
+// Guests are visitors signed in neither as a student nor as an adviser/officer.
+$isGuest = $student === null && empty(current_user()['id']);
 
 // Fetch highlights (done events, limit 3 for landing page)
 $highlights = $conn->query("SELECT * FROM events WHERE status='done' ORDER BY event_date DESC LIMIT 3");
 
 // Fetch upcoming events for calendar
 $upcoming = $conn->query("SELECT * FROM events WHERE status='upcoming' ORDER BY event_date ASC");
-$publicOfficers = $conn->query("SELECT id, name, position, photo FROM officer_profiles ORDER BY id ASC");
+$publicOfficerTiers = jpcs_officer_tiers($conn);
+$publicOfficerCount = array_sum(array_map('count', $publicOfficerTiers));
 ?>
 
 <!DOCTYPE html>
@@ -710,6 +714,7 @@ $publicOfficers = $conn->query("SELECT id, name, position, photo FROM officer_pr
     <link rel="stylesheet" href="assets/css/glass.css?v=<?= filemtime(__DIR__ . '/assets/css/glass.css') ?>">
     <link rel="stylesheet" href="assets/css/light-clean.css?v=<?= filemtime(__DIR__ . '/assets/css/light-clean.css') ?>">
     <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <link rel="stylesheet" href="assets/css/landing-officers.css?v=<?= filemtime(__DIR__ . '/assets/css/landing-officers.css') ?>">
     <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
     <script src="js/glass-ui.js?v=<?= filemtime(__DIR__ . '/js/glass-ui.js') ?>" defer></script>
 </head>
@@ -827,26 +832,48 @@ if(!empty($images)) {
       <span class="nav next" onclick="nextImage()">&#10095;</span>
     </div>
 
-    <div class="section public-officer-section">
+    <div class="section public-officer-section lo-section" id="officers">
       <h3>JPCS Officers</h3>
-      <p>Meet the officers who help lead the Junior Philippine Computer Society.</p>
-      <div class="public-officer-grid">
-        <?php while ($officer = $publicOfficers->fetch_assoc()) { ?>
-        <article class="public-officer-card">
-          <img src="<?= e(image_url($officer['photo'])) ?>" alt="<?= e($officer['name']) ?>">
-          <div><h4><?= e($officer['name']) ?></h4><p><?= e($officer['position'] ?: 'JPCS Officer') ?></p></div>
-        </article>
-        <?php } ?>
-      </div>
-      <?php if ($publicOfficers->num_rows === 0) { ?><p class="public-officer-empty">Officer information will be posted here soon.</p><?php } ?>
+      <p>Meet the adviser and student officers who help lead the Junior Philippine Computer Society.</p>
+      <?php if ($publicOfficerCount === 0) { ?>
+        <p class="public-officer-empty">Officer information will be posted here soon.</p>
+      <?php } else { $loDelay = 0; ?>
+        <div class="lo-tree">
+          <?php foreach ($publicOfficerTiers as $tier => $members) { if (!$members) continue; ?>
+            <section class="lo-tier is-<?= e($tier) ?>" aria-label="<?= e(JPCS_OFFICER_TIER_LABELS[$tier]) ?>">
+              <h4 class="lo-tier__label"><span><?= e(JPCS_OFFICER_TIER_LABELS[$tier]) ?></span></h4>
+              <div class="lo-tier__grid">
+                <?php foreach ($members as $person) { ?>
+                  <article class="lo-card is-<?= e($tier) ?>" style="--lo-delay: <?= min($loDelay++, 10) * 70 ?>ms">
+                    <div class="lo-card__photo">
+                      <?php if ($person['photo'] !== '') { ?>
+                        <img src="<?= e(image_url($person['photo'])) ?>" alt="<?= e($person['name']) ?>" decoding="async">
+                      <?php } else { ?>
+                        <span class="lo-card__initials" aria-hidden="true"><?= e($person['initials']) ?></span>
+                      <?php } ?>
+                    </div>
+                    <div class="lo-card__body">
+                      <span class="lo-card__role"><?= e($tier === 'officer' ? 'Officer' : JPCS_OFFICER_TIER_LABELS[$tier]) ?></span>
+                      <strong><?= e($person['name']) ?></strong>
+                      <span><?= e($person['position'] !== '' ? $person['position'] : 'JPCS Officer') ?></span>
+                    </div>
+                  </article>
+                <?php } ?>
+              </div>
+            </section>
+          <?php } ?>
+        </div>
+      <?php } ?>
     </div>
 
+    <?php if ($isGuest) { ?>
     <div class="section">
       <h3>Get Started</h3>
       <p>Register for upcoming events, explore officer information, and stay connected with JPCS activities.</p>
       <a href="student_register.php" class="btn">Register Now</a>
       <a href="login.php" class="btn">Login</a>
     </div>
+    <?php } ?>
 
     <footer>
       <div>

@@ -32,7 +32,7 @@
   const editStatus = editForm?.querySelector('[data-officer-edit-status]');
   let editReturnFocus = null;
   let addReturnFocus = null;
-  const hierarchy = ['advisor', 'president', 'vice president', 'secretary', 'treasurer', 'auditor', 'public information', 'committee'];
+  const hierarchy = ['adviser', 'advisor', 'president', 'vice president', 'secretary', 'treasurer', 'auditor', 'public information', 'committee'];
   const items = () => [...root.querySelectorAll('[data-officer-item]')];
   const rows = () => [...root.querySelectorAll('[data-officer-row]')];
   const hierarchyIndex = value => { const index = hierarchy.findIndex(label => value.includes(label)); return index < 0 ? hierarchy.length : index; };

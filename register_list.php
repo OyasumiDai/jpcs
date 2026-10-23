@@ -2,6 +2,11 @@
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 
+// The register list now lives in registrations.php (Registered tab).
+$eventParam = filter_var($_GET['event_id'] ?? '', FILTER_VALIDATE_INT);
+$sectionParam = is_string($_GET['section'] ?? null) ? trim($_GET['section']) : '';
+redirect('registrations.php' . ($eventParam ? '?' . http_build_query(['event_id' => (int) $eventParam, 'tab' => 'registered'] + ($sectionParam !== '' ? ['section' => $sectionParam] : [])) : ''));
+
 // Check login
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");

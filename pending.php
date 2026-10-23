@@ -2,6 +2,21 @@
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 
+// Pending review now lives in registrations.php (old links, bookmarks and review deep links still work).
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
+    $target = ['tab' => 'pending'];
+    $eventParam = filter_var($_GET['event_id'] ?? '', FILTER_VALIDATE_INT);
+    $reviewParam = filter_var($_GET['review'] ?? '', FILTER_VALIDATE_INT);
+    if ($reviewParam) {
+        $lookup = $conn->prepare('SELECT event_id FROM registrations WHERE id=?');
+        $lookup->bind_param('i', $reviewParam);
+        $lookup->execute();
+        $eventParam = (int) ($lookup->get_result()->fetch_assoc()['event_id'] ?? 0);
+        $lookup->close();
+    }
+    redirect('registrations.php' . ($eventParam ? '?' . http_build_query(['event_id' => $eventParam] + $target) : ''));
+}
+
 require_once __DIR__ . '/includes/registration_confirm.php';
 require_once __DIR__ . '/includes/masterlist.php';
 

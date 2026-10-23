@@ -10,42 +10,11 @@ if (current_student() === null && !$officerPagePanelAccess) {
 }
 
 require_once __DIR__ . '/includes/public_officers.php';
-ensure_public_officers_table($conn);
 
-// Officer accounts and public officer profiles (the same people as the panel's Officer Information).
-// Advisers first, then officers in the order they were added.
-$officerPeople = [];
-$officerSources = [
-    "SELECT name, position, photo, role FROM users WHERE role IN ('officer', 'admin_advisor', 'admin_adviser') ORDER BY id ASC",
-    "SELECT name, position, photo, 'officer' AS role FROM officer_profiles ORDER BY id ASC",
-];
-foreach ($officerSources as $sql) {
-    foreach ($conn->query($sql)->fetch_all(MYSQLI_ASSOC) as $row) {
-        $initials = '';
-        foreach (preg_split('/\s+/', trim((string) $row['name'])) ?: [] as $part) if ($part !== '') $initials .= mb_strtoupper(mb_substr($part, 0, 1));
-        $officerPeople[] = [
-            'name' => (string) $row['name'],
-            'position' => trim((string) $row['position']),
-            'photo' => trim((string) $row['photo']),
-            'group' => $row['role'] === 'officer' ? 'officer' : 'adviser',
-            'initials' => mb_substr($initials !== '' ? $initials : 'J', 0, 2),
-        ];
-    }
-}
-// Hierarchy: the adviser (the system's admin account), then the president, then the other officers
-// with the vice president(s) first. Within a tier people keep the order they were added.
-$officerTiers = ['adviser' => [], 'president' => [], 'officer' => []];
-foreach ($officerPeople as $person) {
-    $position = mb_strtolower($person['position']);
-    $isPresident = str_contains($position, 'president') && !str_contains($position, 'vice');
-    $tier = $person['group'] === 'adviser' ? 'adviser' : ($isPresident ? 'president' : 'officer');
-    $person['tier'] = $tier;
-    $person['rank'] = $tier === 'officer' && str_contains($position, 'vice') ? 0 : 1;
-    $officerTiers[$tier][] = $person;
-}
-usort($officerTiers['officer'], static fn($a, $b) => $a['rank'] <=> $b['rank']);
+// Adviser, president, then officers: shared with the landing page.
+$officerTiers = jpcs_officer_tiers($conn);
 $officerPeople = array_merge(...array_values($officerTiers));
-$officerTierLabels = ['adviser' => 'Adviser', 'president' => 'President', 'officer' => 'Officers'];
+$officerTierLabels = JPCS_OFFICER_TIER_LABELS;
 ?>
 
 <!DOCTYPE html>

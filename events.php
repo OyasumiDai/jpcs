@@ -93,28 +93,70 @@ for ($day=1;$day<=(int)$first->format('t');$day++) { $date=$month.'-'.sprintf('%
 <tr id="event-<?= (int)$event['id'] ?>"><td><a href="<?= e(image_url($event['poster'])) ?>" target="_blank" rel="noopener"><img src="<?= e(image_url($event['poster'])) ?>" alt="<?= e($event['title']) ?> poster" width="64" height="80" class="event-poster"></a></td><td><strong><?= e($event['title']) ?></strong><details><summary>Description</summary><?= nl2br(e($event['description'])) ?></details></td><td><?= e($event['event_date']) ?></td><td><?= e(substr($event['event_time'] ?? '',0,5)) ?></td><td><?= e($event['location']) ?></td><td><span class="status-badge is-<?= e($event['status']) ?>"><?= e(ucfirst((string) $event['status'])) ?></span></td><td><div class="row-actions">
 <?php if ($isAdmin) { ?><a class="btn" href="?edit=<?= (int)$event['id'] ?>">Edit</a>
 <?php if ($event['status']==='upcoming') { ?><form method="post" class="inline-action"><?php af_field(); ?><input type="hidden" name="id" value="<?= (int)$event['id'] ?>"><button name="done" value="1" type="submit">Mark done</button></form><?php } } ?>
-<a class="btn btn-ghost" href="register_list.php?event_id=<?= (int)$event['id'] ?>">Registrations</a></div></td></tr>
+<a class="btn btn-ghost" href="registrations.php?event_id=<?= (int)$event['id'] ?>">Registrations</a></div></td></tr>
 <?php } if (!$events) { ?><tr><td colspan="7">No events yet.</td></tr><?php } ?></tbody></table></div>
 <?php }
-if ($isAdmin && (isset($_GET['createform']) || $edit)) { $form=$edit ?: []; ?>
-<div class="modal"><section class="modal-content" role="dialog" aria-modal="true" aria-labelledby="event-form-title"><h2 id="event-form-title"><?= !empty($form['id'])?'Edit event':'Create event' ?></h2>
-<?php if ($error) { ?><p role="alert"><?= e($error) ?></p><?php } ?>
-<form method="post" enctype="multipart/form-data"><?php af_field(); ?><input type="hidden" name="id" value="<?= (int)($form['id'] ?? 0) ?>">
-<label for="title">Title</label><input id="title" name="title" maxlength="100" required value="<?= e($form['title'] ?? '') ?>">
-<label for="description">Description</label><textarea id="description" name="description" maxlength="16000"><?= e($form['description'] ?? '') ?></textarea>
-<label for="event_date">Date</label><input id="event_date" type="date" name="event_date" required value="<?= e($form['event_date'] ?? '') ?>">
-<label for="event_time">Time</label><input id="event_time" type="time" name="event_time" required value="<?= e(substr($form['event_time'] ?? '',0,5)) ?>">
-<label for="location">Location</label><input id="location" name="location" maxlength="255" required value="<?= e($form['location'] ?? '') ?>">
-<label for="status">Status</label><select id="status" name="status"><option value="upcoming">Upcoming</option><option value="done" <?= ($form['status'] ?? '')==='done'?'selected':'' ?>>Done</option></select>
-<?php foreach (['poster'=>'Poster','pass_image'=>'Event pass image'] as $field=>$label) { ?>
-<label for="<?= $field ?>"><?= $label ?> (JPEG, PNG, WebP; max 5 MB)</label><input id="<?= $field ?>" type="file" name="<?= $field ?>" accept="image/jpeg,image/png,image/webp" data-preview="<?= $field ?>-preview">
-<img id="<?= $field ?>-preview" src="<?= e(image_url($form[$field] ?? null)) ?>" alt="<?= $label ?> preview" class="event-image-preview">
-<?php } ?><p>Leave image fields empty to keep existing images.</p><button type="submit">Save event</button> <a href="events.php">Cancel</a></form></section></div>
+if ($isAdmin && (isset($_GET['createform']) || $edit)) { $form=$edit ?: []; $isEdit=!empty($form['id']); ?>
+<div class="modal ef-modal"><section class="modal-content ef-dialog" role="dialog" aria-modal="true" aria-labelledby="event-form-title">
+<form method="post" enctype="multipart/form-data" class="ef-form" data-ef-form><?php af_field(); ?><input type="hidden" name="id" value="<?= (int)($form['id'] ?? 0) ?>">
+<header class="ef-head">
+  <span class="ef-head__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path><?php if (!$isEdit) { ?><path d="M12 13v4M10 15h4"></path><?php } ?></svg></span>
+  <div><h2 id="event-form-title"><?= $isEdit ? 'Edit event' : 'Create event' ?></h2><p><?= $isEdit ? 'Update the details students see when they register.' : 'Fill in the details students will see when they register.' ?></p></div>
+  <a class="ef-close cancel-btn" href="events.php" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></a>
+</header>
+<div class="ef-body">
+  <?php if ($error) { ?><p role="alert" class="ef-alert"><?= e($error) ?></p><?php } ?>
+  <fieldset class="ef-section">
+    <legend>Details</legend>
+    <div class="ef-field">
+      <label for="title">Title <span class="ef-count" data-ef-count="title">0/100</span></label>
+      <input id="title" name="title" maxlength="100" required placeholder="e.g. CCS Night 2026" value="<?= e($form['title'] ?? '') ?>">
+    </div>
+    <div class="ef-field">
+      <label for="description">Description <span class="ef-optional">optional</span></label>
+      <textarea id="description" name="description" maxlength="16000" rows="4" placeholder="What is the event about? Who should attend?"><?= e($form['description'] ?? '') ?></textarea>
+    </div>
+  </fieldset>
+  <fieldset class="ef-section">
+    <legend>Schedule &amp; place</legend>
+    <div class="ef-row">
+      <div class="ef-field"><label for="event_date">Date</label><input id="event_date" type="date" name="event_date" required value="<?= e($form['event_date'] ?? '') ?>"></div>
+      <div class="ef-field"><label for="event_time">Time</label><input id="event_time" type="time" name="event_time" required value="<?= e(substr($form['event_time'] ?? '',0,5)) ?>"></div>
+    </div>
+    <div class="ef-field"><label for="location">Location</label><input id="location" name="location" maxlength="255" required placeholder="e.g. CMU Ground" value="<?= e($form['location'] ?? '') ?>"></div>
+    <div class="ef-field">
+      <span class="ef-label" id="status-label">Status</span>
+      <div class="ef-segment" role="radiogroup" aria-labelledby="status-label">
+        <label><input type="radio" name="status" value="upcoming"<?= ($form['status'] ?? 'upcoming') !== 'done' ? ' checked' : '' ?>><span><i class="ef-dot is-upcoming"></i>Upcoming</span></label>
+        <label><input type="radio" name="status" value="done"<?= ($form['status'] ?? '') === 'done' ? ' checked' : '' ?>><span><i class="ef-dot is-done"></i>Done</span></label>
+      </div>
+    </div>
+  </fieldset>
+  <fieldset class="ef-section">
+    <legend>Images</legend>
+    <div class="ef-row">
+      <?php foreach (['poster'=>['Poster','Shown on event cards'],'pass_image'=>['Event pass','Background of the emailed pass']] as $field=>[$label,$hint]) { $has = trim((string)($form[$field] ?? '')) !== ''; ?>
+      <div class="ef-field">
+        <span class="ef-label"><?= $label ?></span>
+        <label class="ef-drop<?= $has ? ' has-image' : '' ?>" for="<?= $field ?>" data-ef-drop>
+          <img id="<?= $field ?>-preview" src="<?= $has ? e(image_url($form[$field])) : '' ?>" alt="<?= $label ?> preview"<?= $has ? '' : ' hidden' ?>>
+          <span class="ef-drop__empty">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V5M7.5 9.5 12 5l4.5 4.5M5 19h14"></path></svg>
+            <strong>Upload <?= mb_strtolower($label) ?></strong><small><?= $hint ?> &middot; JPEG, PNG, WebP &middot; 5 MB</small>
+          </span>
+          <span class="ef-drop__change">Change image</span>
+          <input id="<?= $field ?>" type="file" name="<?= $field ?>" accept="image/jpeg,image/png,image/webp" data-preview="<?= $field ?>-preview">
+        </label>
+        <small class="ef-file" data-ef-file="<?= $field ?>"><?= $has ? 'Current image kept unless you choose a new one.' : 'No image yet.' ?></small>
+      </div>
+      <?php } ?>
+    </div>
+  </fieldset>
+</div>
+<footer class="ef-foot modal-actions">
+  <a class="btn btn-ghost cancel-btn" href="events.php">Cancel</a>
+  <button type="submit"><?= $isEdit ? 'Save changes' : 'Create event' ?></button>
+</footer>
+</form></section></div>
 <?php } ?>
-</main><script>
-document.querySelectorAll('[data-preview]').forEach(input => input.addEventListener('change', () => {
- const image=document.getElementById(input.dataset.preview), file=input.files[0];
- if (image.dataset.objectUrl) URL.revokeObjectURL(image.dataset.objectUrl);
- if (file) { image.dataset.objectUrl=URL.createObjectURL(file); image.src=image.dataset.objectUrl; }
-}));
-</script></body></html>
+</main><script src="js/event-form.js?v=<?= filemtime(__DIR__ . '/js/event-form.js') ?>" defer></script></body></html>

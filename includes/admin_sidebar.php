@@ -29,7 +29,7 @@ if (!empty($sidebarUser['id'])) {
         $sidebarRoleLabel = (string) ($sidebarRecord['position'] ?? '');
     }
 }
-$sidebarRoleLabel = !empty($sidebarRoleLabel) ? $sidebarRoleLabel : ($sidebarIsAdmin ? 'Advisor' : 'Officer');
+$sidebarRoleLabel = !empty($sidebarRoleLabel) ? $sidebarRoleLabel : ($sidebarIsAdmin ? 'Adviser' : 'Officer');
 $sidebarPage = basename($_SERVER['PHP_SELF'] ?? 'dashboard.php');
 $sidebarPhotoUrl = $sidebarPhoto !== '' && function_exists('image_url') ? image_url($sidebarPhoto) : '';
 
@@ -53,7 +53,7 @@ $sidebarNotifyToken = $_SESSION['admin_features_csrf'] ??= bin2hex(random_bytes(
 
 $sidebarLink = static function (string $href, string $label, string $icon, bool $visible = true, ?int $badge = null) use ($sidebarPage): string {
     if (!$visible) return '';
-    $active = $sidebarPage === $href || ($href === 'attendance.php' && in_array($sidebarPage, ['attendance_event.php', 'attendance_section.php'], true));
+    $active = $sidebarPage === $href;
     $current = $active ? ' aria-current="page"' : '';
     $badgeMarkup = $badge !== null && $badge > 0 ? '<span class="admin-sidebar__badge">' . $badge . '</span>' : '';
     return '<a class="admin-sidebar__link' . ($active ? ' is-active' : '') . '" href="' . e($href) . '" title="' . e($label) . '" data-tooltip="' . e($label) . '"' . $current . '><span class="admin-sidebar__icon" aria-hidden="true">' . $icon . '</span><span class="admin-sidebar__label">' . e($label) . '</span>' . $badgeMarkup . '</a>';
@@ -89,10 +89,8 @@ $sidebarLink = static function (string $href, string $label, string $icon, bool 
     <?php echo $sidebarLink('dashboard.php', 'Dashboard', '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6" rx="1"></rect><rect x="14" y="4" width="6" height="6" rx="1"></rect><rect x="4" y="14" width="6" height="6" rx="1"></rect><rect x="14" y="14" width="6" height="6" rx="1"></rect></svg>'); ?>
     <?php echo $sidebarLink('officers.php', 'Officer Information', '<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"></circle><path d="M3 20c.6-3.3 2.6-5 6-5s5.4 1.7 6 5"></path><path d="M16 5.5a3 3 0 0 1 0 5.8M17 15c2.1.5 3.4 1.9 4 5"></path></svg>'); ?>
     <p class="admin-sidebar__section-label">Members &amp; Attendance</p>
-    <?php echo $sidebarLink('pending.php', 'Student Registered Pending', '<svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5"></path></svg>', true, $sidebarPending); ?>
+    <?php echo $sidebarLink('registrations.php', 'Registrations & Attendance', '<svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5"></path></svg>', true, $sidebarPending); ?>
     <?php echo $sidebarLink('scanner.php', 'Event Attendance Scanner', '<svg viewBox="0 0 24 24"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"></path><path d="M8 12h8M8 15h5"></path></svg>'); ?>
-    <?php echo $sidebarLink('attendance.php', 'Attendance List per Event', '<svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h8M8 16h5"></path></svg>'); ?>
-    <?php echo $sidebarLink('register_list.php', 'Register List', '<svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h6M8 16h4"></path></svg>'); ?>
     <?php echo $sidebarLink('masterlist.php', 'Student Masterlist', '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"></path><path d="M14 3v5h5"></path><path d="M9 12h7M9 16h7M9 8h2"></path></svg>'); ?>
     <p class="admin-sidebar__section-label">Events &amp; Settings</p>
     <?php echo $sidebarLink('events.php', 'Event Management', '<svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path></svg>'); ?>

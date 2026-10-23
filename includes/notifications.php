@@ -124,7 +124,7 @@ function notifications_feed(mysqli $conn, array $user, int $limit = NOTIFICATION
         if ((int) $row['auto'] > 0) $detail[] = (int) $row['auto'] . ' confirmed from the masterlist';
         $add(['key' => 'reg-' . $row['id'] . '-' . $row['day'], 'kind' => 'registration',
             'title' => $n === 1 ? $row['latest'] . ' registered for ' . $row['title'] : $n . ' new registrations for ' . $row['title'],
-            'detail' => implode(' · ', $detail), 'url' => 'pending.php?event_id=' . (int) $row['id'], 'at' => (int) $row['at']]);
+            'detail' => implode(' · ', $detail), 'url' => 'registrations.php?tab=pending&event_id=' . (int) $row['id'], 'at' => (int) $row['at']]);
     }
     $stmt->close();
 
@@ -139,7 +139,7 @@ function notifications_feed(mysqli $conn, array $user, int $limit = NOTIFICATION
         $n = (int) $row['n'];
         $add(['key' => 'scan-' . $row['id'] . '-' . $row['day'], 'kind' => 'attendance',
             'title' => $n === 1 ? $row['latest'] . ' checked in at ' . $row['title'] : $n . ' check-ins at ' . $row['title'],
-            'detail' => $n === 1 ? 'QR code scanned' : 'Latest: ' . $row['latest'], 'url' => 'attendance_event.php?event_id=' . (int) $row['id'], 'at' => (int) $row['at']]);
+            'detail' => $n === 1 ? 'QR code scanned' : 'Latest: ' . $row['latest'], 'url' => 'registrations.php?tab=attendance&event_id=' . (int) $row['id'], 'at' => (int) $row['at']]);
     }
     $stmt->close();
 

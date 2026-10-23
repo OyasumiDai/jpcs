@@ -2,6 +2,9 @@
 require_once __DIR__ . '/includes/auth.php';
 require_login();
 
+// Attendance now lives in registrations.php.
+redirect('registrations.php');
+
 // Fetch user role
 $userID = $_SESSION['user_id'];
 $user = $conn->query("SELECT role, name FROM users WHERE id='$userID'")->fetch_assoc();
