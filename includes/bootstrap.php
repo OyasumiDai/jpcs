@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Philippine time, matching the MySQL server, so "today" and timestamps agree across PHP and the database.
+date_default_timezone_set(getenv('JPCS_TIMEZONE') ?: 'Asia/Manila');
+
 // Start one consistent, safer session for every protected page.
 if (session_status() !== PHP_SESSION_ACTIVE) {
     $sessionPath = dirname(__DIR__) . '/storage/sessions';

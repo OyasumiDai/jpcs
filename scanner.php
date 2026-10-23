@@ -332,16 +332,10 @@ $upcoming = $conn->query("
                     </script>
                 <?php } ?>
 
-                <div class="summary-panel">
-                    <h2>Summary</h2>
-
-                    <p>
-                        <strong>Registered:</strong>
-                        <?php echo (int) $totalRegistered; ?>
-                        |
-                        <strong>Attended:</strong>
-                        <?php echo (int) $totalAttended; ?>
-                    </p>
+                <div class="stat-row" role="group" aria-label="Attendance summary">
+                    <div class="stat-tile"><span>Registered</span><strong><?php echo (int) $totalRegistered; ?></strong></div>
+                    <div class="stat-tile is-good"><span>Attended</span><strong><?php echo (int) $totalAttended; ?></strong></div>
+                    <div class="stat-tile is-muted"><span>Not yet scanned</span><strong><?php echo max(0, (int) $totalRegistered - (int) $totalAttended); ?></strong></div>
                 </div>
 
                 <h2>Latest scans</h2>

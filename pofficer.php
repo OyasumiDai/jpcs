@@ -9,8 +9,43 @@ if (current_student() === null && !$officerPagePanelAccess) {
   redirect('student_login.php');
 }
 
-// Get all officers and advisor/admin
-$result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_advisor' ORDER BY id ASC");
+require_once __DIR__ . '/includes/public_officers.php';
+ensure_public_officers_table($conn);
+
+// Officer accounts and public officer profiles (the same people as the panel's Officer Information).
+// Advisers first, then officers in the order they were added.
+$officerPeople = [];
+$officerSources = [
+    "SELECT name, position, photo, role FROM users WHERE role IN ('officer', 'admin_advisor', 'admin_adviser') ORDER BY id ASC",
+    "SELECT name, position, photo, 'officer' AS role FROM officer_profiles ORDER BY id ASC",
+];
+foreach ($officerSources as $sql) {
+    foreach ($conn->query($sql)->fetch_all(MYSQLI_ASSOC) as $row) {
+        $initials = '';
+        foreach (preg_split('/\s+/', trim((string) $row['name'])) ?: [] as $part) if ($part !== '') $initials .= mb_strtoupper(mb_substr($part, 0, 1));
+        $officerPeople[] = [
+            'name' => (string) $row['name'],
+            'position' => trim((string) $row['position']),
+            'photo' => trim((string) $row['photo']),
+            'group' => $row['role'] === 'officer' ? 'officer' : 'adviser',
+            'initials' => mb_substr($initials !== '' ? $initials : 'J', 0, 2),
+        ];
+    }
+}
+// Hierarchy: the adviser (the system's admin account), then the president, then the other officers
+// with the vice president(s) first. Within a tier people keep the order they were added.
+$officerTiers = ['adviser' => [], 'president' => [], 'officer' => []];
+foreach ($officerPeople as $person) {
+    $position = mb_strtolower($person['position']);
+    $isPresident = str_contains($position, 'president') && !str_contains($position, 'vice');
+    $tier = $person['group'] === 'adviser' ? 'adviser' : ($isPresident ? 'president' : 'officer');
+    $person['tier'] = $tier;
+    $person['rank'] = $tier === 'officer' && str_contains($position, 'vice') ? 0 : 1;
+    $officerTiers[$tier][] = $person;
+}
+usort($officerTiers['officer'], static fn($a, $b) => $a['rank'] <=> $b['rank']);
+$officerPeople = array_merge(...array_values($officerTiers));
+$officerTierLabels = ['adviser' => 'Adviser', 'president' => 'President', 'officer' => 'Officers'];
 ?>
 
 <!DOCTYPE html>
@@ -20,9 +55,9 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Officer Information</title>
   <link rel="icon" type="image/png" href="assets/img/jpcs-logo.png">
-  <link rel="stylesheet" href="css/theme.css">
-  <script src="js/theme-init.js"></script>
-  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="css/theme.css?v=<?= filemtime(__DIR__ . '/css/theme.css') ?>">
+  <script src="js/theme-init.js?v=<?= filemtime(__DIR__ . '/js/theme-init.js') ?>"></script>
+  <link rel="stylesheet" href="assets/css/navbar.css?v=<?= filemtime(__DIR__ . '/assets/css/navbar.css') ?>">
 
   <style>
     body {
@@ -400,131 +435,89 @@ $result = $conn->query("SELECT * FROM users WHERE role='officer' OR role='admin_
     .sidebar { display: none !important; }
     .content { margin-left: 0 !important; padding: 100px 20px 20px !important; }
   </style>
-    <link rel="stylesheet" href="assets/css/system-ui.css">
-    <script src="js/system-ui.js" defer></script>
-    <link rel="stylesheet" href="assets/css/glass.css">
-    <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/system-ui.css?v=<?= filemtime(__DIR__ . '/assets/css/system-ui.css') ?>">
+    <script src="js/system-ui.js?v=<?= filemtime(__DIR__ . '/js/system-ui.js') ?>" defer></script>
+    <link rel="stylesheet" href="assets/css/glass.css?v=<?= filemtime(__DIR__ . '/assets/css/glass.css') ?>">
+    <link rel="stylesheet" href="assets/css/light-clean.css?v=<?= filemtime(__DIR__ . '/assets/css/light-clean.css') ?>">
     <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
+    <link rel="stylesheet" href="assets/css/officer-directory.css?v=<?= filemtime(__DIR__ . '/assets/css/officer-directory.css') ?>">
     <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
-    <script src="js/glass-ui.js" defer></script>
+    <script src="js/glass-ui.js?v=<?= filemtime(__DIR__ . '/js/glass-ui.js') ?>" defer></script>
 </head>
 <body class="app-page student-page officer-page">
   <?php require __DIR__ . '/includes/navbar.php'; ?>
 
-  <!-- Content -->
-  <div class="content">
+  <div class="content od-page">
     <header>
       <h1>Junior Philippine Computer Society</h1>
       <h2>City of Malabon University</h2>
     </header>
 
-    <h2 class="page-title">Officer Information</h2>
+    <section class="od-hero" aria-labelledby="od-title">
+      <p class="od-eyebrow">Meet the team</p>
+      <h2 class="od-title" id="od-title">Officer Information</h2>
+      <p class="od-lead">The adviser and student officers leading JPCS this school year. Select a card to view the full photo.</p>
+      <label class="od-search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <span class="visually-hidden">Search officers</span>
+        <input type="search" placeholder="Search by name or position" data-od-search autocomplete="off">
+      </label>
+      <p class="od-count" data-od-count aria-live="polite"></p>
+    </section>
 
-    <div class="officer-grid">
-      <?php while($row = $result->fetch_assoc()) {
-        $photo = image_url($row['photo']);
-      ?>
-        <div class="officer-card">
-          <img
-            src="<?php echo htmlspecialchars($photo, ENT_QUOTES, 'UTF-8'); ?>"
-            alt="<?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?>"
-            onclick="openModal(this)">
-
-          <h4><?php
-            echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
-          ?></h4>
-
-          <p><?php
-            echo htmlspecialchars($row['position'] ?? '', ENT_QUOTES, 'UTF-8');
-          ?></p>
-        </div>
+    <div class="od-tree">
+      <?php $cardIndex = 0; foreach ($officerTiers as $tier => $members) { if (!$members) continue; ?>
+        <section class="od-tier is-<?= e($tier) ?>" data-od-tier aria-labelledby="od-tier-<?= e($tier) ?>">
+          <h3 class="od-tier__label" id="od-tier-<?= e($tier) ?>"><span><?= e($officerTierLabels[$tier]) ?></span></h3>
+          <div class="od-tier__grid">
+            <?php foreach ($members as $person) { $index = $cardIndex++; ?>
+              <article class="od-card is-<?= e($tier) ?>" data-od-card data-search="<?= e(mb_strtolower($person['name'] . ' ' . $person['position'])) ?>" style="--od-delay: <?= min($index, 12) * 60 ?>ms">
+                <button type="button" class="od-card__open" data-od-open="<?= $index ?>" aria-label="View photo of <?= e($person['name']) ?>">
+                  <span class="od-card__photo">
+                    <?php if ($person['photo'] !== '') { ?>
+                      <img src="<?= e(image_url($person['photo'])) ?>" alt="" decoding="async">
+                    <?php } else { ?>
+                      <span class="od-card__initials" aria-hidden="true"><?= e($person['initials']) ?></span>
+                    <?php } ?>
+                    <span class="od-card__zoom" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"></circle><path d="m20 20-4.2-4.2M11 8v6M8 11h6"></path></svg></span>
+                  </span>
+                  <span class="od-card__body">
+                    <strong class="od-card__name"><?= e($person['name']) ?></strong>
+                    <span class="od-card__position"><?= e($person['position'] !== '' ? $person['position'] : 'Member') ?></span>
+                  </span>
+                </button>
+              </article>
+            <?php } ?>
+          </div>
+        </section>
       <?php } ?>
     </div>
-  </div>
-
-  <!-- Modal -->
-  <div id="imageModal" class="modal">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="modalImg" alt="Officer photo">
-
-    <div class="modal-info" id="modalInfo"></div>
-
-    <div class="modal-controls">
-      <button type="button" onclick="prevImage()">Prev</button>
-      <button type="button" onclick="nextImage()">Next</button>
+    <div class="od-empty" data-od-empty hidden>
+      <strong>No officers match your search.</strong>
+      <button type="button" class="od-chip" data-od-reset>Clear search</button>
     </div>
   </div>
 
-  <script>
-    let images = [];
-    let names = [];
-    let positions = [];
-    let currentIndex = 0;
+  <div class="od-viewer" data-od-viewer role="dialog" aria-modal="true" aria-labelledby="od-viewer-name" hidden>
+    <div class="od-viewer__backdrop" data-od-close></div>
+    <figure class="od-viewer__panel">
+      <button type="button" class="od-viewer__close" data-od-close aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+      <div class="od-viewer__stage">
+        <button type="button" class="od-viewer__nav is-prev" data-od-prev aria-label="Previous officer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 6-6 6 6 6"></path></svg></button>
+        <img data-od-image alt="">
+        <span class="od-viewer__initials" data-od-initials hidden></span>
+        <button type="button" class="od-viewer__nav is-next" data-od-next aria-label="Next officer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></button>
+      </div>
+      <figcaption class="od-viewer__caption">
+        <span class="od-card__role" data-od-role></span>
+        <strong id="od-viewer-name" data-od-name></strong>
+        <span data-od-position></span>
+        <small data-od-counter></small>
+      </figcaption>
+    </figure>
+  </div>
 
-    function showCurrentImage() {
-      if (images.length === 0) {
-        return;
-      }
-
-      document.getElementById("modalImg").src =
-        images[currentIndex];
-
-      document.getElementById("modalImg").alt =
-        names[currentIndex];
-
-      document.getElementById("modalInfo").textContent =
-        names[currentIndex] + " - " + positions[currentIndex];
-    }
-
-    function openModal(clickedImage) {
-      const cards = Array.from(
-        document.querySelectorAll(".officer-card img")
-      );
-
-      images = cards.map(img => img.src);
-
-      names = cards.map(
-        img => img.nextElementSibling.textContent.trim()
-      );
-
-      positions = cards.map(
-        img => img.nextElementSibling.nextElementSibling
-          .textContent.trim()
-      );
-
-      currentIndex = cards.indexOf(clickedImage);
-
-      if (currentIndex < 0) {
-        return;
-      }
-
-      showCurrentImage();
-      document.getElementById("imageModal").style.display = "block";
-    }
-
-    function closeModal() {
-      document.getElementById("imageModal").style.display = "none";
-    }
-
-    function nextImage() {
-      if (images.length === 0) {
-        return;
-      }
-
-      currentIndex = (currentIndex + 1) % images.length;
-      showCurrentImage();
-    }
-
-    function prevImage() {
-      if (images.length === 0) {
-        return;
-      }
-
-      currentIndex =
-        (currentIndex - 1 + images.length) % images.length;
-
-      showCurrentImage();
-    }
-  </script>
+  <script type="application/json" id="od-data"><?= json_encode(array_map(static fn($p) => ['name' => $p['name'], 'position' => $p['position'] !== '' ? $p['position'] : 'Member', 'group' => $p['tier'], 'photo' => $p['photo'] !== '' ? image_url($p['photo']) : '', 'initials' => $p['initials']], $officerPeople), JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE) ?></script>
+  <script src="js/officer-directory.js?v=<?= filemtime(__DIR__ . '/js/officer-directory.js') ?>" defer></script>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__.'/admin_features.php';
+require_once __DIR__.'/includes/notifications.php';
 $isAdmin = af_admin($conn);
 $error = '';
 $edit = null;
@@ -21,6 +22,7 @@ if (request_method_is('POST')) {
         }
         if (isset($_POST['done']) && $id) {
             $stmt=$conn->prepare("UPDATE events SET status='done' WHERE id=?"); $stmt->bind_param('i',$id); $stmt->execute();
+            notifications_log_event($conn, af_user($conn, (int) $_SESSION['user_id']), 'event_done', $id, (string) $existing['title']);
         } else {
             $title=af_text('title',100); $description=af_text('description',16000,false);
             $location=af_text('location',255); $date=af_text('event_date',10); $time=af_text('event_time',5);
@@ -38,6 +40,7 @@ if (request_method_is('POST')) {
                 $stmt->bind_param('ssssssss',$title,$description,$date,$time,$location,$poster,$pass,$status);
             }
             $stmt->execute();
+            if ($id) notifications_log_event($conn, af_user($conn, (int) $_SESSION['user_id']), $status === 'done' && ($existing['status'] ?? '') !== 'done' ? 'event_done' : 'event_updated', $id, $title);
         }
         af_success('events.php','Event saved.');
     } catch (Throwable $ex) {
@@ -73,13 +76,14 @@ if (!$first || $first->format('Y-m') !== $month) { $month=date('Y-m'); $first=ne
 <nav class="toolbar" aria-label="Event views"><a class="btn" href="events.php" <?= $view==='list'?'aria-current="page"':'' ?>>List</a> <a class="btn" href="events.php?view=calendar" <?= $view==='calendar'?'aria-current="page"':'' ?>>Calendar</a>
 <?php if ($isAdmin) { ?><a class="btn btn-create" href="events.php?createform=1">Create event</a><?php } ?></nav>
 <?php if ($view==='calendar') { ?>
-<section aria-label="Monthly event calendar"><h2><?= e($first->format('F Y')) ?></h2>
-<a href="?view=calendar&amp;month=<?= $first->modify('-1 month')->format('Y-m') ?>">Previous month</a> · <a href="?view=calendar&amp;month=<?= $first->modify('+1 month')->format('Y-m') ?>">Next month</a>
+<section aria-label="Monthly event calendar" class="calendar-panel"><div class="calendar-head"><h2><?= e($first->format('F Y')) ?></h2>
+<nav class="calendar-nav" aria-label="Change month"><a class="btn" href="?view=calendar&amp;month=<?= $first->modify('-1 month')->format('Y-m') ?>" aria-label="Previous month">&lsaquo; Prev</a><a class="btn" href="?view=calendar&amp;month=<?= date('Y-m') ?>">Today</a><a class="btn" href="?view=calendar&amp;month=<?= $first->modify('+1 month')->format('Y-m') ?>" aria-label="Next month">Next &rsaquo;</a></nav></div>
 <div class="event-calendar">
 <?php foreach (['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] as $day) { ?><strong><?= $day ?></strong><?php }
 for ($blank=1;$blank<(int)$first->format('N');$blank++) echo '<div></div>';
 for ($day=1;$day<=(int)$first->format('t');$day++) { $date=$month.'-'.sprintf('%02d',$day); ?>
-<div class="calendar-day"><strong><?= $day ?></strong>
+<?php $dayEvents = array_filter($events, static fn($event) => $event['event_date'] === $date); ?>
+<div class="calendar-day<?= $date === date('Y-m-d') ? ' is-today' : '' ?><?= $dayEvents ? ' has-events' : '' ?>"><strong<?= $date === date('Y-m-d') ? ' aria-label="Today, ' . $day . '"' : '' ?>><?= $day ?></strong>
 <?php foreach ($events as $event) { if ($event['event_date']!==$date) continue; ?>
 <p><a href="events.php?<?= $isAdmin?'edit':'event' ?>=<?= (int)$event['id'] ?>#event-<?= (int)$event['id'] ?>"><?= e($event['title']) ?></a><br><small><?= e(substr($event['event_time'] ?? '',0,5)) ?> · <?= e($event['status']) ?></small></p>
 <?php } ?></div><?php } ?></div></section>

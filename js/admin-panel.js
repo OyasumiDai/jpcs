@@ -7,7 +7,7 @@
     // Use only the label so pending-count badges never become part of the page title.
     const active = document.querySelector('.admin-sidebar__link[aria-current="page"] .admin-sidebar__label');
     const title = document.querySelector('[data-admin-page-title]');
-    if (title) title.textContent = active?.textContent.trim() || document.title.replace(/^JPCS\s*[-–:]?\s*/i, '');
+    if (title) title.textContent = active?.textContent.trim() || document.title.replace(/^JPCS\s*[-–:]?\s*/i, '').replace(/\s*[|–-]\s*JPCS$/i, '');
     const themeButton = document.querySelector('[data-admin-theme]');
     function themeLabel() {
       if (!themeButton) return;
@@ -58,6 +58,33 @@
     window.JPCSAdmin = Object.assign(window.JPCSAdmin || {}, { toast(message) {
       const node = document.createElement('div'); node.className = 'admin-toast'; node.textContent = message; toastRegion.append(node); setTimeout(() => node.remove(), 6000);
     } });
+    // Dialog forms: wrap each label with its field (plus help text / preview) so short fields can pair up
+    // two per row. Markup without JavaScript stays a single column.
+    document.querySelectorAll('.modal-content form').forEach(form => {
+      const labels = [...form.querySelectorAll(':scope > label[for]')];
+      if (labels.length < 3) return;
+      const fields = [];
+      labels.forEach(label => {
+        const control = form.querySelector('#' + CSS.escape(label.htmlFor));
+        if (!control || control.parentElement !== form) return;
+        const field = document.createElement('div');
+        field.className = 'form-field';
+        label.before(field);
+        field.append(label, control);
+        for (let next = field.nextElementSibling; next && next.matches('img, small, p, .current-photo, .field-error'); next = field.nextElementSibling) field.append(next);
+        field.dataset.wide = control.matches('textarea, input[type=file]') ? '1' : '';
+        fields.push(field);
+      });
+      // Pair neighbouring short fields; a short field without a partner spans the row.
+      let pending = null;
+      [...form.children].forEach(child => {
+        const short = child.classList.contains('form-field') && !child.dataset.wide;
+        if (short && pending) { pending.classList.add('is-half'); child.classList.add('is-half'); pending = null; }
+        else if (short) pending = child;
+        else pending = null;
+      });
+      form.classList.add('has-fields');
+    });
     // Echo server-rendered success messages as a toast so the result is noticed without scrolling.
     document.querySelectorAll('.content .success').forEach(note => { const text = note.textContent.trim(); if (text) window.JPCSAdmin.toast(text); });
     // Busy state on submit; a second submit of the same form is ignored until the page changes.

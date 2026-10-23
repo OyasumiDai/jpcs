@@ -369,7 +369,7 @@ if ($selectedEventID !== null) {
                                 <input type="hidden" name="registration_id"
                                        value="<?= (int) $row['id'] ?>">
                                 <button name="action" value="resend"
-                                        class="btn-confirm">Resend Email</button>
+                                        class="btn-secondary">Resend Email</button>
                             </form>
                         </td>
                     </tr>

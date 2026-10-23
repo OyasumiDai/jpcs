@@ -1,1 +1,0 @@
-user_id|i:2;username|s:7:"advisor";name|s:9:"Prof Dave";role|s:13:"admin_advisor";position|s:7:"Advisor";pending_csrf|s:64:"6adb618190793860e614bb9bde84ac3d3a64a2ad86c5ec1f28c587f6d02c0694";dashboard_csrf|s:64:"7cf0fdae1dab6a5b30dd96378e2f9ac34465d6134133e6fd5e4d3e5ddb65836a";admin_features_csrf|s:64:"be042a4ef9f251a40e4096b5f0ab989a60cfba04b4a20ad2f6144776ef8a9d19";

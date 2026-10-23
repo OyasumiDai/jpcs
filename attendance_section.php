@@ -110,16 +110,11 @@ function sectionEscape($value) {
           - <?php echo sectionEscape($section); ?>
         </h2>
 
-        <p class="print-summary">
-          <strong>Registered:</strong>
-          <?php echo sectionEscape($counts['registered']); ?> /
-
-          <strong>Attended:</strong>
-          <?php echo sectionEscape($counts['attended']); ?> /
-
-          <strong>Not Attended:</strong>
-          <?php echo sectionEscape($counts['not_attended']); ?>
-        </p>
+        <div class="stat-row print-summary" role="group" aria-label="Section attendance summary">
+          <div class="stat-tile"><span>Registered</span><strong><?php echo sectionEscape($counts['registered']); ?></strong></div>
+          <div class="stat-tile is-good"><span>Attended</span><strong><?php echo sectionEscape($counts['attended']); ?></strong></div>
+          <div class="stat-tile is-warn"><span>Not Attended</span><strong><?php echo sectionEscape($counts['not_attended']); ?></strong></div>
+        </div>
 
         <form method="get" class="actions">
           <input type="hidden" name="event_id" value="<?= (int) $eventID ?>">

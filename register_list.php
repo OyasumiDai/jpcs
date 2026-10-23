@@ -172,12 +172,10 @@ function registerListEscape($value) {
 
         <a href="register_list.php" class="back-btn">← Back to Events</a>
 
-        <p class="summary">
-          <strong>Registered:</strong>
-          <?php echo registerListEscape($totalRegistered); ?> |
-          <strong>Attended:</strong>
-          <?php echo registerListEscape($totalAttended); ?>
-        </p>
+        <div class="stat-row summary" role="group" aria-label="Registration summary">
+          <div class="stat-tile"><span>Registered</span><strong><?php echo registerListEscape($totalRegistered); ?></strong></div>
+          <div class="stat-tile is-good"><span>Attended</span><strong><?php echo registerListEscape($totalAttended); ?></strong></div>
+        </div>
 
         <h3>Select Year Level</h3>
 

@@ -30,9 +30,9 @@ if ($isPanelUser && isset($conn) && $conn instanceof mysqli) {
 }
 $panelReturnLabel = in_array($panelRole, ['admin_advisor', 'admin_adviser'], true) ? 'Advisor Panel' : 'Officer Panel';
 ?>
-<link rel="stylesheet" href="css/theme.css">
-<script src="js/theme-init.js"></script>
-<script src="css/theme.js" defer></script>
+<link rel="stylesheet" href="css/theme.css?v=<?= filemtime(dirname(__DIR__) . '/css/theme.css') ?>">
+<script src="js/theme-init.js?v=<?= filemtime(dirname(__DIR__) . '/js/theme-init.js') ?>"></script>
+<script src="css/theme.js?v=<?= filemtime(dirname(__DIR__) . '/css/theme.js') ?>" defer></script>
 <nav class="jpcs-navbar" id="jpcsNavbar" aria-label="Primary navigation">
   <a class="jpcs-brand" href="index.php">
     <img class="jpcs-logo-dark" src="assets/img/jpcs-logo.png" alt="JPCS logo">

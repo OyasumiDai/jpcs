@@ -338,9 +338,9 @@ $events = $conn->query(
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Event Registration</title>
     <link rel="icon" type="image/png" href="assets/img/jpcs-logo.png">
-    <link rel="stylesheet" href="css/theme.css">
-    <script src="js/theme-init.js"></script>
-    <link rel="stylesheet" href="assets/css/navbar.css">
+    <link rel="stylesheet" href="css/theme.css?v=<?= filemtime(__DIR__ . '/css/theme.css') ?>">
+    <script src="js/theme-init.js?v=<?= filemtime(__DIR__ . '/js/theme-init.js') ?>"></script>
+    <link rel="stylesheet" href="assets/css/navbar.css?v=<?= filemtime(__DIR__ . '/assets/css/navbar.css') ?>">
 
     <style>
         * {
@@ -707,13 +707,13 @@ $events = $conn->query(
         .sidebar { display: none !important; }
         .content { margin-left: 0 !important; width: 100%; padding-top: 100px !important; }
     </style>
-    <link rel="stylesheet" href="assets/css/system-ui.css">
-    <script src="js/system-ui.js" defer></script>
-    <link rel="stylesheet" href="assets/css/glass.css">
-    <link rel="stylesheet" href="assets/css/light-clean.css">
+    <link rel="stylesheet" href="assets/css/system-ui.css?v=<?= filemtime(__DIR__ . '/assets/css/system-ui.css') ?>">
+    <script src="js/system-ui.js?v=<?= filemtime(__DIR__ . '/js/system-ui.js') ?>" defer></script>
+    <link rel="stylesheet" href="assets/css/glass.css?v=<?= filemtime(__DIR__ . '/assets/css/glass.css') ?>">
+    <link rel="stylesheet" href="assets/css/light-clean.css?v=<?= filemtime(__DIR__ . '/assets/css/light-clean.css') ?>">
     <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
     <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
-    <script src="js/glass-ui.js" defer></script>
+    <script src="js/glass-ui.js?v=<?= filemtime(__DIR__ . '/js/glass-ui.js') ?>" defer></script>
 </head>
 <body class="app-page student-page">
     <?php require __DIR__ . '/includes/navbar.php'; ?>

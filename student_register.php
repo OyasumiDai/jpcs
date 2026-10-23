@@ -60,20 +60,20 @@ if (request_method_is('POST')) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Register | JPCS</title>
-  <link rel="stylesheet" href="css/theme.css">
-  <script src="js/theme-init.js"></script>
-  <script src="css/theme.js" defer></script>
-  <link rel="stylesheet" href="assets/css/navbar.css">
+  <link rel="stylesheet" href="css/theme.css?v=<?= filemtime(__DIR__ . '/css/theme.css') ?>">
+  <script src="js/theme-init.js?v=<?= filemtime(__DIR__ . '/js/theme-init.js') ?>"></script>
+  <script src="css/theme.js?v=<?= filemtime(__DIR__ . '/css/theme.js') ?>" defer></script>
+  <link rel="stylesheet" href="assets/css/navbar.css?v=<?= filemtime(__DIR__ . '/assets/css/navbar.css') ?>">
   <style><?php include __DIR__ . '/assets/css/auth-page.css'; ?></style>
-  <link rel="stylesheet" href="assets/css/auth-modern.css">
-    <link rel="stylesheet" href="assets/css/system-ui.css">
-    <script src="js/system-ui.js" defer></script>
-    <link rel="stylesheet" href="assets/css/glass.css">
-    <link rel="stylesheet" href="assets/css/light-clean.css">
+  <link rel="stylesheet" href="assets/css/auth-modern.css?v=<?= filemtime(__DIR__ . '/assets/css/auth-modern.css') ?>">
+    <link rel="stylesheet" href="assets/css/system-ui.css?v=<?= filemtime(__DIR__ . '/assets/css/system-ui.css') ?>">
+    <script src="js/system-ui.js?v=<?= filemtime(__DIR__ . '/js/system-ui.js') ?>" defer></script>
+    <link rel="stylesheet" href="assets/css/glass.css?v=<?= filemtime(__DIR__ . '/assets/css/glass.css') ?>">
+    <link rel="stylesheet" href="assets/css/light-clean.css?v=<?= filemtime(__DIR__ . '/assets/css/light-clean.css') ?>">
     <link rel="stylesheet" href="assets/css/glass-theme.css?v=<?= filemtime(__DIR__ . '/assets/css/glass-theme.css') ?>">
     <script src="js/glass-theme.js?v=<?= filemtime(__DIR__ . '/js/glass-theme.js') ?>" defer></script>
-    <link rel="stylesheet" href="assets/css/auth-compact.css">
-    <script src="js/glass-ui.js" defer></script>
+    <link rel="stylesheet" href="assets/css/auth-compact.css?v=<?= filemtime(__DIR__ . '/assets/css/auth-compact.css') ?>">
+    <script src="js/glass-ui.js?v=<?= filemtime(__DIR__ . '/js/glass-ui.js') ?>" defer></script>
 </head>
 <body class="auth-page auth-compact">
   <main class="auth-layout">

@@ -20,11 +20,14 @@
   --gt-brand-ink: #ffb085;
   --gt-on-brand: #1c0d04;
   --gt-spot: rgba(255, 140, 70, .16);
-  --gt-blob-1: rgba(255, 98, 31, .34);
-  --gt-blob-2: rgba(255, 166, 64, .2);
-  --gt-blob-3: rgba(124, 77, 255, .16);
-  --gt-blob-4: rgba(255, 70, 120, .12);
-  --gt-circuit: rgba(255, 170, 110, .09);
+  /* Dark mode lighting: warm ember glows only (no cool tones), plus a sunrise along the top. */
+  --gt-blob-1: rgba(255, 96, 24, .36);
+  --gt-blob-2: rgba(255, 150, 40, .24);
+  --gt-blob-3: rgba(255, 72, 0, .18);
+  --gt-blob-4: rgba(255, 184, 77, .13);
+  --gt-glow-top: rgba(255, 120, 40, .22);
+  --gt-glow-bottom: rgba(255, 90, 20, .12);
+  --gt-circuit: rgba(255, 150, 80, .1);
   --gt-blur: 22px;
 }
 :root[data-theme="light"] {
@@ -49,6 +52,8 @@
   --gt-blob-2: rgba(255, 215, 160, .55);
   --gt-blob-3: rgba(206, 190, 255, .42);
   --gt-blob-4: rgba(255, 192, 203, .38);
+  --gt-glow-top: transparent;
+  --gt-glow-bottom: transparent;
   --gt-circuit: rgba(190, 120, 70, .07);
 }
 
@@ -76,11 +81,13 @@
 
 /* ---------- Aurora backdrop ---------- */
 html { background: var(--gt-bg) !important; }
-html body:is(.app-page, .public-page, .auth-page, .admin-page, .jpcs-admin) { background: transparent !important; background-image: none !important; color: var(--gt-text); }
+html[data-theme] body:is(.app-page, .public-page, .auth-page, .admin-page, .jpcs-admin), html body:is(.app-page, .public-page, .auth-page, .admin-page, .jpcs-admin) { background: transparent !important; background-image: none !important; color: var(--gt-text); }
 html::before, html::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; }
 html::before {
   inset: -20%;
   background:
+    radial-gradient(50% 26% at 50% 4%, var(--gt-glow-top), transparent 72%),
+    radial-gradient(60% 22% at 50% 98%, var(--gt-glow-bottom), transparent 72%),
     radial-gradient(38% 42% at 12% 18%, var(--gt-blob-1), transparent 70%),
     radial-gradient(34% 40% at 88% 82%, var(--gt-blob-2), transparent 70%),
     radial-gradient(30% 36% at 82% 22%, var(--gt-blob-3), transparent 70%),
@@ -97,7 +104,8 @@ html::after {
 html body:is(.app-page, .public-page, .auth-page)::before, html body .glass-auth-modal::before { background: none !important; }
 /* Plain section wrappers on public pages stay clear so the backdrop shows through. */
 html body:is(.public-page, .student-page) .content > :is(.section, header) { background: transparent !important; border-color: transparent !important; box-shadow: none !important; }
-html body .glass-auth-modal { background: color-mix(in srgb, var(--gt-bg) 30%, transparent) !important; }
+html body .glass-auth-modal { background: transparent !important; }
+html body .glass-auth-modal::backdrop { background: transparent; }
 
 @keyframes gt-drift {
   0% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
@@ -285,3 +293,37 @@ html[data-theme] body:is(.app-page, .admin-page) .content :is(button.btn-seconda
 html[data-theme] body:is(.app-page, .admin-page) .content button.btn-danger[type=submit] { border-color: color-mix(in srgb, var(--danger) 55%, transparent) !important; color: var(--danger) !important; }
 html[data-theme] body:is(.app-page, .admin-page) .content :is(button.btn-secondary, button.btn-danger)[type=submit]:hover { filter: none; border-color: var(--gt-brand) !important; background: var(--gt-brand-soft) !important; box-shadow: none !important; }
 html[data-theme] body:is(.app-page, .admin-page) .content button.btn-danger[type=submit]:hover { border-color: var(--danger) !important; background: color-mix(in srgb, var(--danger) 12%, transparent) !important; }
+
+/* Landing, student and sign-in pages: the panel backdrop plus a warmer orange glow. */
+:root { --gt-public-glow: rgba(255, 115, 32, .28); --gt-public-glow-2: rgba(255, 140, 50, .18); }
+:root[data-theme="light"] { --gt-public-glow: rgba(255, 150, 70, .34); --gt-public-glow-2: rgba(255, 185, 110, .32); }
+html:has(body:is(.public-page, .student-page, .auth-page))::before {
+  background:
+    radial-gradient(46% 30% at 50% 0%, var(--gt-public-glow), transparent 72%),
+    radial-gradient(30% 34% at 92% 96%, var(--gt-public-glow-2), transparent 70%),
+    radial-gradient(60% 22% at 50% 98%, var(--gt-glow-bottom), transparent 72%),
+    radial-gradient(38% 42% at 12% 18%, var(--gt-blob-1), transparent 70%),
+    radial-gradient(34% 40% at 88% 82%, var(--gt-blob-2), transparent 70%),
+    radial-gradient(30% 36% at 82% 22%, var(--gt-blob-3), transparent 70%),
+    radial-gradient(32% 38% at 22% 88%, var(--gt-blob-4), transparent 70%);
+}
+html:has(body:is(.public-page, .student-page, .auth-page))::after { background: color-mix(in srgb, var(--gt-circuit) 100%, rgba(255, 120, 40, .04)); }
+/* auth-page.css paints the heading's first letter white, which vanished on light cards. */
+html[data-theme] body .auth-card h1::first-letter { color: inherit; }
+
+/* ---------- Active navigation: soft highlight, no border line ---------- */
+html[data-theme] body:is(.public-page, .app-page, .auth-page, .student-page) :is(.jpcs-nav-links a.active, .jpcs-nav-links a[aria-current="page"]) {
+  color: var(--gt-brand-ink) !important;
+  background: var(--gt-brand-soft) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+html[data-theme] body.jpcs-admin .admin-sidebar__link.is-active {
+  background: linear-gradient(90deg, var(--gt-brand-soft), transparent) !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+  color: var(--gt-brand-ink) !important;
+}
+/* Theme switch: fully rounded pill everywhere (navbar, sign-in pages and panels). */
+html[data-theme] body .theme-toggle { border-radius: 999px !important; overflow: visible; }
+html[data-theme] body .theme-toggle::after, html[data-theme] body .theme-toggle .theme-icon { border-radius: 50% !important; }

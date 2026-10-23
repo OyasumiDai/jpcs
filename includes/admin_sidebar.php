@@ -41,6 +41,16 @@ try {
     $sidebarPending = 0;
 }
 
+// Unread notifications for the sidebar badge; the panel itself loads them from notifications.php.
+require_once __DIR__ . '/notifications.php';
+$sidebarUnread = 0;
+try {
+    $sidebarUnread = notifications_unread_count($conn, $sidebarUser);
+} catch (Throwable $exception) {
+    error_log('JPCS notifications: ' . $exception->getMessage());
+}
+$sidebarNotifyToken = $_SESSION['admin_features_csrf'] ??= bin2hex(random_bytes(32));
+
 $sidebarLink = static function (string $href, string $label, string $icon, bool $visible = true, ?int $badge = null) use ($sidebarPage): string {
     if (!$visible) return '';
     $active = $sidebarPage === $href || ($href === 'attendance.php' && in_array($sidebarPage, ['attendance_event.php', 'attendance_section.php'], true));
@@ -59,8 +69,8 @@ $sidebarLink = static function (string $href, string $label, string $icon, bool 
   <div class="admin-topbar__heading"><a href="dashboard.php">JPCS / Workspace</a><strong data-admin-page-title>Dashboard</strong></div>
   <div class="admin-topbar__actions">
     <button class="theme-toggle" type="button" data-admin-theme aria-label="Switch theme" title="Switch theme"><span class="theme-icon" aria-hidden="true"></span></button>
-    <details class="admin-menu"><summary aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span data-admin-pending-count><?php echo $sidebarPending; ?></span></summary><div class="admin-menu__panel"><strong>Needs your attention</strong><a href="pending.php"><span data-admin-pending-count><?php echo $sidebarPending; ?></span> pending registrations</a><a href="dashboard.php#recent-activity">Recent system activity</a><small>Counts refresh while this page is open.</small></div></details>
-    <details class="admin-menu"><summary aria-label="Account menu"><span class="admin-sidebar__avatar"><?php if ($sidebarPhotoUrl !== '') { ?><img src="<?php echo e($sidebarPhotoUrl); ?>" alt=""><?php } else { echo e($sidebarInitials); } ?></span></summary><div class="admin-menu__panel"><strong><?php echo e($sidebarName); ?></strong><small><?php echo e($sidebarRoleLabel); ?></small><a href="profile.php">My Profile</a></div></details>
+    <button class="admin-bell" type="button" data-notify-open aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M10 21h4"></path></svg></button>
+    <details class="admin-menu"><summary aria-label="Account menu"><span class="admin-sidebar__avatar"><?php if ($sidebarPhotoUrl !== '') { ?><img src="<?php echo e($sidebarPhotoUrl); ?>" alt=""><?php } else { echo e($sidebarInitials); } ?></span></summary><div class="admin-menu__panel"><strong><?php echo e($sidebarName); ?></strong><small><?php echo e($sidebarRoleLabel); ?></small><span class="admin-menu__divider" aria-hidden="true"></span><a class="admin-menu__link" href="profile.php"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"></circle><path d="M5 20c.8-3.6 3.3-5.5 7-5.5s6.2 1.9 7 5.5"></path></svg>My Profile</a><a class="admin-menu__link" href="index.php"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><path d="M4 12h16M12 4c2 2.2 3 4.9 3 8s-1 5.8-3 8M12 4c-2 2.2-3 4.9-3 8s1 5.8 3 8"></path></svg>Landing Page</a><span class="admin-menu__divider" aria-hidden="true"></span><a class="admin-menu__link is-danger" href="logout.php"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 5H5v14h5M14 8l4 4-4 4M9 12h9"></path></svg>Logout</a></div></details>
   </div>
 </div>
 <div class="admin-sidebar-overlay" data-sidebar-overlay hidden></div>
@@ -90,6 +100,7 @@ $sidebarLink = static function (string $href, string $label, string $icon, bool 
   </nav>
   <div class="admin-sidebar__bottom">
     <div class="admin-sidebar__divider"></div>
+    <a class="admin-sidebar__link admin-sidebar__notify<?php echo $sidebarPage === 'notifications.php' ? ' is-active' : ''; ?>" href="notifications.php" title="Notifications" data-tooltip="Notifications" data-notify-open data-notify-token="<?php echo e($sidebarNotifyToken); ?>"<?php echo $sidebarPage === 'notifications.php' ? ' aria-current="page"' : ''; ?>><span class="admin-sidebar__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"></path></svg></span><span class="admin-sidebar__label">Notifications</span><span class="admin-sidebar__badge" data-notify-count<?php echo $sidebarUnread > 0 ? '' : ' hidden'; ?>><?php echo $sidebarUnread > 9 ? '9+' : $sidebarUnread; ?></span></a>
     <a class="admin-sidebar__profile" href="profile.php" aria-label="My Profile" title="My Profile - <?php echo e($sidebarName); ?>, <?php echo e($sidebarRoleLabel); ?>" data-tooltip="My Profile">
       <span class="admin-sidebar__avatar"><?php if ($sidebarPhotoUrl !== '') { ?><img src="<?php echo e($sidebarPhotoUrl); ?>" alt=""><?php } else { echo e($sidebarInitials); } ?></span>
       <span><strong>My Profile</strong><small><?php echo e($sidebarName); ?> · <?php echo e($sidebarRoleLabel); ?></small></span>
@@ -98,5 +109,6 @@ $sidebarLink = static function (string $href, string $label, string $icon, bool 
     <a class="admin-sidebar__logout" href="logout.php" title="Logout" data-tooltip="Logout"><span class="admin-sidebar__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M10 5H5v14h5M14 8l4 4-4 4M9 12h9"></path></svg></span><span class="admin-sidebar__label">Logout</span></a>
   </div>
 </aside>
+<script src="js/notifications.js?v=<?php echo filemtime(__DIR__ . '/../js/notifications.js'); ?>" defer></script>
 <script src="js/admin-sidebar.js?v=<?php echo filemtime(__DIR__ . '/../js/admin-sidebar.js'); ?>" defer></script>
 <script src="js/admin-panel.js?v=<?php echo filemtime(__DIR__ . '/../js/admin-panel.js'); ?>" defer></script>
