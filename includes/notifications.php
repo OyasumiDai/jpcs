@@ -179,6 +179,35 @@ function notifications_feed(mysqli $conn, array $user, int $limit = NOTIFICATION
     }
     $stmt->close();
 
+    // Event approval: advisers see officers' requests; officers see decisions on their own requests.
+    require_once __DIR__ . '/event_requests.php';
+    event_requests_ensure_schema($conn);
+    if (in_array($user['role'] ?? '', ['admin_advisor', 'admin_adviser'], true)) {
+        $stmt = $conn->prepare("SELECT id, request_type, payload, requester_name, UNIX_TIMESTAMP(created_at) AS at FROM event_requests WHERE status = 'pending' AND created_at >= $since AND (requested_by IS NULL OR requested_by <> ?)");
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        foreach ($stmt->get_result()->fetch_all(MYSQLI_ASSOC) as $row) {
+            $title = (string) ((json_decode((string) $row['payload'], true) ?: [])['title'] ?? 'an event');
+            $add(['key' => 'evreq-' . $row['id'], 'kind' => 'event',
+                'title' => $row['requester_name'] . ($row['request_type'] === 'create' ? ' proposed a new event: ' : ' requested changes to ') . $title,
+                'detail' => 'Waiting for your approval', 'url' => 'events.php?view=approvals', 'at' => (int) $row['at']]);
+        }
+        $stmt->close();
+    } else {
+        $stmt = $conn->prepare("SELECT id, request_type, payload, status, reviewer_name, review_note, UNIX_TIMESTAMP(reviewed_at) AS at FROM event_requests WHERE requested_by = ? AND status IN ('approved', 'rejected') AND reviewed_at >= $since");
+        $stmt->bind_param('i', $userId);
+        $stmt->execute();
+        foreach ($stmt->get_result()->fetch_all(MYSQLI_ASSOC) as $row) {
+            $title = (string) ((json_decode((string) $row['payload'], true) ?: [])['title'] ?? 'your event');
+            $approved = $row['status'] === 'approved';
+            $add(['key' => 'evdec-' . $row['id'], 'kind' => 'event',
+                'title' => ($row['request_type'] === 'create' ? 'Your new event ' . $title . ($approved ? ' was approved' : ' was not approved') : 'Your changes to ' . $title . ($approved ? ' were approved' : ' were not approved')),
+                'detail' => trim(($approved ? 'Published' : 'Rejected') . ' by ' . $row['reviewer_name'] . ($row['review_note'] ? ': ' . $row['review_note'] : '')),
+                'url' => 'events.php?view=requests', 'at' => (int) $row['at']]);
+        }
+        $stmt->close();
+    }
+
     // Reminders: upcoming events in the next 3 days (the reminder appears when the event enters that window).
     $stmt = $conn->query("SELECT id, title, event_time, location, DATEDIFF(event_date, CURDATE()) AS days,
             UNIX_TIMESTAMP(GREATEST(TIMESTAMP(event_date) - INTERVAL 3 DAY, created_at)) AS at

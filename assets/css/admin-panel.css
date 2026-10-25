@@ -185,3 +185,40 @@ html[data-theme="light"] .notify-item.is-masterlist .notify-icon { color: #2f5fb
 .notify-list--page .notify-group h3 { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; position: static; }
 /* Day headings stay quiet: shared heading rules would otherwise make them bold and bright. */
 html body .notify-group h3 { color: var(--text-muted) !important; font-size: 11px !important; background: color-mix(in srgb, var(--glass-surface-strong) 70%, transparent); }
+/* Navigation links (sidebar, top bar, menus, notifications) never underline on hover. */
+body.jpcs-admin :is(.admin-sidebar, .admin-topbar, .admin-menu__panel, .notify-panel) a:is(:hover, :focus) { text-decoration: none !important; }
+
+/* Bell dropdown: a compact popover under the top-bar bell; the full list lives on notifications.php. */
+.notify-overlay--clear { background: transparent; }
+.notify-panel.notify-panel--popover { top: 72px; bottom: auto; left: auto; width: min(400px, calc(100vw - 16px)); max-height: min(580px, calc(100dvh - 96px)); border-radius: 18px; opacity: 0; transform: translateY(-8px) scale(.98); transform-origin: top right; transition: opacity 200ms var(--ease), transform 200ms var(--ease); }
+.notify-panel.notify-panel--popover.is-open { opacity: 1; transform: none; }
+.notify-panel--popover::before { content: ""; position: absolute; top: -6px; right: 18px; width: 12px; height: 12px; border-top: 1px solid var(--border); border-left: 1px solid var(--border); background: inherit; transform: rotate(45deg); }
+.notify-panel--popover .notify-panel__head { padding: var(--space-4) var(--space-4) var(--space-3); }
+.notify-panel--popover .notify-panel__head h2 { font-size: 17px; }
+.notify-panel--popover .notify-panel__bell { flex-basis: 36px; width: 36px; height: 36px; border-radius: 11px; }
+.notify-panel--popover .notify-panel__bell svg { width: 18px; height: 18px; }
+.notify-panel--popover .notify-close { width: 32px; height: 32px; }
+.notify-panel--popover .notify-attention { margin: var(--space-3) var(--space-3) 0; padding: var(--space-2) var(--space-3); }
+.notify-panel--popover .notify-tabs { margin: var(--space-3) var(--space-3) 0; }
+.notify-panel--popover .notify-scroll { padding: 0 var(--space-2) var(--space-2); }
+.notify-panel--popover .notify-group h3 { margin-top: var(--space-2); }
+.notify-panel--popover .notify-item a { grid-template-columns: 34px minmax(0, 1fr) auto; gap: var(--space-3); padding: var(--space-2) var(--space-3); }
+.notify-panel--popover .notify-icon { width: 34px; height: 34px; border-radius: 10px; }
+.notify-panel--popover .notify-icon svg { width: 18px; height: 18px; }
+.notify-panel--popover .notify-body strong { font-size: 14px; }
+.notify-panel--popover .notify-empty { padding: var(--space-5) var(--space-3); }
+.notify-panel--popover .notify-panel__foot { padding: var(--space-2); }
+.notify-panel--popover .notify-panel__foot a { display: block; padding: 10px; border-radius: var(--radius-control); color: var(--brand-ink); font-weight: var(--weight-label); text-decoration: none; transition: background var(--motion) var(--ease); }
+.notify-panel--popover .notify-panel__foot a:hover { background: var(--brand-soft); text-decoration: none; }
+@media (max-width: 600px) { .notify-panel.notify-panel--popover { left: 8px; right: 8px !important; width: auto; max-height: calc(100dvh - 90px); } .notify-panel--popover::before { display: none; } }
+@media (prefers-reduced-motion: reduce) { .notify-panel.notify-panel--popover { transition: none; } }
+.notify-toolbar { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-3) var(--space-3) 0; }
+.notify-panel .notify-toolbar .notify-tabs { flex: 1; margin: 0; }
+.notify-markall { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; min-height: 36px; padding: 0 var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-pill); background: var(--surface); color: var(--brand-ink); font: inherit; font-size: var(--font-caption); font-weight: var(--weight-label); white-space: nowrap; cursor: pointer; transition: background var(--motion) var(--ease), border-color var(--motion) var(--ease); }
+.notify-markall:hover { border-color: var(--brand-ink); background: var(--brand-soft); }
+.notify-markall:disabled { opacity: .6; cursor: progress; }
+.notify-markall[hidden] { display: none; }
+.notify-markall svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 420px) { .notify-toolbar { flex-wrap: wrap; } .notify-markall { width: 100%; justify-content: center; } }
+html body .notify-panel.notify-panel--popover, html body .notify-panel--popover .notify-group h3 { background-color: rgba(29, 25, 22, .97); background-image: none; }
+html[data-theme="light"] body .notify-panel.notify-panel--popover, html[data-theme="light"] body .notify-panel--popover .notify-group h3 { background-color: rgba(255, 250, 246, .98); }

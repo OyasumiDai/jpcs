@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 require_once __DIR__.'/admin_features.php';
+require_once __DIR__ . '/includes/audit.php';
 $userID=(int)$_SESSION['user_id'];
 $user=af_user($conn,$userID);
 if (!$user) { http_response_code(403); exit('Account no longer exists.'); }
@@ -13,6 +14,7 @@ if (request_method_is('POST')) {
             $hash=af_password((string)($_POST['new_password'] ?? ''),(string)($_POST['confirm_password'] ?? ''));
             $stmt=$conn->prepare('UPDATE users SET password=? WHERE id=?'); $stmt->bind_param('si',$hash,$userID); $stmt->execute();
             session_regenerate_id(true);
+            audit_log($conn, 'profile.password', $user['name'] . ' changed their password', 'user', $userID);
             af_success('profile.php','Password updated. Other existing sessions are not revoked.');
         }
         if (($_POST['action'] ?? '')!=='details') throw new RuntimeException('Invalid action.');
@@ -24,6 +26,7 @@ if (request_method_is('POST')) {
         if (isset($_POST['remove_photo']) && !$created) $photo=null;
         $stmt=$conn->prepare('UPDATE users SET name=?, username=?, photo=? WHERE id=?'); $stmt->bind_param('sssi',$name,$username,$photo,$userID); $stmt->execute();
         $_SESSION['name']=$name; $_SESSION['username']=$username;
+        audit_log($conn, 'profile.update', $name . ' updated their profile', 'user', $userID, audit_diff($user, ['name' => $name, 'username' => $username, 'photo' => $photo], ['name' => 'Name', 'username' => 'Username', 'photo' => 'Photo']));
         af_success('profile.php','Profile updated.');
     } catch (Throwable $ex) {
         af_cleanup($created);

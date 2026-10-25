@@ -37,3 +37,42 @@ html[data-admin-sidebar-collapsed=true] :is(.admin-sidebar__link,.admin-sidebar_
 html[data-admin-sidebar-collapsed=true] .admin-sidebar__badge{position:absolute;right:0;top:0;margin:0;visibility:visible;opacity:1;pointer-events:none}
 }
 @media(max-width:860px){.admin-sidebar{inset:var(--space-3) auto var(--space-3) var(--space-3);width:var(--sidebar-expanded);max-width:calc(100vw - var(--space-5));transform:translateX(calc(-100% - var(--space-5)))}.admin-sidebar.is-open{transform:translateX(0)}.admin-sidebar__collapse{display:none}.admin-sidebar-toggle{display:grid;place-content:center;gap:var(--space-1);width:40px;height:40px;flex-shrink:0;border:1px solid var(--border);border-radius:var(--radius-control);background:var(--surface);color:var(--text);cursor:pointer}.admin-sidebar-toggle span{width:var(--icon-size);height:2px;background:currentColor}.admin-sidebar-overlay{position:fixed;inset:0;z-index:var(--z-overlay);background:var(--scrim)}}
+
+/* Collapsible nav groups (Members & Attendance, Event Settings). */
+body.jpcs-admin .admin-sidebar__group-toggle{display:flex;align-items:center;gap:var(--space-2);width:100%;height:32px;margin:var(--space-3) 0 var(--space-1);padding:0 var(--space-2);border:0;border-radius:var(--radius-control);background:transparent;box-shadow:none;color:var(--text-muted);font:inherit;font-size:var(--font-caption);font-weight:var(--weight-label);white-space:nowrap;cursor:pointer;transition:background var(--motion) var(--ease),color var(--motion) var(--ease)}
+body.jpcs-admin .admin-sidebar__group-toggle:hover{background:var(--surface-hover);color:var(--text)}
+body.jpcs-admin .admin-sidebar__group-toggle:focus-visible{outline:2px solid var(--brand);outline-offset:1px}
+.admin-sidebar__group-label{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;text-align:left}
+.admin-sidebar__group.has-active .admin-sidebar__group-label{color:var(--brand-ink)}
+.admin-sidebar__chevron{flex:0 0 16px;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s var(--ease)}
+.admin-sidebar__group.is-closed .admin-sidebar__chevron{transform:rotate(-90deg)}
+.admin-sidebar__group-dot{display:none;width:7px;height:7px;border-radius:50%;background:var(--brand);box-shadow:0 0 0 3px var(--brand-soft)}
+.admin-sidebar__group.is-closed.has-badge .admin-sidebar__group-dot{display:block}
+.admin-sidebar__group-items{display:grid;grid-template-rows:1fr;transition:grid-template-rows .3s var(--ease)}
+.admin-sidebar__group-items>div{min-height:0;overflow:hidden;visibility:visible;transition:visibility 0s}
+.admin-sidebar__group.is-closed .admin-sidebar__group-items{grid-template-rows:0fr}
+.admin-sidebar__group.is-closed .admin-sidebar__group-items>div{visibility:hidden;transition:visibility 0s .3s}
+.admin-sidebar__group-icon{display:none}
+/* Icon rail: each group is one icon; its links open in a flyout beside the rail (js/admin-sidebar.js). */
+html[data-admin-sidebar-collapsed=true] body.jpcs-admin .admin-sidebar__group-toggle{position:relative;justify-content:center;gap:0;height:var(--nav-height);margin:var(--space-1) 0;padding:0}
+html[data-admin-sidebar-collapsed=true] .admin-sidebar__group-icon{display:grid}
+html[data-admin-sidebar-collapsed=true] :is(.admin-sidebar__group-label,.admin-sidebar__chevron){display:none}
+html[data-admin-sidebar-collapsed=true] .admin-sidebar__group .admin-sidebar__group-items{grid-template-rows:0fr;transition:none}
+html[data-admin-sidebar-collapsed=true] .admin-sidebar__group .admin-sidebar__group-items>div{visibility:hidden;transition:none}
+html[data-admin-sidebar-collapsed=true] .admin-sidebar__group.has-badge .admin-sidebar__group-dot{position:absolute;top:8px;right:8px;display:block}
+html[data-admin-sidebar-collapsed=true] body.jpcs-admin .admin-sidebar__group-toggle.is-flyout-open{background:var(--surface-hover);color:var(--text)}
+html[data-admin-sidebar-collapsed=true] body.jpcs-admin .admin-sidebar__group.has-active .admin-sidebar__group-toggle{background:var(--brand-soft);color:var(--brand-ink)}
+body.jpcs-admin .admin-flyout{position:fixed;right:auto;z-index:var(--z-dropdown);width:auto;min-width:240px;max-width:calc(100vw - 120px);gap:2px;padding:var(--space-3);animation:admin-flyout-in .18s var(--ease)}
+body.jpcs-admin .admin-flyout[hidden]{display:none}
+.admin-flyout__title{margin:2px var(--space-2) var(--space-2);color:var(--text-muted);font-size:var(--font-caption);font-weight:var(--weight-label)}
+body.jpcs-admin .admin-flyout .admin-flyout__link{margin:0;padding:10px var(--space-3);color:var(--text-muted);font-weight:var(--weight-label);white-space:nowrap}
+body.jpcs-admin .admin-flyout .admin-flyout__link svg{flex:0 0 20px;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;color:inherit}
+body.jpcs-admin .admin-flyout .admin-flyout__link:is(:hover,:focus-visible){background:var(--surface-hover);color:var(--text)}
+body.jpcs-admin .admin-flyout .admin-flyout__link.is-active{background:var(--brand-soft);color:var(--brand-ink)}
+body.jpcs-admin .admin-flyout__link .admin-sidebar__badge{position:static;margin-left:auto;visibility:visible;opacity:1}
+@keyframes admin-flyout-in{from{opacity:0;transform:translateX(-6px) scale(.98)}}
+@media (prefers-reduced-motion:reduce){.admin-sidebar__group-items,.admin-sidebar__chevron{transition:none}.admin-flyout{animation:none!important}}
+html body.jpcs-admin .admin-flyout{background-color:rgba(29,25,22,.97)!important;background-image:none!important;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 18px 50px rgba(0,0,0,.45)}
+html[data-theme=light] body.jpcs-admin .admin-flyout{background-color:rgba(255,250,246,.98)!important;box-shadow:0 18px 50px rgba(120,70,30,.18)}
+html body.jpcs-admin .admin-flyout .admin-flyout__link{font-size:15px;padding:11px var(--space-3);gap:14px}
+html body.jpcs-admin .admin-flyout .admin-flyout__title{font-size:13px}

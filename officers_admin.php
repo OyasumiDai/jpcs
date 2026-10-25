@@ -1,5 +1,8 @@
 <?php
 require_once __DIR__ . '/admin_features.php';
+require_once __DIR__ . '/includes/permissions.php';
+permissions_require($conn, 'officers');
+require_once __DIR__ . '/includes/audit.php';
 require_once __DIR__ . '/includes/public_officers.php';
 ensure_public_officers_table($conn);
 
@@ -35,7 +38,9 @@ if ($isPublicProfile) {
                 $statement = $conn->prepare('INSERT INTO officer_profiles (name, position, photo) VALUES (?, ?, ?)');
                 $statement->bind_param('sss', $name, $position, $photo);
             }
-            $statement->execute(); $statement->close();
+            $statement->execute(); $savedProfile = $profileID > 0 ? $profileID : (int) $conn->insert_id; $statement->close();
+            if ($profileID > 0) audit_log($conn, 'officer.profile_update', 'Updated public officer ' . $name, 'officer_profile', $savedProfile, audit_diff($profile, ['name' => $name, 'position' => $position, 'photo' => $photo], ['name' => 'Name', 'position' => 'Position', 'photo' => 'Photo']));
+            else audit_log($conn, 'officer.profile_create', 'Added public officer ' . $name, 'officer_profile', $savedProfile, ['Position' => ['', $position]]);
             af_success('officers.php', $profileID > 0 ? 'Public officer profile updated.' : 'Public officer profile added.');
         } catch (Throwable $exception) {
             af_cleanup($created);
@@ -69,6 +74,7 @@ if (request_method_is('POST')) {
         if (isset($_POST['remove_photo']) && !$created) $photo = null;
         $statement = $conn->prepare('UPDATE users SET name=?, position=?, photo=? WHERE id=?');
         $statement->bind_param('sssi', $name, $position, $photo, $id); $statement->execute(); $statement->close();
+        audit_log($conn, 'officer.update', 'Updated officer ' . $name, 'user', $id, audit_diff($officer, ['name' => $name, 'position' => $position, 'photo' => $photo], ['name' => 'Name', 'position' => 'Position', 'photo' => 'Photo']));
         if ($id === (int) $_SESSION['user_id']) { $_SESSION['name'] = $name; $_SESSION['position'] = $position; }
         af_success('officers.php', 'Officer details updated.');
     } catch (Throwable $exception) {

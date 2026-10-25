@@ -68,7 +68,7 @@
   const updateDates = () => {
     document.querySelectorAll('.dash-filters input[type="date"]').forEach(input => { input.disabled = period.value !== 'custom'; });
   };
-  period?.addEventListener('change', updateDates); updateDates();
+  if (period) { period.addEventListener('change', updateDates); updateDates(); }
   document.querySelectorAll('[data-dash-review]').forEach(form => form.addEventListener('submit', event => {
     const removing = event.submitter?.value === 'remove';
     if (!window.confirm(removing ? 'Reject and permanently remove this pending registration?' : 'Approve this registration and send the confirmation email?')) event.preventDefault();

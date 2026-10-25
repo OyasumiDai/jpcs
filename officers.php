@@ -2,6 +2,8 @@
 require_once __DIR__ . '/admin_features.php';
 require_once __DIR__ . '/includes/public_officers.php';
 require_login();
+require_once __DIR__ . '/includes/permissions.php';
+permissions_require($conn, 'officers');
 ensure_public_officers_table($conn);
 
 $userID = (int) ($_SESSION['user_id'] ?? 0);

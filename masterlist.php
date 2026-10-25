@@ -2,7 +2,10 @@
 declare(strict_types=1);
 // Student Masterlist: upload (PDF/XLSX/CSV) with preview, organised management, history and officer section access.
 require_once __DIR__ . '/admin_features.php';
+require_once __DIR__ . '/includes/permissions.php';
+permissions_require($conn, 'masterlist');
 require_once __DIR__ . '/includes/masterlist.php';
+require_once __DIR__ . '/includes/audit.php';
 
 masterlist_ensure_schema($conn);
 $mlUser = af_user($conn, (int) $_SESSION['user_id']);
@@ -114,6 +117,7 @@ if (request_method_is('POST')) {
             $rows = array_map(static fn($row) => ['id' => (string) ($row['id'] ?? ''), 'name' => (string) ($row['name'] ?? ''), 'include' => !empty($row['include'])], array_slice(array_values($submitted), 0, MASTERLIST_MAX_ROWS));
             $result = masterlist_save_rows($conn, $mlUser, $mlSections, $preview['batch'], $preview['section'], $preview['filename'], $preview['type'], $rows);
             unset($_SESSION['ml_preview']);
+            audit_log($conn, 'masterlist.upload', 'Uploaded ' . $preview['section'] . ' masterlist (' . masterlist_batch_label($preview['batch']) . ')', 'masterlist_upload', $result['upload_id'], ['File' => ['', $preview['filename']], 'Added' => ['', (string) $result['added']], 'Updated' => ['', (string) $result['updated']], 'Skipped' => ['', (string) $result['skipped']]]);
             $reasons = [];
             foreach ($result['reasons'] as $reason => $count) $reasons[] = $count . ' ' . $reason;
             ml_flash('success', sprintf('Saved %s for %s (%s): %d added, %d updated, %d skipped%s.', $preview['filename'], $preview['section'], masterlist_batch_label($preview['batch']), $result['added'], $result['updated'], $result['skipped'], $reasons ? ' (' . implode(', ', $reasons) . ')' : ''), 'masterlist.php?tab=entries&batch=' . urlencode($preview['batch']));
@@ -132,6 +136,7 @@ if (request_method_is('POST')) {
                 $stmt->bind_param('i', $entryId);
                 $stmt->execute();
                 $stmt->close();
+                audit_log($conn, 'masterlist.delete', 'Removed ' . $entry['student_name'] . ' from the ' . $entry['course_year_section'] . ' masterlist', 'masterlist', $entryId, ['Student ID' => [$entry['student_id_no'], ''], 'Batch' => [$entry['batch'], '']]);
                 ml_flash('success', 'Removed ' . $entry['student_name'] . ' (' . $entry['student_id_no'] . ') from the ' . masterlist_batch_label($entry['batch']) . ' masterlist.', $back);
             }
             $newId = masterlist_normalize_id((string) ($_POST['student_id_no'] ?? ''));
@@ -148,6 +153,7 @@ if (request_method_is('POST')) {
             $stmt->bind_param('ssssisi', $newId, $newName, $newBatch, $newSection, $userId, $role, $entryId);
             $stmt->execute();
             $stmt->close();
+            audit_log($conn, 'masterlist.update', 'Edited masterlist entry ' . $newName, 'masterlist', $entryId, audit_diff($entry, ['student_id_no' => $newId, 'student_name' => $newName, 'batch' => $newBatch, 'course_year_section' => $newSection], ['student_id_no' => 'Student ID', 'student_name' => 'Name', 'batch' => 'Batch', 'course_year_section' => 'Section']));
             ml_flash('success', 'Saved changes for ' . $newName . '.', $back);
         }
         if ($action === 'save_access') {
@@ -169,6 +175,7 @@ if (request_method_is('POST')) {
             }
             $stmt->close();
             $conn->commit();
+            audit_log($conn, 'masterlist.access', 'Set section access for ' . $officer['name'], 'user', $officerId, ['Sections' => ['', $chosen ? implode(', ', $chosen) : 'none']]);
             ml_flash('success', $officer['name'] . ' now manages ' . ($chosen ? count($chosen) . ' section' . (count($chosen) === 1 ? '' : 's') . ' (' . implode(', ', $chosen) . ')' : 'no sections') . '.', 'masterlist.php?tab=access');
         }
         throw new RuntimeException('Unknown action.');

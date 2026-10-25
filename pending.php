@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_login();
+require_once __DIR__ . '/includes/permissions.php';
+permissions_require($conn, 'registrations');
 
 // Pending review now lives in registrations.php (old links, bookmarks and review deep links still work).
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
@@ -19,6 +21,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET') {
 
 require_once __DIR__ . '/includes/registration_confirm.php';
 require_once __DIR__ . '/includes/masterlist.php';
+require_once __DIR__ . '/includes/audit.php';
 
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
@@ -154,9 +157,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $message = 'Registration removed.';
+            audit_log($conn, 'registration.remove', 'Removed ' . $student['student_name'] . ' registration for ' . $student['title'], 'registration', $id, ['Student ID' => [(string) $student['student_id'], '']]);
             $messageType = 'success';
         } else {
             $result = jpcs_confirm_registration($conn, $id, $eventID, $action, (string) $user['name']);
+            audit_log($conn, 'registration.' . $action, ($action === 'confirm' ? 'Confirmed ' : 'Re-sent confirmation to ') . $student['student_name'] . ' for ' . $student['title'], 'registration', $id, ['Control no.' => ['', $result['control_number']], 'Email' => ['', $result['type'] === 'success' ? 'sent' : 'failed']]);
             $message = $result['message'];
             $messageType = $result['type'];
         }

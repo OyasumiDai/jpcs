@@ -40,3 +40,8 @@
     });
   });
 })();
+
+/* Approvals: confirm before rejecting an officer's request. */
+document.querySelectorAll('[data-ev-reject]').forEach(button => button.addEventListener('click', event => {
+  if (!window.confirm('Reject this request? The officer will see your note.')) event.preventDefault();
+}));

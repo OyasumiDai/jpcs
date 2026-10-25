@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_login();
+require_once __DIR__ . '/includes/permissions.php';
+permissions_require($conn, 'registrations');
 
 // Attendance per event now lives in registrations.php.
 $eventParam = filter_var($_GET['event_id'] ?? '', FILTER_VALIDATE_INT);

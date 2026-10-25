@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/includes/auth.php';
 require_login();
+require_once __DIR__ . '/includes/permissions.php';
+permissions_require($conn, 'registrations');
 
 // Attendance now lives in registrations.php.
 redirect('registrations.php');

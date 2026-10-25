@@ -3,8 +3,11 @@ declare(strict_types=1);
 // Registrations & Attendance: one place for pending review, the registered list and attendance per section.
 // Replaces pending.php, register_list.php, attendance.php, attendance_event.php and attendance_section.php.
 require_once __DIR__ . '/admin_features.php';
+require_once __DIR__ . '/includes/permissions.php';
+permissions_require($conn, 'registrations');
 require_once __DIR__ . '/includes/registration_confirm.php';
 require_once __DIR__ . '/includes/masterlist.php';
+require_once __DIR__ . '/includes/audit.php';
 
 $regUser = af_user($conn, (int) $_SESSION['user_id']);
 if (!in_array($regUser['role'] ?? '', ['admin_advisor', 'admin_adviser', 'officer'], true)) {
@@ -25,6 +28,11 @@ if (request_method_is('POST')) {
     $back = 'registrations.php?event_id=' . (int) $eventId . '&tab=' . ($action === 'resend' ? 'registered' : 'pending');
     try {
         if (!$id || !$eventId || !in_array($action, ['confirm', 'resend', 'remove'], true)) throw new RuntimeException('Invalid registration action.');
+        $lookup = $conn->prepare('SELECT r.student_name, r.student_id, e.title FROM registrations r JOIN events e ON e.id = r.event_id WHERE r.id = ? AND r.event_id = ?');
+        $lookup->bind_param('ii', $id, $eventId);
+        $lookup->execute();
+        $target = $lookup->get_result()->fetch_assoc() ?: [];
+        $lookup->close();
         if ($action === 'remove') {
             $stmt = $conn->prepare("DELETE FROM registrations WHERE id=? AND event_id=? AND status='pending'");
             $stmt->bind_param('ii', $id, $eventId);
@@ -33,9 +41,11 @@ if (request_method_is('POST')) {
             $stmt->close();
             if ($removed !== 1) throw new RuntimeException('Only pending registrations can be removed.');
             $flash = ['success', 'Registration removed.'];
+            audit_log($conn, 'registration.remove', 'Removed ' . ($target['student_name'] ?? 'a') . ' registration for ' . ($target['title'] ?? 'an event'), 'registration', (int) $id, ['Student ID' => [(string) ($target['student_id'] ?? ''), '']]);
         } else {
             $result = jpcs_confirm_registration($conn, (int) $id, (int) $eventId, $action, (string) $regUser['name']);
             $flash = [$result['type'], $result['message']];
+            audit_log($conn, 'registration.' . $action, ($action === 'confirm' ? 'Confirmed ' : 'Re-sent confirmation to ') . ($target['student_name'] ?? 'a student') . ' for ' . ($target['title'] ?? 'an event'), 'registration', (int) $id, ['Control no.' => ['', $result['control_number']], 'Email' => ['', $result['type'] === 'success' ? 'sent' : 'failed']]);
         }
     } catch (Throwable $error) {
         error_log('JPCS registrations: ' . $error->getMessage());

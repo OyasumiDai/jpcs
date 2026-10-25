@@ -251,7 +251,7 @@ html[data-theme] body:is(.public-page, .app-page, .auth-page) :is(.jpcs-nav-link
 html[data-theme] body:is(.public-page, .app-page, .auth-page) :is(.jpcs-nav-links a.active, .jpcs-nav-links a[aria-current="page"], .glass-auth-tabs a[aria-current="page"]) {
   color: var(--gt-brand-ink) !important;
   background: var(--gt-brand-soft) !important;
-  box-shadow: inset 0 -2px 0 var(--gt-brand) !important;
+  box-shadow: none !important;
 }
 /* Theme switch: the admin look on every page. */
 html[data-theme] body .theme-toggle {

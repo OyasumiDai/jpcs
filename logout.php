@@ -1,5 +1,10 @@
 <?php
 require_once __DIR__ . '/includes/bootstrap.php';
+require_once __DIR__ . '/includes/audit.php';
+
+if (!empty($_SESSION['user_id'])) {
+    audit_log($conn, 'auth.logout', ($_SESSION['name'] ?? 'Someone') . ' signed out', 'user', (int) $_SESSION['user_id']);
+}
 
 $_SESSION = [];
 

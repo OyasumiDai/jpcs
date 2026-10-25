@@ -76,7 +76,7 @@ try {
     $dashPendingTotal = (int) dash_query("SELECT COUNT(*) n FROM registrations WHERE status='pending'")[0]['n'];
     $dashActivity = dash_query("SELECT * FROM (
         SELECT 'Registration received' kind, student_name label, registered_at happened, event_id FROM registrations WHERE registered_at >= ? AND registered_at < ?
-        UNION ALL SELECT 'Attendance scanned', participant_id, scanned_at, event_id FROM attendance WHERE scanned_at >= ? AND scanned_at < ?
+        UNION ALL SELECT 'Attendance scanned', COALESCE((SELECT r.student_name FROM registrations r WHERE r.control_number = attendance.participant_id AND r.event_id = attendance.event_id LIMIT 1), participant_id), scanned_at, event_id FROM attendance WHERE scanned_at >= ? AND scanned_at < ?
         UNION ALL SELECT 'Event created', title, created_at, id FROM events WHERE created_at >= ? AND created_at < ?
         ) activity ORDER BY happened DESC LIMIT 10", array_merge($dashBounds,$dashBounds,$dashBounds));
 } catch (Throwable $error) {

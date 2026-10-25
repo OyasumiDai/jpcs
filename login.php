@@ -1,17 +1,36 @@
 <?php
 require_once __DIR__ . '/includes/student_auth.php';
 require_once __DIR__ . '/includes/login_auth.php';
+require_once __DIR__ . '/includes/audit.php';
 
 $error = '';
 $username = '';
+$lockSeconds = 0;
 if (request_method_is('POST')) {
     // Accept identifier from older student forms as well as the shared form.
     $username = trim((string) ($_POST['username'] ?? $_POST['identifier'] ?? ''));
     $password = (string) ($_POST['password'] ?? '');
-    $account = find_login_account($conn, $username, $password);
-    if ($account === null) {
-        $error = 'Invalid login details. Check your email, student ID or username and password.';
+    // Locked identifiers and IPs are refused before the password is even checked.
+    $throttle = login_throttle_status($conn, $username);
+    $account = $throttle['locked'] > 0 ? null : find_login_account($conn, $username, $password);
+    if ($throttle['locked'] > 0) {
+        $lockSeconds = $throttle['locked'];
+    } elseif ($account === null) {
+        login_throttle_fail($conn, $username);
+        audit_log($conn, 'auth.login_failed', 'Failed sign-in for "' . mb_substr($username, 0, 60) . '"', null, null, [], ['name' => 'Unknown visitor']);
+        $throttle = login_throttle_status($conn, $username);
+        if ($throttle['locked'] > 0) {
+            $lockSeconds = $throttle['locked'];
+            audit_log($conn, 'auth.locked', 'Sign-in locked for "' . mb_substr($username, 0, 60) . '" after too many failed attempts', null, null, ['Locked for' => ['', login_throttle_wait_text($lockSeconds)]], ['name' => 'Unknown visitor']);
+        } else {
+            $error = 'Invalid login details. Check your email, student ID or username and password.';
+            if ($throttle['failures'] >= LOGIN_WARN_AFTER) {
+                $error .= ' ' . $throttle['remaining'] . ($throttle['remaining'] === 1 ? ' attempt' : ' attempts') . ' left before sign-in is locked for ' . LOGIN_LOCK_MINUTES . ' minutes.';
+            }
+        }
     } else {
+        $record = $account['record'];
+        login_throttle_clear($conn, [$username, $record['username'] ?? '', $record['email'] ?? '', $record['student_id'] ?? '']);
         // Retain the existing one-time upgrade of legacy staff passwords.
         if ($account['legacy']) {
             $newHash = password_hash($password, PASSWORD_DEFAULT);
@@ -21,7 +40,11 @@ if (request_method_is('POST')) {
             $update->execute();
             $update->close();
         }
-        redirect(set_login_session($account));
+        $destination = set_login_session($account);
+        if ($account['type'] === 'staff') {
+            audit_log($conn, 'auth.login', $account['record']['name'] . ' signed in', 'user', (int) $account['record']['id'], [], $account['record']);
+        }
+        redirect($destination);
     }
 }
 ?>
@@ -274,7 +297,9 @@ if (request_method_is('POST')) {
             <h1>Login</h1>
             <p>Students, officers and advisers can sign in here.</p>
             <?php if (isset($_GET['registered'])) { ?><p class="success" role="status">Account created. You can now log in.</p><?php } ?>
+            <?php if (isset($_GET['reset'])) { ?><p class="success" role="status">Your password was changed. Log in with your new password.</p><?php } ?>
             <?php if ($error !== '') { ?><p class="error" role="alert"><?php echo htmlspecialchars($error, ENT_QUOTES, 'UTF-8'); ?></p><?php } ?>
+            <?php if ($lockSeconds > 0) { ?><p class="error login-lock" role="alert" data-login-lock="<?php echo (int) $lockSeconds; ?>"><strong>Too many failed attempts.</strong> For your security, sign-in is paused. Try again in <b data-lock-left><?php echo htmlspecialchars(login_throttle_wait_text($lockSeconds), ENT_QUOTES, 'UTF-8'); ?></b>, or <a href="forgot_password.php">reset your password</a>.</p><?php } ?>
             <form class="auth-form" method="POST">
                 <div class="auth-field full">
                     <label for="username">Email, student ID or username</label>
@@ -284,7 +309,7 @@ if (request_method_is('POST')) {
                     <label for="password">Password</label>
                     <div class="input-wrap password-wrap"><span class="field-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><rect x="5" y="10" width="14" height="10" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path></svg></span><input type="password" id="password" name="password" placeholder="Enter your password" autocomplete="current-password" required><button class="password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password" data-password-toggle="password"><svg viewBox="0 0 24 24" focusable="false"><path d="M3 12s3.2-5 9-5 9 5 9 5-3.2 5-9 5-9-5-9-5Z"></path><circle cx="12" cy="12" r="2.2"></circle></svg></button></div>
                 </div>
-                <div class="auth-meta"><label class="check"><input type="checkbox" name="remember" id="remember"> Remember me</label><a href="mailto:jpcs@cmu.edu.ph?subject=JPCS%20password%20reset">Forgot password?</a></div>
+                <div class="auth-meta"><label class="check"><input type="checkbox" name="remember" id="remember"> Remember me</label><a href="forgot_password.php">Forgot password?</a></div>
                 <button class="auth-submit" type="submit">Login</button>
             </form>
             <p class="auth-link">Don't have an account? <a href="student_register.php">Register</a></p>
@@ -292,6 +317,27 @@ if (request_method_is('POST')) {
         </section>
     </main>
     <script>
+      // Sign-in lock: count down and re-enable the form when the wait is over.
+      (function () {
+        const lock = document.querySelector('[data-login-lock]');
+        if (!lock) return;
+        const button = document.querySelector('.auth-submit');
+        const left = lock.querySelector('[data-lock-left]');
+        let seconds = Number(lock.dataset.loginLock) || 0;
+        const tick = function () {
+          if (seconds <= 0) {
+            button.disabled = false;
+            lock.className = 'success';
+            lock.textContent = 'You can try signing in again now.';
+            return;
+          }
+          button.disabled = true;
+          left.textContent = Math.floor(seconds / 60) + ':' + String(seconds % 60).padStart(2, '0');
+          seconds -= 1;
+          setTimeout(tick, 1000);
+        };
+        tick();
+      }());
       document.querySelector('[data-password-toggle]')?.addEventListener('click', function () {
         const input = document.getElementById(this.dataset.passwordToggle);
         const visible = input.type === 'text';

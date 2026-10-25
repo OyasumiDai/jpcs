@@ -1,5 +1,5 @@
-/* Notifications panel for advisers and officers. Opened from the sidebar item or the top-bar bell;
-   without JavaScript both lead to notifications.php. */
+/* Notifications dropdown for advisers and officers, opened from the top-bar bell.
+   The sidebar item and "View all notifications" lead to the full notifications.php page. */
 (() => {
   'use strict';
   const triggers = [...document.querySelectorAll('[data-notify-open]')];
@@ -14,12 +14,11 @@
   };
 
   const overlay = document.createElement('div');
-  overlay.className = 'notify-overlay';
+  overlay.className = 'notify-overlay notify-overlay--clear';
   overlay.hidden = true;
   const panel = document.createElement('aside');
-  panel.className = 'notify-panel';
+  panel.className = 'notify-panel notify-panel--popover';
   panel.setAttribute('role', 'dialog');
-  panel.setAttribute('aria-modal', 'true');
   panel.setAttribute('aria-labelledby', 'notify-title');
   panel.hidden = true;
   panel.innerHTML = `
@@ -33,12 +32,15 @@
       <span><strong>Needs your attention</strong><small data-notify-pending-text>registrations waiting for review</small></span>
       <span class="notify-attention__go">Review <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"></path></svg></span>
     </a>
+    <div class="notify-toolbar">
     <div class="notify-tabs" role="tablist" aria-label="Filter notifications">
       <button type="button" role="tab" aria-selected="true" data-notify-filter="all">All <span data-notify-total>0</span></button>
       <button type="button" role="tab" aria-selected="false" data-notify-filter="unread">Unread <span data-notify-new>0</span></button>
     </div>
+    <button type="button" class="notify-markall" data-notify-markall hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12.5l4 4 8-9M10 16.5l1 1 9-10"></path></svg>Mark all as read</button>
+    </div>
     <div class="notify-scroll" data-notify-list aria-live="polite"></div>
-    <footer class="notify-panel__foot"><a href="notifications.php">View all notifications</a></footer>`;
+    <footer class="notify-panel__foot"><a href="notifications.php" data-notify-all>View all notifications</a></footer>`;
   document.body.append(overlay, panel);
   const listBox = panel.querySelector('[data-notify-list]');
   const summary = panel.querySelector('[data-notify-summary]');
@@ -65,10 +67,13 @@
     </li>`;
   const render = () => {
     const unread = feed.items.filter(item => item.unread);
-    const shown = (filter === 'unread' ? unread : feed.items).slice(0, 30);
+    const pool = filter === 'unread' ? unread : feed.items;
+    const shown = pool.slice(0, 8);
+    panel.querySelector('[data-notify-all]').textContent = pool.length > shown.length ? `View all ${feed.items.length} notifications` : 'View all notifications';
     summary.textContent = unread.length ? `${unread.length} new since you last checked` : 'You are all caught up';
     panel.querySelector('[data-notify-total]').textContent = feed.items.length;
     panel.querySelector('[data-notify-new]').textContent = unread.length;
+    panel.querySelector('[data-notify-markall]').hidden = !unread.length;
     const attention = panel.querySelector('[data-notify-attention]');
     attention.hidden = !feed.pending;
     panel.querySelector('[data-notify-pending]').textContent = feed.pending > 99 ? '99+' : feed.pending;
@@ -94,7 +99,7 @@
     if (!response.ok) throw new Error(String(response.status));
     return response.json();
   });
-  // Opening the panel marks everything as read; items stay highlighted until the panel is reopened.
+  // Items stay unread until the user chooses "Mark all as read" (here or on the full page).
   const markRead = () => {
     const body = new FormData();
     body.append('csrf', token);
@@ -102,23 +107,33 @@
     return fetch('notifications.php', { method: 'POST', body, credentials: 'same-origin' }).then(response => { if (response.ok) setBadge(0); });
   };
 
+  // Anchor the dropdown under the bell that opened it.
+  let anchor = triggers[0];
+  const place = () => {
+    const rect = anchor.getBoundingClientRect();
+    panel.style.top = `${Math.round(rect.bottom + 10)}px`;
+    panel.style.right = `${Math.max(8, Math.round(innerWidth - rect.right))}px`;
+  };
+  window.addEventListener('resize', () => { if (!panel.hidden) place(); });
+
   let lastFocus = null;
   const open = () => {
     lastFocus = document.activeElement;
+    place();
     overlay.hidden = false;
     panel.hidden = false;
     requestAnimationFrame(() => { overlay.classList.add('is-open'); panel.classList.add('is-open'); });
     triggers.forEach(trigger => trigger.setAttribute('aria-expanded', 'true'));
     closeButton.focus();
     listBox.innerHTML = '<div class="notify-loading" aria-label="Loading"><span></span><span></span><span></span></div>';
-    fetchFeed().then(data => { feed = data; render(); if (data.unread > 0) markRead(); })
+    fetchFeed().then(data => { feed = data; render(); })
       .catch(() => { summary.textContent = 'Could not load notifications.'; listBox.innerHTML = '<div class="notify-empty"><a href="notifications.php">Open the notifications page</a></div>'; });
   };
   const close = () => {
     overlay.classList.remove('is-open');
     panel.classList.remove('is-open');
     triggers.forEach(trigger => trigger.setAttribute('aria-expanded', 'false'));
-    setTimeout(() => { overlay.hidden = true; panel.hidden = true; }, 250);
+    setTimeout(() => { overlay.hidden = true; panel.hidden = true; }, 200);
     lastFocus?.focus();
   };
 
@@ -128,8 +143,18 @@
     trigger.addEventListener('click', event => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) return; // keep "open in new tab"
       event.preventDefault();
+      anchor = trigger;
       panel.hidden ? open() : close();
     });
+  });
+  const markAll = panel.querySelector('[data-notify-markall]');
+  markAll.addEventListener('click', () => {
+    markAll.disabled = true;
+    markRead().then(() => {
+      feed.items.forEach(item => { item.unread = false; });
+      render();
+      panel.querySelector('[data-notify-filter="all"]').focus();
+    }).catch(() => { summary.textContent = 'Could not mark as read. Try again.'; }).finally(() => { markAll.disabled = false; });
   });
   overlay.addEventListener('click', close);
   closeButton.addEventListener('click', close);

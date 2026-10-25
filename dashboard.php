@@ -62,26 +62,151 @@ $dashCharts = ['daily'=>$dashDaily,'attendance'=>$dashEventAttendance,'status'=>
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Dashboard · JPCS</title><link rel="icon" href="assets/img/jpcs-logo.png">
-<?php require __DIR__ . '/includes/admin_head.php'; ?><script src="js/admin-dashboard.js" defer></script></head>
+<?php require __DIR__ . '/includes/admin_head.php'; ?><script src="js/admin-dashboard.js?v=<?= filemtime(__DIR__ . '/js/admin-dashboard.js') ?>" defer></script></head>
 <body class="app-page admin-page">
 <?php require __DIR__ . '/includes/admin_sidebar.php'; ?>
-<main class="content dash-page">
-  <header class="dash-header"><div><p class="dash-eyebrow">JPCS / OVERVIEW</p><h1>Dashboard</h1><p>Organization activity, registrations and event attendance.</p></div><div class="dash-actions"><a class="dash-button" href="?<?= e($dashQuery) ?>&amp;export=csv">Export CSV</a><button type="button" data-dash-print>Print / Save PDF</button></div></header>
-  <form class="panel-card dash-filters" method="get"><label>Reporting period<select name="period" id="dash-period"><?php foreach (['today'=>'Today','7'=>'Last 7 days','30'=>'Last 30 days','semester'=>'Semester (Jan–Jun / Jul–Dec to date)','custom'=>'Custom range'] as $value=>$label) { ?><option value="<?= e($value) ?>" <?= $dashPeriod===(string)$value?'selected':'' ?>><?= e($label) ?></option><?php } ?></select></label><label>From<input type="date" name="start" value="<?= e($dashStart->format('Y-m-d')) ?>"></label><label>Through<input type="date" name="end" value="<?= e($dashEnd->format('Y-m-d')) ?>"></label><button type="submit">Apply filter</button></form>
+<?php
+require_once __DIR__ . '/includes/permissions.php';
+$dashCan = static fn(string $feature): bool => permissions_can($conn, $dashUser, $feature);
+$dashHour = (int) date('G');
+$dashGreeting = $dashHour < 12 ? 'Good morning' : ($dashHour < 18 ? 'Good afternoon' : 'Good evening');
+$dashNameParts = preg_split('/\s+/', trim((string) $dashUser['name'])) ?: [];
+// Keep a title with the name: "Prof Dave", not "Prof".
+$dashFirstName = implode(' ', array_slice($dashNameParts, 0, preg_match('/^(prof|dr|engr|mr|mrs|ms|sir|maam)\.?$/i', $dashNameParts[0] ?? '') ? 2 : 1));
+$dashPeriods = ['today' => 'Today', '7' => '7 days', '30' => '30 days', 'semester' => 'Semester'];
+$dashTrendBadge = static function (string $key) use ($dashMetrics, $dashPrevious, $dashAvailable): string {
+    if (!$dashAvailable) return '';
+    $delta = $dashMetrics[$key] - $dashPrevious[$key];
+    if ($delta === 0) return '<span class="db-trend is-flat">No change</span>';
+    $pct = $dashPrevious[$key] > 0 ? ' · ' . abs(round($delta / $dashPrevious[$key] * 100)) . '%' : '';
+    return '<span class="db-trend ' . ($delta > 0 ? 'is-up' : 'is-down') . '">' . ($delta > 0 ? '▲ ' : '▼ ') . abs($delta) . $pct . '</span>';
+};
+$dashActivityIcon = ['Registration received' => '<path d="M15 19c-.6-2.8-2.6-4.3-6-4.3S3.6 16.2 3 19"></path><circle cx="9" cy="8" r="3.3"></circle><path d="M18 8v6M15 11h6"></path>', 'Attendance scanned' => '<path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"></path><path d="m8.5 12 2.5 2.5 4.5-5"></path>', 'Event created' => '<path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path>'];
+$dashQuick = array_filter([
+    ['registrations', 'registrations.php', 'Review registrations', '<path d="M4 5h16v14H4z"></path><path d="M8 9h8M8 13h5"></path>'],
+    ['scanner', 'scanner.php', 'Open scanner', '<path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"></path><path d="M8 12h8"></path>'],
+    ['events', 'events.php' . ($dashAdmin ? '?createform=1' : ''), $dashAdmin ? 'Create event' : 'View events', '<path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path>'],
+    ['masterlist', 'masterlist.php', 'Upload masterlist', '<path d="M6 3h9l4 4v14H6z"></path><path d="M14 3v5h5M9 13h6M12 10v6"></path>'],
+    [$dashAdmin ? '' : '__never', 'accounts.php', 'Manage accounts', '<circle cx="12" cy="8" r="3"></circle><path d="M5 20c.8-3.3 3.2-5 7-5s6.2 1.7 7 5"></path>'],
+    ['audit', 'audit.php', 'Audit trail', '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"></path><path d="M9 12l2 2 4-4"></path>'],
+], static fn($action) => $action[0] === '' || ($action[0] !== '__never' && $dashCan($action[0])));
+?>
+<main class="content dash-page db-page">
+  <header class="db-head">
+    <div>
+      <p class="db-date"><?= e(date('l, F j, Y')) ?></p>
+      <h1><?= e($dashGreeting) ?><?= $dashFirstName !== '' ? ', ' . e($dashFirstName) : '' ?></h1>
+      <p class="db-sub">Here's what's happening in JPCS — <?= e($dashStart->format('M j')) ?> to <?= e($dashEnd->format('M j, Y')) ?>.</p>
+    </div>
+    <div class="db-head__tools">
+      <nav class="rx-segment db-periods" aria-label="Reporting period">
+        <?php foreach ($dashPeriods as $value => $label) { ?><a href="?period=<?= e($value) ?>"<?= $dashPeriod === (string) $value ? ' aria-current="page"' : '' ?>><?= e($label) ?></a><?php } ?>
+        <details class="db-custom"<?= $dashPeriod === 'custom' ? ' open' : '' ?>>
+          <summary<?= $dashPeriod === 'custom' ? ' aria-current="page"' : '' ?>>Custom</summary>
+          <form method="get" class="db-custom__form">
+            <input type="hidden" name="period" value="custom">
+            <label>From<input type="date" name="start" value="<?= e($dashStart->format('Y-m-d')) ?>" max="<?= date('Y-m-d') ?>"></label>
+            <label>To<input type="date" name="end" value="<?= e($dashEnd->format('Y-m-d')) ?>" max="<?= date('Y-m-d') ?>"></label>
+            <button type="submit">Apply</button>
+          </form>
+        </details>
+      </nav>
+      <details class="db-more">
+        <summary class="btn btn-ghost" aria-label="Export options"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M5 20h14"></path></svg>Export</summary>
+        <div class="db-more__menu"><a href="?<?= e($dashQuery) ?>&amp;export=csv">Download CSV</a><button type="button" data-dash-print>Print / save as PDF</button></div>
+      </details>
+    </div>
+  </header>
   <?php if ($dashError || $dashDataError) { ?><p class="dash-alert" role="alert"><?= e($dashError ?: $dashDataError) ?></p><?php } ?>
-  <p class="dash-context"><?= e($dashStart->format('M j, Y')) ?> – <?= e($dashEnd->format('M j, Y')) ?> · Prior: <?= e($dashPrior[0]) ?> – <?= e($dashStart->modify('-1 day')->format('Y-m-d')) ?> · <?= $dashAdmin?'Adviser':'Officer' ?> view · Organization-wide event data</p>
-  <section class="dash-kpis" aria-label="Key performance indicators"><?php foreach ($dashKpis as $key=>$meta) { ?><article class="panel-card dash-kpi"><h2><?= e($meta[0]) ?></h2><strong><?= $dashAvailable?number_format($dashMetrics[$key]):'—' ?></strong><p><?= e(dash_trend($key)) ?></p><small><?= e($meta[1]) ?></small></article><?php } ?></section>
-  <div class="dashboard-grid dash-grid">
-  <?php foreach (['daily'=>['Registrations over time','Daily registration totals; dates with no registrations have zero entries.'], 'attendance'=>['Attendance by event','Top 12 events by distinct check-ins during the selected period.'], 'status'=>['Event status','Current status of events scheduled within the selected period.'], 'sections'=>['Course, year & section','Registration counts grouped by the stored course / year / section value.']] as $id=>$meta) { ?>
-    <section class="panel-card dash-card"><h2><?= e($meta[0]) ?></h2><p class="dash-muted"><?= e($meta[1]) ?></p><div class="dash-chart" data-dash-chart="<?= e($id) ?>"></div><details><summary>View data table / legend</summary><div class="dash-table-wrap"><table><thead><tr><th>Category</th><th>Count</th></tr></thead><tbody><?php foreach ($dashCharts[$id] as $row) { ?><tr><td><?= e($row['label']) ?></td><td><?= (int)$row['value'] ?></td></tr><?php } ?><?php if (!$dashCharts[$id]) { ?><tr><td colspan="2"><?= $dashAvailable?'No records in this period.':'Data unavailable.' ?></td></tr><?php } ?></tbody></table></div></details></section>
-  <?php } ?>
-  <section class="panel-card dash-card"><div class="dash-section-head"><h2>Upcoming events</h2><a href="events.php">Manage events</a></div><p class="dash-muted">Next six events from today, across all reporting periods.</p><?php foreach ($dashUpcoming as $event) { ?><article class="dash-row"><div><a href="registrations.php?event_id=<?= (int)$event['id'] ?>"><strong><?= e($event['title']) ?></strong></a><p><?= e($event['event_date']) ?> <?= e($event['event_time']) ?> · <?= e($event['location']) ?></p></div><span class="dash-badge"><?= (int)$event['registrations'] ?> registrations / <?= (int)$event['pending'] ?> pending</span></article><?php } ?><?php if (!$dashUpcoming) { ?><p class="dash-empty"><?= $dashAvailable?'No future events marked upcoming.':'Data unavailable.' ?></p><?php } ?></section>
-  <section class="panel-card dash-card"><div class="dash-section-head"><h2>Pending review <span class="dash-badge"><?= $dashPendingTotal===null?'—':$dashPendingTotal ?></span></h2><a href="registrations.php">View all</a></div><p class="dash-muted">Oldest six requests, across all dates. Reject removes the pending registration.</p><?php foreach ($dashPending as $row) { ?><article class="dash-row"><div><strong><?= e($row['student_name']) ?></strong><p><?= e($row['title']) ?> · <?= e($row['registered_at']) ?></p></div><form action="pending.php" method="post" class="dash-actions" data-dash-review><input type="hidden" name="csrf" value="<?= e($_SESSION['pending_csrf']) ?>"><input type="hidden" name="registration_id" value="<?= (int)$row['id'] ?>"><input type="hidden" name="event_id" value="<?= (int)$row['event_id'] ?>"><?php if ($row['event_status']==='upcoming') { ?><button name="action" value="confirm">Approve</button><?php } ?><button name="action" value="remove" class="dash-danger">Reject</button></form></article><?php } ?><?php if (!$dashPending) { ?><p class="dash-empty"><?= $dashAvailable?'No pending requests.':'Data unavailable.' ?></p><?php } ?></section>
-  <section class="panel-card dash-card"><h2>Recent activity</h2><p class="dash-muted">Latest 10 recorded actions within your filter.</p><ol class="dash-feed"><?php foreach ($dashActivity as $row) { ?><li><strong><?= e($row['kind']) ?></strong><span><?= e($row['label']) ?></span><time><?= e($row['happened']) ?></time></li><?php } ?></ol><?php if (!$dashActivity) { ?><p class="dash-empty"><?= $dashAvailable?'No timestamped activity in this period.':'Data unavailable.' ?></p><?php } ?></section>
-  <section class="panel-card dash-card"><h2>Quick actions</h2><div class="dash-quick"><a href="events.php">Manage events <span>→</span></a><a href="registrations.php">Review registrations <span>→</span></a><a href="scanner.php">Open attendance scanner <span>→</span></a><a href="registrations.php">Attendance reports <span>→</span></a><a href="registrations.php">Registration lists <span>→</span></a><?php if ($dashAdmin) { ?><a href="accounts.php">Manage accounts <span>→</span></a><?php } ?></div></section>
+
+  <section class="db-kpis" aria-label="Key numbers">
+    <article class="db-kpi"><span class="db-kpi__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M15 19c-.6-2.8-2.6-4.3-6-4.3S3.6 16.2 3 19"></path><circle cx="9" cy="8" r="3.3"></circle><path d="M18 8v6M15 11h6"></path></svg></span><div><span>Registrations</span><strong><?= $dashAvailable ? number_format($dashMetrics['registrations']) : '—' ?></strong><?= $dashTrendBadge('registrations') ?></div></article>
+    <<?= $dashCan('registrations') ? 'a href="registrations.php"' : 'article' ?> class="db-kpi is-warn"><span class="db-kpi__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l2.5 2"></path></svg></span><div><span>Pending review</span><strong><?= $dashPendingTotal === null ? '—' : number_format($dashPendingTotal) ?></strong><small><?= $dashPendingTotal ? 'Waiting for an officer' : 'All caught up' ?></small></div></<?= $dashCan('registrations') ? 'a' : 'article' ?>>
+    <article class="db-kpi is-good"><span class="db-kpi__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8V5h3M17 5h3v3M20 16v3h-3M7 19H4v-3"></path><path d="m8.5 12 2.5 2.5 4.5-5"></path></svg></span><div><span>Check-ins</span><strong><?= $dashAvailable ? number_format($dashMetrics['scans']) : '—' ?></strong><?= $dashTrendBadge('scans') ?></div></article>
+    <<?= $dashCan('events') ? 'a href="events.php"' : 'article' ?> class="db-kpi is-muted"><span class="db-kpi__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 6h16v14H4z"></path><path d="M8 4v4M16 4v4M4 10h16"></path></svg></span><div><span>Upcoming events</span><strong><?= count($dashUpcoming) ?></strong><small><?= $dashUpcoming ? 'Next: ' . e(date('M j', strtotime((string) $dashUpcoming[0]['event_date']))) : 'None scheduled' ?></small></div></<?= $dashCan('events') ? 'a' : 'article' ?>>
+  </section>
+
+  <div class="db-layout">
+    <div class="db-main">
+      <section class="panel-card db-card">
+        <div class="db-card__head"><div><h2>Registrations over time</h2><p>Daily registrations in the selected period.</p></div><span class="db-total"><?= $dashAvailable ? number_format($dashMetrics['registrations']) : '—' ?> total</span></div>
+        <div class="dash-chart" data-dash-chart="daily"></div>
+      </section>
+
+      <?php if ($dashCan('registrations')) { ?>
+      <section class="panel-card db-card">
+        <div class="db-card__head"><div><h2>Needs your attention <?php if ($dashPendingTotal) { ?><span class="dash-badge"><?= (int) $dashPendingTotal ?></span><?php } ?></h2><p>Oldest pending registrations first.</p></div><a class="db-link" href="registrations.php">View all</a></div>
+        <?php if (!$dashPending) { ?>
+          <div class="db-empty"><span aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"></path></svg></span>No registrations are waiting. Nice work!</div>
+        <?php } else { ?>
+          <ul class="db-list">
+            <?php foreach (array_slice($dashPending, 0, 5) as $row) { ?>
+              <li class="db-pending">
+                <span class="db-avatar" aria-hidden="true"><?= e(mb_strtoupper(mb_substr(trim((string) $row['student_name']), 0, 1))) ?></span>
+                <div class="db-pending__who"><strong><?= e($row['student_name']) ?></strong><small><?= e($row['title']) ?> · <?= e(date('M j, g:i A', strtotime((string) $row['registered_at']))) ?></small></div>
+                <form action="pending.php" method="post" class="db-pending__actions" data-dash-review><input type="hidden" name="csrf" value="<?= e($_SESSION['pending_csrf']) ?>"><input type="hidden" name="registration_id" value="<?= (int) $row['id'] ?>"><input type="hidden" name="event_id" value="<?= (int) $row['event_id'] ?>">
+                  <?php if ($row['event_status'] === 'upcoming') { ?><button name="action" value="confirm" class="db-approve" title="Approve and email the QR code">Approve</button><?php } ?>
+                  <button name="action" value="remove" class="dash-danger db-reject" title="Reject and remove">Reject</button>
+                </form>
+              </li>
+            <?php } ?>
+          </ul>
+        <?php } ?>
+      </section>
+      <?php } ?>
+    </div>
+
+    <aside class="db-side">
+      <section class="panel-card db-card">
+        <div class="db-card__head"><h2>Upcoming events</h2><?php if ($dashCan('events')) { ?><a class="db-link" href="events.php">All events</a><?php } ?></div>
+        <?php if (!$dashUpcoming) { ?><div class="db-empty">No upcoming events yet.</div><?php } else { ?>
+          <ul class="db-list">
+            <?php foreach (array_slice($dashUpcoming, 0, 4) as $event) { $ts = strtotime((string) $event['event_date']); ?>
+              <li><a class="db-event" href="<?= $dashCan('registrations') ? 'registrations.php?event_id=' . (int) $event['id'] : '#' ?>">
+                <span class="db-event__date"><b><?= e(date('j', $ts)) ?></b><?= e(date('M', $ts)) ?></span>
+                <span class="db-event__body"><strong><?= e($event['title']) ?></strong><small><?= $event['event_time'] ? e(date('g:i A', strtotime((string) $event['event_time']))) . ' · ' : '' ?><?= e($event['location']) ?></small><small class="db-event__stats"><?= (int) $event['registrations'] ?> registered<?= (int) $event['pending'] ? ' · <b>' . (int) $event['pending'] . ' pending</b>' : '' ?></small></span>
+              </a></li>
+            <?php } ?>
+          </ul>
+        <?php } ?>
+      </section>
+
+      <?php if ($dashQuick) { ?>
+      <section class="panel-card db-card">
+        <div class="db-card__head"><h2>Quick actions</h2></div>
+        <div class="db-quick">
+          <?php foreach ($dashQuick as [, $href, $label, $icon]) { ?><a href="<?= e($href) ?>"><svg viewBox="0 0 24 24" aria-hidden="true"><?= $icon ?></svg><?= e($label) ?></a><?php } ?>
+        </div>
+      </section>
+      <?php } ?>
+
+      <section class="panel-card db-card">
+        <div class="db-card__head"><h2>Recent activity</h2></div>
+        <?php if (!$dashActivity) { ?><div class="db-empty">No activity in this period.</div><?php } else { ?>
+          <ol class="db-feed">
+            <?php foreach (array_slice($dashActivity, 0, 6) as $row) { ?>
+              <li><span class="db-feed__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><?= $dashActivityIcon[$row['kind']] ?? $dashActivityIcon['Event created'] ?></svg></span><span><strong><?= e($row['kind']) ?></strong><small><?= e($row['label']) ?></small></span><time datetime="<?= e(date('c', strtotime((string) $row['happened']))) ?>"><?= e(date('M j, g:i A', strtotime((string) $row['happened']))) ?></time></li>
+            <?php } ?>
+          </ol>
+        <?php } ?>
+      </section>
+    </aside>
   </div>
-  <footer class="panel-card dash-notes"><strong>About these numbers</strong><p>Registration status is its current value, not status at the period end. Approval / rejection timestamps and historical status changes are not stored; no approval trend is inferred. Attendance counts distinct event / participant pairs by scan time, not unique students or an attendance rate. Semester uses calendar half-years because no academic calendar is stored. Times use the application/database timezone. Upcoming and pending lists ignore the reporting filter.</p></footer>
-  <?php if ($dashAdmin) { ?><details class="panel-card dash-notes dash-gallery"><summary>Legacy highlight gallery</summary><p>Upload images for an existing event (JPEG, PNG, WebP or GIF; up to 8 MB each). Existing gallery POST names remain supported and require this session’s CSRF token.</p><form method="post" enctype="multipart/form-data" class="dash-filters"><input type="hidden" name="csrf" value="<?= e($_SESSION['dashboard_csrf']) ?>"><label>Event ID<input type="number" name="event_id" required></label><label>Images<input type="file" name="images[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple required></label><button name="upload_images" value="1">Upload images</button></form><form method="post" class="dash-filters" data-dash-delete-image><input type="hidden" name="csrf" value="<?= e($_SESSION['dashboard_csrf']) ?>"><label>Image ID<input type="number" name="remove_id" required></label><button>Remove image</button></form></details><?php } ?>
+
+  <details class="panel-card db-insights">
+    <summary><span><strong>More insights</strong><small>Attendance by event, event status, sections and all figures</small></span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></summary>
+    <div class="db-figures">
+      <?php foreach ($dashKpis as $key => $meta) { ?><div><span><?= e($meta[0]) ?></span><strong><?= $dashAvailable ? number_format($dashMetrics[$key]) : '—' ?></strong><small><?= e($meta[1]) ?></small></div><?php } ?>
+    </div>
+    <div class="db-charts">
+      <?php foreach (['attendance' => ['Attendance by event', 'Top events by check-ins.'], 'status' => ['Event status', 'Events dated in this period.'], 'sections' => ['Course, year & section', 'Registrations per section.']] as $id => $meta) { ?>
+        <section class="db-chart-card"><h3><?= e($meta[0]) ?></h3><p><?= e($meta[1]) ?></p><div class="dash-chart" data-dash-chart="<?= e($id) ?>"></div></section>
+      <?php } ?>
+    </div>
+    <p class="db-notes"><strong>About these numbers:</strong> registration status is its current value; attendance counts distinct event/participant pairs by scan time; "Semester" uses calendar half-years. Upcoming events and pending review ignore the period filter.</p>
+  </details>
+
+  <?php if ($dashAdmin) { ?><details class="panel-card dash-notes dash-gallery db-gallery"><summary>Highlight gallery (images per event)</summary><p>Upload images for an existing event (JPEG, PNG, WebP or GIF; up to 8 MB each).</p><form method="post" enctype="multipart/form-data" class="dash-filters"><input type="hidden" name="csrf" value="<?= e($_SESSION['dashboard_csrf']) ?>"><label>Event ID<input type="number" name="event_id" required></label><label>Images<input type="file" name="images[]" accept="image/jpeg,image/png,image/webp,image/gif" multiple required></label><button name="upload_images" value="1">Upload images</button></form><form method="post" class="dash-filters" data-dash-delete-image><input type="hidden" name="csrf" value="<?= e($_SESSION['dashboard_csrf']) ?>"><label>Image ID<input type="number" name="remove_id" required></label><button>Remove image</button></form></details><?php } ?>
 </main>
 <script type="application/json" id="dash-data"><?= json_encode(['charts'=>$dashCharts,'available'=>$dashAvailable,'start'=>$dashBounds[0],'end'=>$dashBounds[1]], JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_INVALID_UTF8_SUBSTITUTE) ?></script>
 </body></html>
