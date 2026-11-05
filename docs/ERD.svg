@@ -1,0 +1,495 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1960" height="1570" viewBox="0 0 1960 1570" font-family="Segoe UI, Helvetica, Arial, sans-serif" fill="#111">
+<rect width="100%" height="100%" fill="#fff"/>
+<text x="980" y="40" text-anchor="middle" font-size="22" font-weight="800">Entity Relationship Diagram — JPCS-CMU Event Management System</text>
+<polyline points="100,117.5 30,117.5 30,602.5 100,602.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="92" y1="110.5" x2="92" y2="124.5"/><line x1="86" y1="110.5" x2="86" y2="124.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="86" y1="602.5" x2="100" y2="594.5"/><line x1="86" y1="602.5" x2="100" y2="610.5"/><line x1="86" y1="602.5" x2="100" y2="602.5"/><circle cx="80" cy="602.5" r="5" fill="#fff"/></g>
+<polyline points="100,793.5 50,793.5 50,476.5 100,476.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="92" y1="786.5" x2="92" y2="800.5"/><line x1="86" y1="786.5" x2="86" y2="800.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="92" y1="469.5" x2="92" y2="483.5"/><circle cx="81" cy="476.5" r="5" fill="#fff"/></g>
+<polyline points="100,751.5 70,751.5 70,1068.5 100,1068.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="92" y1="744.5" x2="92" y2="758.5"/><line x1="86" y1="744.5" x2="86" y2="758.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="86" y1="1068.5" x2="100" y2="1060.5"/><line x1="86" y1="1068.5" x2="100" y2="1076.5"/><line x1="86" y1="1068.5" x2="100" y2="1068.5"/><circle cx="80" cy="1068.5" r="5" fill="#fff"/></g>
+<polyline points="580,477.5 460,477.5 460,138.5 430,138.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="572" y1="470.5" x2="572" y2="484.5"/><line x1="566" y1="470.5" x2="566" y2="484.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="444" y1="138.5" x2="430" y2="146.5"/><line x1="444" y1="138.5" x2="430" y2="130.5"/><line x1="444" y1="138.5" x2="430" y2="138.5"/><circle cx="450" cy="138.5" r="5" fill="#fff"/></g>
+<polyline points="580,517.5 478,517.5 478,560.5 430,560.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="572" y1="510.5" x2="572" y2="524.5"/><line x1="566" y1="510.5" x2="566" y2="524.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="444" y1="560.5" x2="430" y2="568.5"/><line x1="444" y1="560.5" x2="430" y2="552.5"/><line x1="444" y1="560.5" x2="430" y2="560.5"/><circle cx="450" cy="560.5" r="5" fill="#fff"/></g>
+<polyline points="580,557.5 496,557.5 496,1068.5 430,1068.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="572" y1="550.5" x2="572" y2="564.5"/><line x1="566" y1="550.5" x2="566" y2="564.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="444" y1="1068.5" x2="430" y2="1076.5"/><line x1="444" y1="1068.5" x2="430" y2="1060.5"/><line x1="444" y1="1068.5" x2="430" y2="1068.5"/><circle cx="450" cy="1068.5" r="5" fill="#fff"/></g>
+<polyline points="580,497.5 514,497.5 514,287.5 580,287.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="572" y1="490.5" x2="572" y2="504.5"/><line x1="566" y1="490.5" x2="566" y2="504.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="566" y1="287.5" x2="580" y2="279.5"/><line x1="566" y1="287.5" x2="580" y2="295.5"/><line x1="566" y1="287.5" x2="580" y2="287.5"/><circle cx="560" cy="287.5" r="5" fill="#fff"/></g>
+<polyline points="580,457.5 532,457.5 532,117.5 580,117.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="572" y1="450.5" x2="572" y2="464.5"/><line x1="566" y1="450.5" x2="566" y2="464.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="566" y1="117.5" x2="580" y2="109.5"/><line x1="566" y1="117.5" x2="580" y2="125.5"/><line x1="566" y1="117.5" x2="580" y2="117.5"/><circle cx="560" cy="117.5" r="5" fill="#fff"/></g>
+<polyline points="580,537.5 550,537.5 550,732.5 580,732.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="572" y1="530.5" x2="572" y2="544.5"/><line x1="566" y1="530.5" x2="566" y2="544.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="566" y1="732.5" x2="580" y2="724.5"/><line x1="566" y1="732.5" x2="580" y2="740.5"/><line x1="566" y1="732.5" x2="580" y2="732.5"/><circle cx="560" cy="732.5" r="5" fill="#fff"/></g>
+<polyline points="910,457.5 940,457.5 940,117.5 1060,117.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="918" y1="464.5" x2="918" y2="450.5"/><line x1="924" y1="464.5" x2="924" y2="450.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1052" y1="110.5" x2="1052" y2="124.5"/><circle cx="1041" cy="117.5" r="5" fill="#fff"/></g>
+<polyline points="910,477.5 985,477.5 985,308.5 1060,308.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="918" y1="484.5" x2="918" y2="470.5"/><line x1="924" y1="484.5" x2="924" y2="470.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1046" y1="308.5" x2="1060" y2="300.5"/><line x1="1046" y1="308.5" x2="1060" y2="316.5"/><line x1="1046" y1="308.5" x2="1060" y2="308.5"/><circle cx="1040" cy="308.5" r="5" fill="#fff"/></g>
+<polyline points="910,497.5 1030,497.5 1030,583.5 1060,583.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="918" y1="504.5" x2="918" y2="490.5"/><line x1="924" y1="504.5" x2="924" y2="490.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1046" y1="583.5" x2="1060" y2="575.5"/><line x1="1046" y1="583.5" x2="1060" y2="591.5"/><line x1="1046" y1="583.5" x2="1060" y2="583.5"/><circle cx="1040" cy="583.5" r="5" fill="#fff"/></g>
+<polyline points="1390,897.5 1420,897.5 1420,499.5 1390,499.5" stroke="#1f2937" stroke-width="1.4" fill="none"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1398" y1="904.5" x2="1398" y2="890.5"/><line x1="1404" y1="904.5" x2="1404" y2="890.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1404" y1="499.5" x2="1390" y2="507.5"/><line x1="1404" y1="499.5" x2="1390" y2="491.5"/><line x1="1404" y1="499.5" x2="1390" y2="499.5"/><circle cx="1410" cy="499.5" r="5" fill="#fff"/></g>
+<polyline points="1390,857.5 1442.5,857.5 1442.5,287.5 1390,287.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1398" y1="864.5" x2="1398" y2="850.5"/><line x1="1404" y1="864.5" x2="1404" y2="850.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1404" y1="287.5" x2="1390" y2="295.5"/><line x1="1404" y1="287.5" x2="1390" y2="279.5"/><line x1="1404" y1="287.5" x2="1390" y2="287.5"/><circle cx="1410" cy="287.5" r="5" fill="#fff"/></g>
+<polyline points="1390,837.5 1465,837.5 1465,138.5 1540,138.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1398" y1="844.5" x2="1398" y2="830.5"/><line x1="1404" y1="844.5" x2="1404" y2="830.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1526" y1="138.5" x2="1540" y2="130.5"/><line x1="1526" y1="138.5" x2="1540" y2="146.5"/><line x1="1526" y1="138.5" x2="1540" y2="138.5"/><circle cx="1520" cy="138.5" r="5" fill="#fff"/></g>
+<polyline points="1390,877.5 1487.5,877.5 1487.5,455.5 1540,455.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1398" y1="884.5" x2="1398" y2="870.5"/><line x1="1404" y1="884.5" x2="1404" y2="870.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1526" y1="455.5" x2="1540" y2="447.5"/><line x1="1526" y1="455.5" x2="1540" y2="463.5"/><line x1="1526" y1="455.5" x2="1540" y2="455.5"/><circle cx="1520" cy="455.5" r="5" fill="#fff"/></g>
+<polyline points="1390,917.5 1510,917.5 1510,625.5 1540,625.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1398" y1="924.5" x2="1398" y2="910.5"/><line x1="1404" y1="924.5" x2="1404" y2="910.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1526" y1="625.5" x2="1540" y2="617.5"/><line x1="1526" y1="625.5" x2="1540" y2="633.5"/><line x1="1526" y1="625.5" x2="1540" y2="625.5"/><circle cx="1520" cy="625.5" r="5" fill="#fff"/></g>
+<polyline points="1870,327.5 1915,327.5 1915,476.5 1870,476.5" stroke="#1f2937" stroke-width="1.4" fill="none" stroke-dasharray="6 4"/>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1878" y1="334.5" x2="1878" y2="320.5"/><line x1="1884" y1="334.5" x2="1884" y2="320.5"/></g>
+<g stroke="#1f2937" stroke-width="1.4" fill="none"><line x1="1878" y1="483.5" x2="1878" y2="469.5"/><circle cx="1889" cy="476.5" r="5" fill="#fff"/></g>
+<g><rect x="100" y="70" width="330" height="292" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M100,104 V80 a10,10 0 0 1 10,-10 H420 a10,10 0 0 1 10,10 V104 Z" fill="#e8601c"/>
+<text x="114" y="92" fill="#fff" font-size="15" font-weight="700">masterlist_uploads</text>
+<text x="112" y="119" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="152" y="119" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="418" y="119" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="125" width="328" height="21" fill="#fbf4ee"/>
+<text x="112" y="140" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="152" y="140" font-size="13"  fill="#111">uploaded_by</text>
+<text x="418" y="140" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="152" y="161" font-size="13"  fill="#111">uploader_name</text>
+<text x="418" y="161" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="167" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="182" font-size="13"  fill="#111">uploader_role</text>
+<text x="418" y="182" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(30) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="203" font-size="13"  fill="#111">original_filename</text>
+<text x="418" y="203" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="209" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="224" font-size="13"  fill="#111">file_type</text>
+<text x="418" y="224" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(10) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="245" font-size="13"  fill="#111">batch</text>
+<text x="418" y="245" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(9) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="251" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="266" font-size="13"  fill="#111">course_year_section</text>
+<text x="418" y="266" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="287" font-size="13"  fill="#111">rows_added</text>
+<text x="418" y="287" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="293" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="308" font-size="13"  fill="#111">rows_updated</text>
+<text x="418" y="308" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="329" font-size="13"  fill="#111">rows_skipped</text>
+<text x="418" y="329" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="335" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="350" font-size="13"  fill="#111">created_at</text>
+<text x="418" y="350" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="100" y="408" width="330" height="250" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M100,442 V418 a10,10 0 0 1 10,-10 H420 a10,10 0 0 1 10,10 V442 Z" fill="#e8601c"/>
+<text x="114" y="430" fill="#fff" font-size="15" font-weight="700">student_masterlist</text>
+<text x="112" y="457" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="152" y="457" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="418" y="457" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="463" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="478" font-size="13"  fill="#111">student_id_no</text>
+<text x="418" y="478" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="499" font-size="13"  fill="#111">student_name</text>
+<text x="418" y="499" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(150) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="505" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="520" font-size="13"  fill="#111">batch</text>
+<text x="418" y="520" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(9) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="541" font-size="13"  fill="#111">course_year_section</text>
+<text x="418" y="541" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="547" width="328" height="21" fill="#fbf4ee"/>
+<text x="112" y="562" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="152" y="562" font-size="13"  fill="#111">uploaded_by</text>
+<text x="418" y="562" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="152" y="583" font-size="13"  fill="#111">uploader_role</text>
+<text x="418" y="583" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(30) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="589" width="328" height="21" fill="#fbf4ee"/>
+<text x="112" y="604" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="152" y="604" font-size="13"  fill="#111">upload_id</text>
+<text x="418" y="604" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED</text>
+<text x="152" y="625" font-size="13"  fill="#111">created_at</text>
+<text x="418" y="625" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="631" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="646" font-size="13"  fill="#111">updated_at</text>
+<text x="418" y="646" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="100" y="704" width="330" height="229" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M100,738 V714 a10,10 0 0 1 10,-10 H420 a10,10 0 0 1 10,10 V738 Z" fill="#e8601c"/>
+<text x="114" y="726" fill="#fff" font-size="15" font-weight="700">student_accounts</text>
+<text x="112" y="753" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="152" y="753" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="418" y="753" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="759" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="774" font-size="13"  fill="#111">full_name</text>
+<text x="418" y="774" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(150) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="112" y="795" font-size="10.5" font-weight="700" fill="#167647">UK</text>
+<text x="152" y="795" font-size="13"  fill="#111">student_id</text>
+<text x="418" y="795" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="801" width="328" height="21" fill="#fbf4ee"/>
+<text x="112" y="816" font-size="10.5" font-weight="700" fill="#167647">UK</text>
+<text x="152" y="816" font-size="13"  fill="#111">email</text>
+<text x="418" y="816" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(150) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="837" font-size="13"  fill="#111">course_year</text>
+<text x="418" y="837" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="843" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="858" font-size="13"  fill="#111">password_hash</text>
+<text x="418" y="858" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="879" font-size="13"  fill="#111">created_at</text>
+<text x="418" y="879" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="885" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="900" font-size="13"  fill="#111">terms_version</text>
+<text x="418" y="900" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(20)</text>
+<text x="152" y="921" font-size="13"  fill="#111">terms_accepted_at</text>
+<text x="418" y="921" font-size="11.5" text-anchor="end" fill="#6b5e55">DATETIME</text>
+</g>
+<g><rect x="100" y="979" width="330" height="271" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M100,1013 V989 a10,10 0 0 1 10,-10 H420 a10,10 0 0 1 10,10 V1013 Z" fill="#e8601c"/>
+<text x="114" y="1001" fill="#fff" font-size="15" font-weight="700">password_resets</text>
+<text x="112" y="1028" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="152" y="1028" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="418" y="1028" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="1034" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="1049" font-size="13"  fill="#111">account_type</text>
+<text x="418" y="1049" font-size="11.5" text-anchor="end" fill="#6b5e55">ENUM <tspan fill="#9c8f86">NN</tspan></text>
+<text x="112" y="1070" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="152" y="1070" font-size="13"  fill="#111">account_id</text>
+<text x="418" y="1070" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="1076" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="1091" font-size="13"  fill="#111">email</text>
+<text x="418" y="1091" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(150) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="1112" font-size="13"  fill="#111">code_hash</text>
+<text x="418" y="1112" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="1118" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="1133" font-size="13"  fill="#111">attempts</text>
+<text x="418" y="1133" font-size="11.5" text-anchor="end" fill="#6b5e55">TINYINT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="1154" font-size="13"  fill="#111">expires_at</text>
+<text x="418" y="1154" font-size="11.5" text-anchor="end" fill="#6b5e55">DATETIME <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="1160" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="1175" font-size="13"  fill="#111">verified_at</text>
+<text x="418" y="1175" font-size="11.5" text-anchor="end" fill="#6b5e55">DATETIME</text>
+<text x="152" y="1196" font-size="13"  fill="#111">used_at</text>
+<text x="418" y="1196" font-size="11.5" text-anchor="end" fill="#6b5e55">DATETIME</text>
+<rect x="101" y="1202" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="1217" font-size="13"  fill="#111">ip</text>
+<text x="418" y="1217" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(45)</text>
+<text x="152" y="1238" font-size="13"  fill="#111">created_at</text>
+<text x="418" y="1238" font-size="11.5" text-anchor="end" fill="#6b5e55">DATETIME <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="100" y="1296" width="330" height="124" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M100,1330 V1306 a10,10 0 0 1 10,-10 H420 a10,10 0 0 1 10,10 V1330 Z" fill="#e8601c"/>
+<text x="114" y="1318" fill="#fff" font-size="15" font-weight="700">login_attempts</text>
+<text x="112" y="1345" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="152" y="1345" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="418" y="1345" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="1351" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="1366" font-size="13"  fill="#111">identifier</text>
+<text x="418" y="1366" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(150) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="152" y="1387" font-size="13"  fill="#111">ip</text>
+<text x="418" y="1387" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(45) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="101" y="1393" width="328" height="21" fill="#fbf4ee"/>
+<text x="152" y="1408" font-size="13"  fill="#111">created_at</text>
+<text x="418" y="1408" font-size="11.5" text-anchor="end" fill="#6b5e55">DATETIME <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="580" y="70" width="330" height="124" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M580,104 V80 a10,10 0 0 1 10,-10 H900 a10,10 0 0 1 10,10 V104 Z" fill="#e8601c"/>
+<text x="594" y="92" fill="#fff" font-size="15" font-weight="700">officer_sections</text>
+<text x="592" y="119" font-size="10.5" font-weight="700" fill="#b84b10">PK FK</text>
+<text x="632" y="119" font-size="13" font-weight="700" text-decoration="underline" fill="#111">user_id</text>
+<text x="898" y="119" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="125" width="328" height="21" fill="#fbf4ee"/>
+<text x="592" y="140" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="632" y="140" font-size="13" font-weight="700" text-decoration="underline" fill="#111">course_year_section</text>
+<text x="898" y="140" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="592" y="161" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="632" y="161" font-size="13"  fill="#111">assigned_by</text>
+<text x="898" y="161" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<rect x="581" y="167" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="182" font-size="13"  fill="#111">created_at</text>
+<text x="898" y="182" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="580" y="240" width="330" height="124" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M580,274 V250 a10,10 0 0 1 10,-10 H900 a10,10 0 0 1 10,10 V274 Z" fill="#e8601c"/>
+<text x="594" y="262" fill="#fff" font-size="15" font-weight="700">officer_permissions</text>
+<text x="592" y="289" font-size="10.5" font-weight="700" fill="#b84b10">PK FK</text>
+<text x="632" y="289" font-size="13" font-weight="700" text-decoration="underline" fill="#111">user_id</text>
+<text x="898" y="289" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="295" width="328" height="21" fill="#fbf4ee"/>
+<text x="592" y="310" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="632" y="310" font-size="13" font-weight="700" text-decoration="underline" fill="#111">feature</text>
+<text x="898" y="310" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(30) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="592" y="331" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="632" y="331" font-size="13"  fill="#111">granted_by</text>
+<text x="898" y="331" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<rect x="581" y="337" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="352" font-size="13"  fill="#111">created_at</text>
+<text x="898" y="352" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="580" y="410" width="330" height="208" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M580,444 V420 a10,10 0 0 1 10,-10 H900 a10,10 0 0 1 10,10 V444 Z" fill="#e8601c"/>
+<text x="594" y="432" fill="#fff" font-size="15" font-weight="700">users</text>
+<text x="592" y="459" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="632" y="459" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="898" y="459" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="465" width="328" height="21" fill="#fbf4ee"/>
+<text x="592" y="480" font-size="10.5" font-weight="700" fill="#167647">UK</text>
+<text x="632" y="480" font-size="13"  fill="#111">username</text>
+<text x="898" y="480" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="632" y="501" font-size="13"  fill="#111">name</text>
+<text x="898" y="501" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="507" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="522" font-size="13"  fill="#111">password</text>
+<text x="898" y="522" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="632" y="543" font-size="13"  fill="#111">role</text>
+<text x="898" y="543" font-size="11.5" text-anchor="end" fill="#6b5e55">ENUM <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="549" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="564" font-size="13"  fill="#111">position</text>
+<text x="898" y="564" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100)</text>
+<text x="632" y="585" font-size="13"  fill="#111">photo</text>
+<text x="898" y="585" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<rect x="581" y="591" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="606" font-size="13"  fill="#111">created_at</text>
+<text x="898" y="606" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="580" y="664" width="330" height="292" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M580,698 V674 a10,10 0 0 1 10,-10 H900 a10,10 0 0 1 10,10 V698 Z" fill="#e8601c"/>
+<text x="594" y="686" fill="#fff" font-size="15" font-weight="700">audit_log</text>
+<text x="592" y="713" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="632" y="713" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="898" y="713" font-size="11.5" text-anchor="end" fill="#6b5e55">BIGINT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="719" width="328" height="21" fill="#fbf4ee"/>
+<text x="592" y="734" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="632" y="734" font-size="13"  fill="#111">user_id</text>
+<text x="898" y="734" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="632" y="755" font-size="13"  fill="#111">actor_name</text>
+<text x="898" y="755" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="761" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="776" font-size="13"  fill="#111">actor_role</text>
+<text x="898" y="776" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(30) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="632" y="797" font-size="13"  fill="#111">action</text>
+<text x="898" y="797" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="803" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="818" font-size="13"  fill="#111">entity_type</text>
+<text x="898" y="818" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(30)</text>
+<text x="632" y="839" font-size="13"  fill="#111">entity_id</text>
+<text x="898" y="839" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50)</text>
+<rect x="581" y="845" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="860" font-size="13"  fill="#111">summary</text>
+<text x="898" y="860" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="632" y="881" font-size="13"  fill="#111">details</text>
+<text x="898" y="881" font-size="11.5" text-anchor="end" fill="#6b5e55">TEXT</text>
+<rect x="581" y="887" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="902" font-size="13"  fill="#111">ip_address</text>
+<text x="898" y="902" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(45) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="632" y="923" font-size="13"  fill="#111">user_agent</text>
+<text x="898" y="923" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="581" y="929" width="328" height="21" fill="#fbf4ee"/>
+<text x="632" y="944" font-size="13"  fill="#111">created_at</text>
+<text x="898" y="944" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="1060" y="70" width="330" height="82" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1060,104 V80 a10,10 0 0 1 10,-10 H1380 a10,10 0 0 1 10,10 V104 Z" fill="#e8601c"/>
+<text x="1074" y="92" fill="#fff" font-size="15" font-weight="700">notification_reads</text>
+<text x="1072" y="119" font-size="10.5" font-weight="700" fill="#b84b10">PK FK</text>
+<text x="1112" y="119" font-size="13" font-weight="700" text-decoration="underline" fill="#111">user_id</text>
+<text x="1378" y="119" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="125" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="140" font-size="13"  fill="#111">last_seen_at</text>
+<text x="1378" y="140" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP</text>
+</g>
+<g><rect x="1060" y="198" width="330" height="187" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1060,232 V208 a10,10 0 0 1 10,-10 H1380 a10,10 0 0 1 10,10 V232 Z" fill="#e8601c"/>
+<text x="1074" y="220" fill="#fff" font-size="15" font-weight="700">panel_activity</text>
+<text x="1072" y="247" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="1112" y="247" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="1378" y="247" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="253" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="268" font-size="13"  fill="#111">kind</text>
+<text x="1378" y="268" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(30) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1072" y="289" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1112" y="289" font-size="13"  fill="#111">event_id</text>
+<text x="1378" y="289" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<rect x="1061" y="295" width="328" height="21" fill="#fbf4ee"/>
+<text x="1072" y="310" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1112" y="310" font-size="13"  fill="#111">user_id</text>
+<text x="1378" y="310" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="1112" y="331" font-size="13"  fill="#111">actor_name</text>
+<text x="1378" y="331" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="337" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="352" font-size="13"  fill="#111">title</text>
+<text x="1378" y="352" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1112" y="373" font-size="13"  fill="#111">created_at</text>
+<text x="1378" y="373" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="1060" y="431" width="330" height="313" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1060,465 V441 a10,10 0 0 1 10,-10 H1380 a10,10 0 0 1 10,10 V465 Z" fill="#e8601c"/>
+<text x="1074" y="453" fill="#fff" font-size="15" font-weight="700">event_requests</text>
+<text x="1072" y="480" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="1112" y="480" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="1378" y="480" font-size="11.5" text-anchor="end" fill="#6b5e55">INT UNSIGNED <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="486" width="328" height="21" fill="#fbf4ee"/>
+<text x="1072" y="501" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1112" y="501" font-size="13"  fill="#111">event_id</text>
+<text x="1378" y="501" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="1112" y="522" font-size="13"  fill="#111">request_type</text>
+<text x="1378" y="522" font-size="11.5" text-anchor="end" fill="#6b5e55">ENUM <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="528" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="543" font-size="13"  fill="#111">payload</text>
+<text x="1378" y="543" font-size="11.5" text-anchor="end" fill="#6b5e55">TEXT <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1112" y="564" font-size="13"  fill="#111">new_files</text>
+<text x="1378" y="564" font-size="11.5" text-anchor="end" fill="#6b5e55">TEXT</text>
+<rect x="1061" y="570" width="328" height="21" fill="#fbf4ee"/>
+<text x="1072" y="585" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1112" y="585" font-size="13"  fill="#111">requested_by</text>
+<text x="1378" y="585" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="1112" y="606" font-size="13"  fill="#111">requester_name</text>
+<text x="1378" y="606" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="612" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="627" font-size="13"  fill="#111">status</text>
+<text x="1378" y="627" font-size="11.5" text-anchor="end" fill="#6b5e55">ENUM <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1072" y="648" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1112" y="648" font-size="13"  fill="#111">reviewed_by</text>
+<text x="1378" y="648" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<rect x="1061" y="654" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="669" font-size="13"  fill="#111">reviewer_name</text>
+<text x="1378" y="669" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100)</text>
+<text x="1112" y="690" font-size="13"  fill="#111">review_note</text>
+<text x="1378" y="690" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(500)</text>
+<rect x="1061" y="696" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="711" font-size="13"  fill="#111">created_at</text>
+<text x="1378" y="711" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1112" y="732" font-size="13"  fill="#111">reviewed_at</text>
+<text x="1378" y="732" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP</text>
+</g>
+<g><rect x="1060" y="790" width="330" height="250" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1060,824 V800 a10,10 0 0 1 10,-10 H1380 a10,10 0 0 1 10,10 V824 Z" fill="#e8601c"/>
+<text x="1074" y="812" fill="#fff" font-size="15" font-weight="700">events</text>
+<text x="1072" y="839" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="1112" y="839" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="1378" y="839" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="845" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="860" font-size="13"  fill="#111">title</text>
+<text x="1378" y="860" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100)</text>
+<text x="1112" y="881" font-size="13"  fill="#111">description</text>
+<text x="1378" y="881" font-size="11.5" text-anchor="end" fill="#6b5e55">TEXT</text>
+<rect x="1061" y="887" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="902" font-size="13"  fill="#111">event_date</text>
+<text x="1378" y="902" font-size="11.5" text-anchor="end" fill="#6b5e55">DATE</text>
+<text x="1112" y="923" font-size="13"  fill="#111">created_at</text>
+<text x="1378" y="923" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="929" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="944" font-size="13"  fill="#111">location</text>
+<text x="1378" y="944" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<text x="1112" y="965" font-size="13"  fill="#111">event_time</text>
+<text x="1378" y="965" font-size="11.5" text-anchor="end" fill="#6b5e55">TIME</text>
+<rect x="1061" y="971" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="986" font-size="13"  fill="#111">poster</text>
+<text x="1378" y="986" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<text x="1112" y="1007" font-size="13"  fill="#111">pass_image</text>
+<text x="1378" y="1007" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<rect x="1061" y="1013" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="1028" font-size="13"  fill="#111">status</text>
+<text x="1378" y="1028" font-size="11.5" text-anchor="end" fill="#6b5e55">ENUM</text>
+</g>
+<g><rect x="1060" y="1086" width="330" height="145" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1060,1120 V1096 a10,10 0 0 1 10,-10 H1380 a10,10 0 0 1 10,10 V1120 Z" fill="#e8601c"/>
+<text x="1074" y="1108" fill="#fff" font-size="15" font-weight="700">officer_profiles</text>
+<text x="1072" y="1135" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="1112" y="1135" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="1378" y="1135" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1061" y="1141" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="1156" font-size="13"  fill="#111">name</text>
+<text x="1378" y="1156" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100) <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1112" y="1177" font-size="13"  fill="#111">position</text>
+<text x="1378" y="1177" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100)</text>
+<rect x="1061" y="1183" width="328" height="21" fill="#fbf4ee"/>
+<text x="1112" y="1198" font-size="13"  fill="#111">photo</text>
+<text x="1378" y="1198" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<text x="1112" y="1219" font-size="13"  fill="#111">created_at</text>
+<text x="1378" y="1219" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="1540" y="70" width="330" height="271" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1540,104 V80 a10,10 0 0 1 10,-10 H1860 a10,10 0 0 1 10,10 V104 Z" fill="#e8601c"/>
+<text x="1554" y="92" fill="#fff" font-size="15" font-weight="700">registrations</text>
+<text x="1552" y="119" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="1592" y="119" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="1858" y="119" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1541" y="125" width="328" height="21" fill="#fbf4ee"/>
+<text x="1552" y="140" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1592" y="140" font-size="13"  fill="#111">event_id</text>
+<text x="1858" y="140" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="1592" y="161" font-size="13"  fill="#111">student_name</text>
+<text x="1858" y="161" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<rect x="1541" y="167" width="328" height="21" fill="#fbf4ee"/>
+<text x="1592" y="182" font-size="13"  fill="#111">student_id</text>
+<text x="1858" y="182" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50)</text>
+<text x="1592" y="203" font-size="13"  fill="#111">course_year_section</text>
+<text x="1858" y="203" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(100)</text>
+<rect x="1541" y="209" width="328" height="21" fill="#fbf4ee"/>
+<text x="1592" y="224" font-size="13"  fill="#111">email</text>
+<text x="1858" y="224" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<text x="1592" y="245" font-size="13"  fill="#111">contact</text>
+<text x="1858" y="245" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(20)</text>
+<rect x="1541" y="251" width="328" height="21" fill="#fbf4ee"/>
+<text x="1592" y="266" font-size="13"  fill="#111">registered_at</text>
+<text x="1858" y="266" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1592" y="287" font-size="13"  fill="#111">confirmed_by</text>
+<text x="1858" y="287" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<rect x="1541" y="293" width="328" height="21" fill="#fbf4ee"/>
+<text x="1592" y="308" font-size="13"  fill="#111">status</text>
+<text x="1858" y="308" font-size="11.5" text-anchor="end" fill="#6b5e55">ENUM</text>
+<text x="1592" y="329" font-size="13"  fill="#111">control_number</text>
+<text x="1858" y="329" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50)</text>
+</g>
+<g><rect x="1540" y="387" width="330" height="124" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1540,421 V397 a10,10 0 0 1 10,-10 H1860 a10,10 0 0 1 10,10 V421 Z" fill="#e8601c"/>
+<text x="1554" y="409" fill="#fff" font-size="15" font-weight="700">attendance</text>
+<text x="1552" y="436" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="1592" y="436" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="1858" y="436" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1541" y="442" width="328" height="21" fill="#fbf4ee"/>
+<text x="1552" y="457" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1592" y="457" font-size="13"  fill="#111">event_id</text>
+<text x="1858" y="457" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<text x="1552" y="478" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1592" y="478" font-size="13"  fill="#111">participant_id</text>
+<text x="1858" y="478" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(50) <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1541" y="484" width="328" height="21" fill="#fbf4ee"/>
+<text x="1592" y="499" font-size="13"  fill="#111">scanned_at</text>
+<text x="1858" y="499" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<g><rect x="1540" y="557" width="330" height="124" rx="10" fill="#fff" stroke="#1f2937" stroke-width="1.6"/>
+<path d="M1540,591 V567 a10,10 0 0 1 10,-10 H1860 a10,10 0 0 1 10,10 V591 Z" fill="#e8601c"/>
+<text x="1554" y="579" fill="#fff" font-size="15" font-weight="700">highlight_images</text>
+<text x="1552" y="606" font-size="10.5" font-weight="700" fill="#b84b10">PK</text>
+<text x="1592" y="606" font-size="13" font-weight="700" text-decoration="underline" fill="#111">id</text>
+<text x="1858" y="606" font-size="11.5" text-anchor="end" fill="#6b5e55">INT <tspan fill="#9c8f86">NN</tspan></text>
+<rect x="1541" y="612" width="328" height="21" fill="#fbf4ee"/>
+<text x="1552" y="627" font-size="10.5" font-weight="700" fill="#2f5fb3">FK</text>
+<text x="1592" y="627" font-size="13"  fill="#111">event_id</text>
+<text x="1858" y="627" font-size="11.5" text-anchor="end" fill="#6b5e55">INT</text>
+<text x="1592" y="648" font-size="13"  fill="#111">image_path</text>
+<text x="1858" y="648" font-size="11.5" text-anchor="end" fill="#6b5e55">VARCHAR(255)</text>
+<rect x="1541" y="654" width="328" height="21" fill="#fbf4ee"/>
+<text x="1592" y="669" font-size="13"  fill="#111">uploaded_at</text>
+<text x="1858" y="669" font-size="11.5" text-anchor="end" fill="#6b5e55">TIMESTAMP <tspan fill="#9c8f86">NN</tspan></text>
+</g>
+<text x="40" y="1470" font-size="14" font-weight="700">Legend</text>
+<text x="40" y="1496" font-size="12" font-weight="700" fill="#b84b10">PK</text><text x="70" y="1496" font-size="12.5">Primary key</text>
+<text x="190" y="1496" font-size="12" font-weight="700" fill="#2f5fb3">FK</text><text x="220" y="1496" font-size="12.5">Foreign key</text>
+<text x="340" y="1496" font-size="12" font-weight="700" fill="#167647">UK</text><text x="370" y="1496" font-size="12.5">Unique key</text>
+<text x="490" y="1496" font-size="12" font-weight="700" fill="#9c8f86">NN</text><text x="520" y="1496" font-size="12.5">Not null</text>
+<line x1="680" y1="1492" x2="740" y2="1492" stroke="#1f2937" stroke-width="1.4"/><text x="750" y="1496" font-size="12.5">Foreign key enforced in MySQL</text>
+<line x1="680" y1="1518" x2="740" y2="1518" stroke="#1f2937" stroke-width="1.4" stroke-dasharray="6 4"/><text x="750" y="1522" font-size="12.5">Relationship used by the application (not enforced)</text>
+<text x="1150" y="1496" font-size="12.5">||  exactly one        o&lt;  zero or many        |o  zero or one</text>
+<text x="1150" y="1522" font-size="12" fill="#6b5e55">password_resets.account_id points to users or student_accounts (account_type)</text>
+</svg>

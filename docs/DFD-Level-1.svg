@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="1894" viewBox="0 0 1480 1894" font-family="Helvetica, Arial, sans-serif" fill="#111">
+<defs><marker id="a" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,1 L10,5 L0,9 z" fill="#111"/></marker></defs>
+<rect width="100%" height="100%" fill="#fff"/>
+<text x="740" y="1864" text-anchor="middle" font-size="15" font-weight="700">Figure: Data Flow Diagram (Level 1) — JPCS-CMU Event Management System</text>
+<polyline points="290,104 580,104" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="435" y="99" text-anchor="middle" font-size="12.5">Account &amp; Permission Actions</text>
+<polyline points="290,130 580,130" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="435" y="125" text-anchor="middle" font-size="12.5">Report Request</text>
+<polyline points="580,156 290,156" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="435" y="151" text-anchor="middle" font-size="12.5">Dashboard Reports</text>
+<polyline points="580,182 290,182" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="435" y="177" text-anchor="middle" font-size="12.5">Audit Trail &amp; Notifications</text>
+<polyline points="580,724 149,724 149,203" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="364.5" y="719" text-anchor="middle" font-size="12.5">Login Status</text>
+<polyline points="183,203 183,698 580,698" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="381.5" y="693" text-anchor="middle" font-size="12.5">Login Credentials</text>
+<polyline points="580,453 217,453 217,203" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="398.5" y="448" text-anchor="middle" font-size="12.5">Pending Event Requests</text>
+<polyline points="251,203 251,427 580,427" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="415.5" y="422" text-anchor="middle" font-size="12.5">New Events &amp; Approval Decisions</text>
+<polyline points="290,1060 580,1060" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="435" y="1055" text-anchor="middle" font-size="12.5">Event Registration Details</text>
+<polyline points="580,1086 290,1086" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="435" y="1081" text-anchor="middle" font-size="12.5">Available Events</text>
+<polyline points="580,1112 290,1112" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="435" y="1107" text-anchor="middle" font-size="12.5">Ticket Email with QR Code</text>
+<polyline points="166,1036 166,750 580,750" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="373" y="745" text-anchor="middle" font-size="12.5">Registration Details &amp; Terms Agreement</text>
+<polyline points="200,1036 200,776 580,776" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="390" y="771" text-anchor="middle" font-size="12.5">Login Credentials / Reset Request</text>
+<polyline points="580,802 234,802 234,1036" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="407" y="797" text-anchor="middle" font-size="12.5">Registration Confirmation</text>
+<polyline points="580,828 268,828 268,1036" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="424" y="823" text-anchor="middle" font-size="12.5">Login Status / Reset Code</text>
+<polyline points="580,1671 200,1671 200,1136" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="390" y="1666" text-anchor="middle" font-size="12.5">Membership Verification Result</text>
+<polyline points="234,1136 234,1645 580,1645" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="407" y="1640" text-anchor="middle" font-size="12.5">Student ID for Verification</text>
+<polyline points="268,1136 268,1372 580,1372" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="424" y="1367" text-anchor="middle" font-size="12.5">Event Pass QR Code</text>
+<polyline points="920,1073 1170,1073" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1045" y="1068" text-anchor="middle" font-size="12.5">Pending Registrations</text>
+<polyline points="1170,1099 920,1099" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1045" y="1094" text-anchor="middle" font-size="12.5">Registration Confirmation</text>
+<polyline points="1362,1036 1362,130 920,130" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1141" y="125" text-anchor="middle" font-size="12.5">Officer Profile Updates</text>
+<polyline points="920,156 1328,156 1328,1036" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1124" y="151" text-anchor="middle" font-size="12.5">Feature Permissions &amp; Notifications</text>
+<polyline points="1294,1036 1294,427 920,427" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1107" y="422" text-anchor="middle" font-size="12.5">Event Proposals &amp; Change Requests</text>
+<polyline points="920,453 1260,453 1260,1036" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1090" y="448" text-anchor="middle" font-size="12.5">Request Status</text>
+<polyline points="1226,1036 1226,750 920,750" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1073" y="745" text-anchor="middle" font-size="12.5">Login Credentials</text>
+<polyline points="920,776 1192,776 1192,1036" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1056" y="771" text-anchor="middle" font-size="12.5">Login Status</text>
+<polyline points="920,1671 1328,1671 1328,1136" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1124" y="1666" text-anchor="middle" font-size="12.5">Upload Summary</text>
+<polyline points="1294,1136 1294,1645 920,1645" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1107" y="1640" text-anchor="middle" font-size="12.5">Masterlist File</text>
+<polyline points="920,1398 1260,1398 1260,1136" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1090" y="1393" text-anchor="middle" font-size="12.5">Attendance Report</text>
+<polyline points="920,1372 1226,1372 1226,1136" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1073" y="1367" text-anchor="middle" font-size="12.5">Student Details / Duplicate Warning</text>
+<polyline points="1192,1136 1192,1346 920,1346" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="1056" y="1341" text-anchor="middle" font-size="12.5">Scanned QR / Control Number</text>
+<rect x="580" y="40" width="340" height="162" rx="22" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<line x1="580" y1="66" x2="920" y2="66" stroke="#111" stroke-width="1.3"/>
+<text x="750" y="58" text-anchor="middle" font-size="14">6.0</text>
+<text x="750" y="130" text-anchor="middle" font-size="14.5" font-weight="700">User Management,</text>
+<text x="750" y="148" text-anchor="middle" font-size="14.5" font-weight="700">Notifications &amp; Reporting</text>
+<path d="M932,248 H568 V290 H932 M614,248 V290" fill="none" stroke="#111" stroke-width="1.4"/>
+<text x="591" y="274" text-anchor="middle" font-size="13.5">D6</text>
+<text x="773" y="274" text-anchor="middle" font-size="13.5">Audit Logs &amp; Notifications</text>
+<polyline points="650,202 650,248" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<polyline points="850,248 850,202" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="642" y="229" text-anchor="end" font-size="12.5">Activity Logs</text>
+<text x="858" y="229" font-size="12.5">Audit &amp; Notification Records</text>
+<rect x="580" y="348" width="340" height="140" rx="22" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<line x1="580" y1="374" x2="920" y2="374" stroke="#111" stroke-width="1.3"/>
+<text x="750" y="366" text-anchor="middle" font-size="14">2.0</text>
+<text x="750" y="427" text-anchor="middle" font-size="14.5" font-weight="700">Event Management</text>
+<text x="750" y="445" text-anchor="middle" font-size="14.5" font-weight="700">&amp; Approval</text>
+<path d="M932,534 H568 V576 H932 M614,534 V576" fill="none" stroke="#111" stroke-width="1.4"/>
+<text x="591" y="560" text-anchor="middle" font-size="13.5">D2</text>
+<text x="773" y="560" text-anchor="middle" font-size="13.5">Events &amp; Event Requests</text>
+<polyline points="650,488 650,534" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<polyline points="850,534 850,488" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="642" y="515" text-anchor="end" font-size="12.5">Event Details</text>
+<text x="858" y="515" font-size="12.5">Event Records</text>
+<rect x="580" y="634" width="340" height="214" rx="22" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<line x1="580" y1="660" x2="920" y2="660" stroke="#111" stroke-width="1.3"/>
+<text x="750" y="652" text-anchor="middle" font-size="14">1.0</text>
+<text x="750" y="750" text-anchor="middle" font-size="14.5" font-weight="700">Registration &amp;</text>
+<text x="750" y="768" text-anchor="middle" font-size="14.5" font-weight="700">Authentication</text>
+<path d="M932,894 H568 V936 H932 M614,894 V936" fill="none" stroke="#111" stroke-width="1.4"/>
+<text x="591" y="920" text-anchor="middle" font-size="13.5">D1</text>
+<text x="773" y="920" text-anchor="middle" font-size="13.5">User Accounts</text>
+<polyline points="650,848 650,894" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<polyline points="850,894 850,848" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="642" y="875" text-anchor="end" font-size="12.5">Account Details</text>
+<text x="858" y="875" font-size="12.5">Account Information</text>
+<rect x="580" y="994" width="340" height="140" rx="22" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<line x1="580" y1="1020" x2="920" y2="1020" stroke="#111" stroke-width="1.3"/>
+<text x="750" y="1012" text-anchor="middle" font-size="14">3.0</text>
+<text x="750" y="1073" text-anchor="middle" font-size="14.5" font-weight="700">Event Registration</text>
+<text x="750" y="1091" text-anchor="middle" font-size="14.5" font-weight="700">&amp; Ticketing</text>
+<path d="M932,1180 H568 V1222 H932 M614,1180 V1222" fill="none" stroke="#111" stroke-width="1.4"/>
+<text x="591" y="1206" text-anchor="middle" font-size="13.5">D3</text>
+<text x="773" y="1206" text-anchor="middle" font-size="13.5">Event Registrations</text>
+<polyline points="650,1134 650,1180" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<polyline points="850,1180 850,1134" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="642" y="1161" text-anchor="end" font-size="12.5">Registration Details</text>
+<text x="858" y="1161" font-size="12.5">Registration Records</text>
+<rect x="580" y="1280" width="340" height="140" rx="22" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<line x1="580" y1="1306" x2="920" y2="1306" stroke="#111" stroke-width="1.3"/>
+<text x="750" y="1298" text-anchor="middle" font-size="14">4.0</text>
+<text x="750" y="1359" text-anchor="middle" font-size="14.5" font-weight="700">Attendance</text>
+<text x="750" y="1377" text-anchor="middle" font-size="14.5" font-weight="700">Monitoring</text>
+<path d="M932,1466 H568 V1508 H932 M614,1466 V1508" fill="none" stroke="#111" stroke-width="1.4"/>
+<text x="591" y="1492" text-anchor="middle" font-size="13.5">D4</text>
+<text x="773" y="1492" text-anchor="middle" font-size="13.5">Attendance Records</text>
+<polyline points="650,1420 650,1466" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<polyline points="850,1466 850,1420" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="642" y="1447" text-anchor="end" font-size="12.5">Attendance Details</text>
+<text x="858" y="1447" font-size="12.5">Attendance History</text>
+<rect x="580" y="1566" width="340" height="140" rx="22" fill="#fff" stroke="#111" stroke-width="1.5"/>
+<line x1="580" y1="1592" x2="920" y2="1592" stroke="#111" stroke-width="1.3"/>
+<text x="750" y="1584" text-anchor="middle" font-size="14">5.0</text>
+<text x="750" y="1645" text-anchor="middle" font-size="14.5" font-weight="700">Student Masterlist</text>
+<text x="750" y="1663" text-anchor="middle" font-size="14.5" font-weight="700">Management</text>
+<path d="M932,1752 H568 V1794 H932 M614,1752 V1794" fill="none" stroke="#111" stroke-width="1.4"/>
+<text x="591" y="1778" text-anchor="middle" font-size="13.5">D5</text>
+<text x="773" y="1778" text-anchor="middle" font-size="13.5">Student Masterlist</text>
+<polyline points="650,1706 650,1752" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<polyline points="850,1752 850,1706" fill="none" stroke="#111" stroke-width="1.3" marker-end="url(#a)"/>
+<text x="642" y="1733" text-anchor="end" font-size="12.5">Student Records</text>
+<text x="858" y="1733" font-size="12.5">Verified Student Data</text>
+<rect x="40" y="83" width="250" height="120" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="165" y="150" text-anchor="middle" font-size="19" font-weight="700">Adviser</text>
+<rect x="40" y="1036" width="250" height="100" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="165" y="1093" text-anchor="middle" font-size="19" font-weight="700">Student</text>
+<rect x="1170" y="1036" width="270" height="100" fill="#fff" stroke="#111" stroke-width="2"/>
+<text x="1305" y="1093" text-anchor="middle" font-size="19" font-weight="700">JPCS Officer</text>
+</svg>
